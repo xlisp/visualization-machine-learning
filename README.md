@@ -18,7 +18,7 @@
 
 ##### `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
-* `C-c C-k` 打开R的Repl 
+* `C-c C-k` 打开R的Repl, `C-c C-l`eval当前文件缓冲到Repl里面
 * `C-x C-e` fun r lisp!
 ```emacs-lisp
 (defun ess-eval-sexp (vis)
