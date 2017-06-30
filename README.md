@@ -177,5 +177,5 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 3 3 13  Wenli      F   1986-8-8
 
 # => read from web:
-('=' (wbcd, (read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE))))
+('<-' (wbcd, (read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE))))
 ```
