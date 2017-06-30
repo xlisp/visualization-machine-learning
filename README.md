@@ -18,7 +18,7 @@
 
 ##### `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
-* `C-c C-k` 打开R的Repl 
+* `C-c C-k` 打开R的Repl, `C-c C-l`eval当前文件缓冲到Repl里面
 * `C-x C-e` fun r lisp!
 ```emacs-lisp
 (defun ess-eval-sexp (vis)
@@ -117,6 +117,19 @@ Levels: Devin Edward Wenli
 (pt_data [,3]) #=> 只是第三列
 [1] M M F
 Levels: F M
+
+((pt_data [-1]) [-2])
+#=> 去除第一,然后再去除第二列
+     Name  Birthdate
+ 1  Devin 1984-12-29
+ 2 Edward   1983-5-6
+ 3  Wenli   1986-8-8
+ 
+(pt_data$Birthdate)
+#=> 取某一列
+[1] 1984-12-29 1983-5-6   1986-8-8
+Levels: 1983-5-6 1984-12-29 1986-8-8
+
 ```
 ##### matrix (函数内赋值参数用: x=123)
 ```r
@@ -162,4 +175,7 @@ Levels: F M
 1 1 11  Devin      M 1984-12-29
 2 2 12 Edward      M   1983-5-6
 3 3 13  Wenli      F   1986-8-8
+
+# => read from web:
+('<-' (wbcd, (read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE))))
 ```
