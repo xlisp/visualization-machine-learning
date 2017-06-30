@@ -1,4 +1,16 @@
 ### R函数式的列表(Lisp表达方式)
+*`C-x C-e` 执行R的S表达式*:  1. `C-c C-k` 打开R的Repl 2. `C-x C-e` fun r lisp!
+```emacs-lisp
+(defun ess-eval-sexp (vis)
+  (interactive "P")
+  (save-excursion
+    (backward-sexp)
+    (let ((end (point)))
+      (forward-sexp)
+      (ess-eval-region (point) end vis "Eval sexp"))))
+      
+(add-hook 'ess-mode-hook (lambda () (define-key global-map (kbd "C-x C-e") 'ess-eval-sexp) ))
+```
 
 * lambda
 ```r
