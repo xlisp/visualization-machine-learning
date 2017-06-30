@@ -1,4 +1,21 @@
+
 ### R函数式的列表(Lisp表达方式)
+
+- [R函数式的列表(Lisp表达方式)](#r%E5%87%BD%E6%95%B0%E5%BC%8F%E7%9A%84%E5%88%97%E8%A1%A8lisp%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F)
+    - [`C-x C-e` 执行R的S表达式](#c-x-c-e-%E6%89%A7%E8%A1%8Cr%E7%9A%84s%E8%A1%A8%E8%BE%BE%E5%BC%8F)
+    - [lambda](#lambda)
+    - [if](#if)
+    - [plot](#plot)
+    - [Reduce](#reduce)
+    - [Filter](#filter)
+    - [Map](#map)
+    - [vector](#vector)
+    - [factor](#factor)
+    - [list](#list)
+    - [data.frame (函数内赋值参数用: x=123)](#dataframe-%E5%87%BD%E6%95%B0%E5%86%85%E8%B5%8B%E5%80%BC%E5%8F%82%E6%95%B0%E7%94%A8-x123)
+    - [matrix (函数内赋值参数用: x=123)](#matrix-%E5%87%BD%E6%95%B0%E5%86%85%E8%B5%8B%E5%80%BC%E5%8F%82%E6%95%B0%E7%94%A8-x123)
+    - [csv 表格数据文件](#csv-%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6)
+
 ##### `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
 * `C-c C-k` 打开R的Repl 
