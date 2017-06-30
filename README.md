@@ -15,34 +15,34 @@
 (add-hook 'ess-mode-hook (lambda () (define-key global-map (kbd "C-x C-e") 'ess-eval-sexp) ))
 ```
 
-* lambda
+##### lambda
 ```r
 # define
 (function (y) (function (x) ('+' (x, y))))
 # call
 ((function (x) x) (1)) #=> [1] 1
 ```
-* if
+##### if
 ```r
 ('if' (0, ('==' (1, 1)), ('==' (2, 1)))) #=> [1] FALSE
 ```
-* plot
+##### plot
 ```r
 ('plot' (('rnorm' (10)), ('rnorm' (10))))
 # 加了额外的参数
 ('plot' (('rnorm' (10)), ('rnorm' (10)), ('=' (type, 'b'))))
 ```
-* Reduce
+##### Reduce
 ```r
 (Reduce ('*', 1:10))
 ```
-* Filter
+##### Filter
 ```r
 ((function (x) ('if' (('%%' (x, 2)), x, 0))) (2)) #=> [1] 0
 # call
 (Filter ((function (x) ('if' (('%%' (x, 2)), x, 0))), 1:10)) #=>  [1] 1 3 5 7 9
 ```
-* Map
+##### Map
 ```r
 (Map ((function (x) ('+' (x, 100))), 1:3))
 # =>
@@ -53,21 +53,21 @@
 [[3]]
 [1] 103
 ```
-* vector
+##### vector
 ```r
 # 如果本来是前缀的表达方式的函数,引号'c'可以省略,function除外必须加引号
 (c (1, 1, 3)) #=> [1] 1 1 3
 ((c (1, 8, 3)) [2]) #=> [1] 8
 ('=' (defvar, (c ("A", "B", "C")))) #=> [1] "A" "B" "C"
 ```
-* factor
+##### factor
 ```r
 (factor ((c ("1", "1", "3")), ('=' (levels, (c ("A", "B", "C"))))))
 #=>
 [1] <NA> <NA> <NA>
 Levels: A B C
 ```
-* list
+##### list
 ```r
 (list (11, "aa", FALSE))
 #=>
@@ -78,7 +78,7 @@ Levels: A B C
 [[3]]
 [1] FALSE
 ```
-* data.frame (函数内赋值参数用: x=123)
+##### data.frame (函数内赋值参数用: x=123)
 ```r
 ('=' (pt_data,
   (data.frame (
@@ -101,7 +101,7 @@ Levels: Devin Edward Wenli
 [1] M M F
 Levels: F M
 ```
-* matrix (函数内赋值参数用: x=123)
+##### matrix (函数内赋值参数用: x=123)
 ```r
 (matrix ((c (1, 2, 1, 3, 5, 8)), nrow=2)) 
 #=>  2行->3列
@@ -130,7 +130,7 @@ Levels: F M
 [1,]    1    2    4    3
 
 ```
-* csv 表格数据文件
+##### csv 表格数据文件
 ```r
 (write.csv (pt_data, ('=' (file, "my-data-frame.csv"))))
 # cat my-data-frame.csv #=>
