@@ -78,14 +78,14 @@ Levels: A B C
 [[3]]
 [1] FALSE
 ```
-* data.frame
+* data.frame (函数内赋值参数用: x=123)
 ```r
 ('=' (pt_data,
   (data.frame (
-    ('=' (ID, (c (11,12,13)))),
-    ('=' (Name, (c ("Devin","Edward","Wenli")))),
-    ('=' (Gender, (c ("M","M","F")))),
-    ('=' (Birthdate, (c ("1984-12-29","1983-5-6","1986-8-8"))))))))
+    ID=(c (11,12,13)),
+    Name=(c ("Devin","Edward","Wenli")),
+    Gender=(c ("M","M","F")),
+    Birthdate=(c ("1984-12-29","1983-5-6","1986-8-8"))))))
 #=>
   ID   Name Gender  Birthdate
 1 11  Devin      M 1984-12-29
@@ -101,7 +101,7 @@ Levels: Devin Edward Wenli
 [1] M M F
 Levels: F M
 ```
-* matrix (matrix函数内赋值参数用: x=123)
+* matrix (函数内赋值参数用: x=123)
 ```r
 (matrix ((c (1, 2, 1, 3, 5, 8)), nrow=2)) 
 #=>  2行->3列
@@ -130,4 +130,19 @@ Levels: F M
 [1,]    1    2    4    3
 
 ```
+* csv 表格数据文件
+```r
+(write.csv (pt_data, ('=' (file, "my-data-frame.csv"))))
+# cat my-data-frame.csv #=>
+"","ID","Name","Gender","Birthdate"
+"1",11,"Devin","M","1984-12-29"
+"2",12,"Edward","M","1983-5-6"
+"3",13,"Wenli","F","1986-8-8"
 
+(read.csv ("my-data-frame.csv"))
+#=>
+  X ID   Name Gender  Birthdate
+1 1 11  Devin      M 1984-12-29
+2 2 12 Edward      M   1983-5-6
+3 3 13  Wenli      F   1986-8-8
+```
