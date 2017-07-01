@@ -1,4 +1,27 @@
+
 ### R函数式的列表(Lisp表达方式)
+
+- [R函数式的列表(Lisp表达方式)](#r%E5%87%BD%E6%95%B0%E5%BC%8F%E7%9A%84%E5%88%97%E8%A1%A8lisp%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F)
+    - [Emacs `C-x C-e` 执行R的S表达式](#emacs-c-x-c-e-%E6%89%A7%E8%A1%8Cr%E7%9A%84s%E8%A1%A8%E8%BE%BE%E5%BC%8F)
+    - [lambda](#lambda)
+    - [if](#if)
+    - [plot](#plot)
+    - [Reduce](#reduce)
+    - [Filter](#filter)
+    - [Map](#map)
+    - [vector](#vector)
+    - [factor](#factor)
+    - [list](#list)
+    - [data.frame (函数内赋值参数用: x=123)](#dataframe-%E5%87%BD%E6%95%B0%E5%86%85%E8%B5%8B%E5%80%BC%E5%8F%82%E6%95%B0%E7%94%A8-x123)
+    - [matrix (函数内赋值参数用: x=123)](#matrix-%E5%87%BD%E6%95%B0%E5%86%85%E8%B5%8B%E5%80%BC%E5%8F%82%E6%95%B0%E7%94%A8-x123)
+    - [csv 表格数据文件](#csv-%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6)
+    - [table记录频数的方法(每一类)](#table%E8%AE%B0%E5%BD%95%E9%A2%91%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95%E6%AF%8F%E4%B8%80%E7%B1%BB)
+    - [round & prop.table & table计算频率百分比](#round--proptable--table%E8%AE%A1%E7%AE%97%E9%A2%91%E7%8E%87%E7%99%BE%E5%88%86%E6%AF%94)
+    - [summary 总结数据特征,极值, 细胞核的3种特征: 最小, 最大, 平均值,中间值等](#summary-%E6%80%BB%E7%BB%93%E6%95%B0%E6%8D%AE%E7%89%B9%E5%BE%81%E6%9E%81%E5%80%BC-%E7%BB%86%E8%83%9E%E6%A0%B8%E7%9A%843%E7%A7%8D%E7%89%B9%E5%BE%81-%E6%9C%80%E5%B0%8F-%E6%9C%80%E5%A4%A7-%E5%B9%B3%E5%9D%87%E5%80%BC%E4%B8%AD%E9%97%B4%E5%80%BC%E7%AD%89)
+    - [min & max 标准化数值型数据,以便确保在标准的范围内](#min--max-%E6%A0%87%E5%87%86%E5%8C%96%E6%95%B0%E5%80%BC%E5%9E%8B%E6%95%B0%E6%8D%AE%E4%BB%A5%E4%BE%BF%E7%A1%AE%E4%BF%9D%E5%9C%A8%E6%A0%87%E5%87%86%E7%9A%84%E8%8C%83%E5%9B%B4%E5%86%85)
+    - [lapply表格数据每一个数据单元都执行某个操作: 相当于map了,结果变成了list列表](#lapply%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%AF%8F%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8D%95%E5%85%83%E9%83%BD%E6%89%A7%E8%A1%8C%E6%9F%90%E4%B8%AA%E6%93%8D%E4%BD%9C-%E7%9B%B8%E5%BD%93%E4%BA%8Emap%E4%BA%86%E7%BB%93%E6%9E%9C%E5%8F%98%E6%88%90%E4%BA%86list%E5%88%97%E8%A1%A8)
+    - [一元线性回归](#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92)
+    - [knn](#knn)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
