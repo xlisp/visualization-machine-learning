@@ -23,7 +23,7 @@
 ## 2.良性肿块 恶性肿块 
 ##     62.7     37.3   # 百分比计算
 
-## 3.总结特征, 10个细胞核的3种特征: 最小, 最大, 平均值,中间值等
+## 3.总结特征, 细胞核的3种特征: 最小, 最大, 平均值,中间值等
 (summary ((wbcd [(c ("radius_mean", "area_mean", "smoothness_mean"))])))
 ##   radius_mean       area_mean      smoothness_mean  
 ##  Min.   : 6.981   Min.   : 143.5   Min.   :0.05263  
