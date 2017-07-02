@@ -350,3 +350,9 @@ $texture_mean
  Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
  4.0    12.0    18.0    20.9    24.0    72.0
 ```
+##### head看数据前几个值,tail-log
+```r
+(head (credit_rand$amount))
+#=>
+[1] 2346 2030 1082 2631 3069 1333
+```
