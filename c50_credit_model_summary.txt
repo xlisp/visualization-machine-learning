@@ -1,0 +1,195 @@
+> (summary (credit_model))
+
+Call:
+C5.0.default(x = (credit_train[-17]), y = credit_train$default)
+
+
+C5.0 [Release 2.07 GPL Edition]  	Sun Jul  2 11:30:46 2017
+-------------------------------
+
+Class specified by attribute `outcome'
+
+Read 900 cases (21 attributes) from undefined.data
+
+Decision tree:
+
+checking_balance = unknown: no (344/37)
+checking_balance in {< 0 DM,> 200 DM,1 - 200 DM}:
+:...foreign_worker = no: no (19/3)
+    foreign_worker = yes:
+    :...credit_history in {fully repaid,fully repaid this bank}:
+        :...savings_balance in {< 100 DM,101 - 500 DM}: yes (53/12)
+        :   savings_balance in {> 1000 DM,501 - 1000 DM,unknown}:
+        :   :...dependents <= 1: no (10/1)
+        :       dependents > 1: yes (4/1)
+        credit_history in {critical,delayed,repaid}:
+        :...other_debtors = co-applicant:
+            :...months_loan_duration <= 15: no (6/2)
+            :   months_loan_duration > 15: yes (14/3)
+            other_debtors = guarantor:
+            :...installment_plan = stores: no (0)
+            :   installment_plan = bank:
+            :   :...purpose = car (new): yes (3)
+            :   :   purpose in {business,car (used),domestic appliances,
+            :   :               education,furniture,others,radio/tv,repairs,
+            :   :               retraining}: no (5)
+            :   installment_plan = none:
+            :   :...months_loan_duration <= 36: no (21)
+            :       months_loan_duration > 36:
+            :       :...purpose = furniture: no (1)
+            :           purpose in {business,car (new),car (used),
+            :                       domestic appliances,education,others,
+            :                       radio/tv,repairs,retraining}: yes (3)
+            other_debtors = none:
+            :...months_loan_duration > 30:
+                :...checking_balance = > 200 DM: no (5/1)
+                :   checking_balance = < 0 DM:
+                :   :...property = other: yes (11)
+                :   :   property = real estate: no (1)
+                :   :   property = building society savings:
+                :   :   :...job = mangement self-employed: no (2)
+                :   :   :   job in {skilled employee,unemployed non-resident,
+                :   :   :           unskilled resident}: yes (7/2)
+                :   :   property = unknown/none:
+                :   :   :...installment_rate <= 2: no (2)
+                :   :       installment_rate > 2: yes (12/1)
+                :   checking_balance = 1 - 200 DM:
+                :   :...savings_balance in {> 1000 DM,
+                :       :                   501 - 1000 DM}: yes (0)
+                :       savings_balance = unknown: no (8/1)
+                :       savings_balance in {< 100 DM,101 - 500 DM}:
+                :       :...months_loan_duration > 45: yes (11)
+                :           months_loan_duration <= 45:
+                :           :...personal_status in {divorced male,
+                :               :                   married male}: yes (3)
+                :               personal_status = female: no (3)
+                :               personal_status = single male:
+                :               :...age > 39: yes (4)
+                :                   age <= 39: [S1]
+                months_loan_duration <= 30:
+                :...credit_history = critical:
+                    :...installment_plan in {none,stores}: no (79/17)
+                    :   installment_plan = bank:
+                    :   :...months_loan_duration <= 15: no (4)
+                    :       months_loan_duration > 15: yes (6/1)
+                    credit_history in {delayed,repaid}:
+                    :...checking_balance in {> 200 DM,1 - 200 DM}:
+                        :...purpose in {domestic appliances,education,others,
+                        :   :           retraining}: no (7)
+                        :   purpose = car (used):
+                        :   :...personal_status in {divorced male,married male,
+                        :   :   :                   single male}: no (6)
+                        :   :   personal_status = female: yes (4)
+                        :   purpose = radio/tv:
+                        :   :...installment_plan in {bank,none}: no (36/9)
+                        :   :   installment_plan = stores: yes (2)
+                        :   purpose = repairs:
+                        :   :...installment_plan in {bank,none}: no (5/1)
+                        :   :   installment_plan = stores: yes (1)
+                        :   purpose = business:
+                        :   :...age > 51: yes (2)
+                        :   :   age <= 51:
+                        :   :   :...dependents <= 1: no (13)
+                        :   :       dependents > 1: yes (3/1)
+                        :   purpose = furniture:
+                        :   :...checking_balance = > 200 DM: no (9/1)
+                        :   :   checking_balance = 1 - 200 DM:
+                        :   :   :...installment_plan = bank: yes (3/1)
+                        :   :       installment_plan = stores: no (1)
+                        :   :       installment_plan = none:
+                        :   :       :...installment_rate <= 2: no (6)
+                        :   :           installment_rate > 2: yes (11/4)
+                        :   purpose = car (new):
+                        :   :...amount <= 1301:
+                        :       :...age <= 22: no (2)
+                        :       :   age > 22: yes (11/1)
+                        :       amount > 1301:
+                        :       :...telephone = none: no (9)
+                        :           telephone = yes:
+                        :           :...age > 29: no (6)
+                        :               age <= 29: [S2]
+                        checking_balance = < 0 DM:
+                        :...savings_balance in {> 1000 DM,
+                            :                   501 - 1000 DM}: no (6)
+                            savings_balance in {< 100 DM,101 - 500 DM,unknown}:
+                            :...installment_rate > 3: yes (56/17)
+                                installment_rate <= 3:
+                                :...property = building society savings:
+                                    :...amount <= 1313: no (3)
+                                    :   amount > 1313: yes (6)
+                                    property = unknown/none: [S3]
+                                    property = real estate:
+                                    :...months_loan_duration <= 15: no (6)
+                                    :   months_loan_duration > 15: [S4]
+                                    property = other:
+                                    :...amount > 3195: no (8)
+                                        amount <= 3195: [S5]
+
+SubTree [S1]
+
+employment_length in {> 7 yrs,1 - 4 yrs,4 - 7 yrs,unemployed}: no (9)
+employment_length = 0 - 1 yrs: yes (2)
+
+SubTree [S2]
+
+checking_balance = > 200 DM: no (1)
+checking_balance = 1 - 200 DM: yes (4)
+
+SubTree [S3]
+
+employment_length in {> 7 yrs,0 - 1 yrs,1 - 4 yrs}: yes (5)
+employment_length in {4 - 7 yrs,unemployed}: no (3)
+
+SubTree [S4]
+
+purpose in {car (used),furniture}: no (2)
+purpose in {business,car (new),domestic appliances,education,others,radio/tv,
+            repairs,retraining}: yes (3)
+
+SubTree [S5]
+
+months_loan_duration > 16: yes (3)
+months_loan_duration <= 16:
+:...amount <= 1386: yes (2)
+    amount > 1386: no (3)
+
+
+Evaluation on training data (900 cases):
+
+	    Decision Tree   
+	  ----------------  
+	  Size      Errors  
+
+	    63  117(13.0%)   <<
+
+
+	   (a)   (b)    <-classified as
+	  ----  ----
+	   578    44    (a): class no
+	    73   205    (b): class yes
+
+
+	Attribute usage:
+
+	100.00%	checking_balance
+	 61.78%	foreign_worker
+	 59.67%	credit_history
+	 52.22%	other_debtors
+	 51.33%	months_loan_duration
+	 23.67%	savings_balance
+	 20.78%	installment_plan
+	 17.67%	purpose
+	 14.56%	installment_rate
+	  8.78%	property
+	  6.44%	amount
+	  6.33%	age
+	  3.44%	personal_status
+	  3.33%	dependents
+	  2.22%	telephone
+	  2.11%	employment_length
+	  1.00%	job
+
+
+Time: 0.0 secs
+
+> 
