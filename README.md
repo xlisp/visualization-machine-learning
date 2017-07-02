@@ -28,6 +28,7 @@
     - [head看数据前几个值,tail-log](#head%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%89%8D%E5%87%A0%E4%B8%AA%E5%80%BCtail-log)
     - [评估模型的性能: gmodels/CrossTable](#%E8%AF%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%80%A7%E8%83%BD-gmodelscrosstable)
     - [c50决策树](#c50%E5%86%B3%E7%AD%96%E6%A0%91)
+    - [neuralnet](#neuralnet)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -390,4 +391,16 @@ $texture_mean
 ('<-' (credit_model, (C5.0 ((credit_train [-17]), credit_train$default))))
 ('<-' (credit_pred, (predict (credit_model, credit_test))))
 (CrossTable (credit_test$default, credit_pred, prop.chisq=FALSE, prop.c=FALSE, prop.r=FALSE, dnn=(c ('actual default', 'predicted default'))))
+```
+##### [neuralnet](./neuralnet.R)
+```r
+(library (neuralnet))
+## neuralnet函数用于数值预测的神经网络: 多种原料=>强度预测, 用多层前馈神经网络
+('<-' (concrete_model, (neuralnet (strength ~ cement + slag + ash + water + superplastic + coarseagg + fineagg + age, data=concrete_train))))
+## 预测强度
+('<-' (predicted_strength, (model_results$net.result)))
+## cor用来获取两个数值向量之间的相关性
+(cor (predicted_strength, concrete_test$strength))
+##              [,1]
+## [1,] 0.7195218932
 ```
