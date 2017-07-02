@@ -23,6 +23,11 @@
     - [一元线性回归](#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92)
     - [knn](#knn)
     - [bayes](#bayes)
+    - [str 查看dataframe特征 & 类型 & 总数, 数据轮廓](#str-%E6%9F%A5%E7%9C%8Bdataframe%E7%89%B9%E5%BE%81--%E7%B1%BB%E5%9E%8B--%E6%80%BB%E6%95%B0-%E6%95%B0%E6%8D%AE%E8%BD%AE%E5%BB%93)
+    - [summary总结某列数据的Min/Max,Median,Mean等](#summary%E6%80%BB%E7%BB%93%E6%9F%90%E5%88%97%E6%95%B0%E6%8D%AE%E7%9A%84minmaxmedianmean%E7%AD%89)
+    - [head看数据前几个值,tail-log](#head%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%89%8D%E5%87%A0%E4%B8%AA%E5%80%BCtail-log)
+    - [评估模型的性能: gmodels/CrossTable](#%E8%AF%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%80%A7%E8%83%BD-gmodelscrosstable)
+    - [c50决策树](#c50%E5%86%B3%E7%AD%96%E6%A0%91)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -376,4 +381,13 @@ $texture_mean
 ##          Column Total |        79 |        21 |       100 | 
 ##                       |     0.790 |     0.210 |           | 
 ##      -----------------|-----------|-----------|-----------|
+```
+
+##### [c50决策树](./c50.R)
+
+```r
+(library (C50))
+('<-' (credit_model, (C5.0 ((credit_train [-17]), credit_train$default))))
+('<-' (credit_pred, (predict (credit_model, credit_test))))
+(CrossTable (credit_test$default, credit_pred, prop.chisq=FALSE, prop.c=FALSE, prop.r=FALSE, dnn=(c ('actual default', 'predicted default'))))
 ```
