@@ -29,6 +29,7 @@
     - [评估模型的性能: gmodels/CrossTable](#%E8%AF%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%80%A7%E8%83%BD-gmodelscrosstable)
     - [c50决策树](#c50%E5%86%B3%E7%AD%96%E6%A0%91)
     - [neuralnet](#neuralnet)
+    - [svm](#svm)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -403,4 +404,18 @@ $texture_mean
 (cor (predicted_strength, concrete_test$strength))
 ##              [,1]
 ## [1,] 0.7195218932
+```
+##### [svm](./ocr_svm.R)
+```r
+(library (kernlab))
+## 字母分类器: 超平面分割面=>两类数据空间化(填充,龚起来)=>分割完了再降维
+('<-' (letter_classifier, (ksvm (letter ~ ., data=letters_train, kernel="vanilladot"))))
+## 评估模型的性能: 字母的预测
+('<-' (letter_predictions, (predict (letter_classifier, letters_test))))
+
+## 预测的值和真实的值进行比较=>
+(round (('*' ((prop.table (table ('==' (letter_predictions, letters_test$letter)))) ,100)), digits=1))
+## ==>> 正确率为83.9%
+## FALSE  TRUE
+##  16.1  83.9
 ```
