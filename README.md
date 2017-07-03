@@ -419,3 +419,9 @@ $texture_mean
 ## FALSE  TRUE
 ##  16.1  83.9
 ```
+##### R宏%>%
+```r
+(library (magrittr))
+(1 %>% (function (x) ('+' (x, 100)))
+    %>% (function (x) (print (x))) ) #=> [1] 101
+```
