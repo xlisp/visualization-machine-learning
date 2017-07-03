@@ -30,6 +30,7 @@
     - [c50决策树](#c50%E5%86%B3%E7%AD%96%E6%A0%91)
     - [neuralnet](#neuralnet)
     - [svm](#svm)
+    - [kmeans](#kmeans)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -418,4 +419,21 @@ $texture_mean
 ## ==>> 正确率为83.9%
 ## FALSE  TRUE
 ##  16.1  83.9
+```
+##### [kmeans,K均值聚类](./kmeans.R)
+```r
+## 只是取36个特征:
+('<-' (interests, (teens [5:40])))
+('<-' (interests_z, (as.data.frame (lapply (interests, scale)))))
+
+## k均值聚类:
+('<-' (teen_clusters, (kmeans (interests_z, 5))))
+
+## 看到分出来5类,各自的数量如下
+(teen_clusters$size)
+# [1]   868  5089  2528   986 20529
+
+# 分量teen_clusters$centers查看聚类质心的坐标,所有的特征
+(teen_clusters$centers) 
+
 ```
