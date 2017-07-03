@@ -420,7 +420,7 @@ $texture_mean
 ## FALSE  TRUE
 ##  16.1  83.9
 ```
-##### [kmeans,K均值聚类](./kmeans.R)
+##### [kmeans](./kmeans.R)
 ```r
 ## 只是取36个特征:
 ('<-' (interests, (teens [5:40])))
