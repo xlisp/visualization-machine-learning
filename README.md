@@ -31,6 +31,7 @@
     - [neuralnet](#neuralnet)
     - [svm](#svm)
     - [kmeans](#kmeans)
+    - [R宏%>%](#r宏)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
