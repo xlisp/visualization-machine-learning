@@ -436,4 +436,9 @@ $texture_mean
 # 分量teen_clusters$centers查看聚类质心的坐标,所有的特征
 (teen_clusters$centers) 
 
+##### R宏%>%
+```r
+(library (magrittr))
+(1 %>% (function (x) ('+' (x, 100)))
+    %>% (function (x) (print (x))) ) #=> [1] 101
 ```
