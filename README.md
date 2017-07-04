@@ -444,3 +444,24 @@ $texture_mean
 (1 %>% (function (x) ('+' (x, 100)))
     %>% (function (x) (print (x))) ) #=> [1] 101
 ```
+* 对于function里面定义临时变量,用pipe
+```r
+(library (tm))
+(library (magrittr))
+
+('<-' (getTermMatrix, (function (text)
+    (text
+        %>% (function (st) (Corpus ((VectorSource (st)))))
+        %>% (function (cor) (tm_map (cor, (content_transformer (tolower)))))
+        %>% (function (cor) (tm_map (cor, removePunctuation)))
+        %>% (function (cor) (tm_map (cor, removeNumbers)))
+        %>% (function (cor) (tm_map (cor, removeWords, (c (stopwords("SMART"), "thy", "thou", "thee", "the", "and", "but")))))
+        %>% (function (cor) (TermDocumentMatrix (cor, control=(list (minWordLength=1)))))
+        %>% (function (mydtm) (as.matrix (mydtm)))
+        %>% (function (m) (sort ((rowSums (m)), decreasing=TRUE))) ))))
+
+(getTermMatrix ("The Clojure Programming Language. Clojure is a dynamic, general-purpose programming")) #=>
+##        clojure    programming        dynamic generalpurpose       language
+##              2              2              1              1              1
+
+```
