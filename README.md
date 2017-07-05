@@ -23,6 +23,7 @@
     - [lapply表格数据每一个数据单元都执行某个操作: 相当于map了,结果变成了list列表](#lapply%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%AF%8F%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8D%95%E5%85%83%E9%83%BD%E6%89%A7%E8%A1%8C%E6%9F%90%E4%B8%AA%E6%93%8D%E4%BD%9C-%E7%9B%B8%E5%BD%93%E4%BA%8Emap%E4%BA%86%E7%BB%93%E6%9E%9C%E5%8F%98%E6%88%90%E4%BA%86list%E5%88%97%E8%A1%A8)
     - [一元线性回归](#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92)
     - [knn](#knn)
+    - [regression](#regression)
     - [bayes](#bayes)
     - [str 查看dataframe特征 & 类型 & 总数, 数据轮廓](#str-%E6%9F%A5%E7%9C%8Bdataframe%E7%89%B9%E5%BE%81--%E7%B1%BB%E5%9E%8B--%E6%80%BB%E6%95%B0-%E6%95%B0%E6%8D%AE%E8%BD%AE%E5%BB%93)
     - [summary总结某列数据的Min/Max,Median,Mean等](#summary%E6%80%BB%E7%BB%93%E6%9F%90%E5%88%97%E6%95%B0%E6%8D%AE%E7%9A%84minmaxmedianmean%E7%AD%89)
@@ -224,7 +225,7 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 ## [1,]    1    2    1
 ## [2,]    3    5    8
 
-## 矩阵的标量预算
+## 矩阵的标量运算
 ('*' (10, (matrix ((c (1, 2, 1, 3, 5, 8)), ncol=2))))
 ##      [,1] [,2]
 ## [1,]   10   30
@@ -548,3 +549,8 @@ $texture_mean
 
 ```
 
+##### [regression](./regression.R)
+
+```r
+
+```
