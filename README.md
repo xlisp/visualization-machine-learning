@@ -71,6 +71,17 @@
 (library (magrittr))
 ((c (1, 2, 3)) %>% (function (x) (Map ((function (x) ('+' (x, 100))), x)))
     %>% (function (x) (Reduce ('+', x)) ) ) #=> [1] 306
+
+## let复用前面的变量定义
+((function (x, y=('*' (x, 2))) y) (100)) #=> [1] 200
+## 综合例子: function里面的默认参数,当let来用,可以用前面定义的变量(x,y=x),但是不能覆盖前面定义的变量(x,x=1)
+((function (y, x, mx=(as.matrix (x)), cx=(cbind (Intercept=1, mx)))
+    ('%*%' (('%*%' ((solve ('%*%' ((t (cx)), cx))), (t (cx)))), y)) ) -> reg)
+
+(reg (y=(launch$distress_ct), x=(launch [3])))
+##                    [,1]
+## Intercept    4.30158730
+## temperature -0.05746032
 ```
 ##### if
 ```r
