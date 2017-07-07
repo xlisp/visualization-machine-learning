@@ -569,6 +569,7 @@ $texture_mean
 ```
 ##### [特征选择Boruta](./Boruta_Feature_Selection.R)
 * [Boruta Ozone, form library mlbench's data](./Boruta_Ozone.R)
+* [Boruta Madelon](./Boruta_Madelon.R)
 ```r
 (library (Boruta))
 ('<-' (Boruta.mod, (Boruta (Classes~., data=(train [,-348])))))
