@@ -565,7 +565,36 @@ $texture_mean
 ##### [regression](./regression.R)
 
 ```r
+## 3.1 探索特征之间的关系---相关系数矩阵
+(cor (insurance [(c ("age", "bmi", "children", "charges"))]))
+##                age       bmi   children    charges
+## age      1.0000000 0.1092719 0.04246900 0.29900819
+## bmi      0.1092719 1.0000000 0.01275890 0.19834097
+## children 0.0424690 0.0127589 1.00000000 0.06799823
+## charges  0.2990082 0.1983410 0.06799823 1.00000000
 
+## 3.2 可视化特征之间的关系------散点图矩阵
+## (pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
+(library (psych)) ## pairs.panels可以显示拟合的线
+## (pairs.panels (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_panels_insurance.png
+
+## 3.3 基于数据训练模型 --------------
+((lm (charges ~ age + children + bmi + sex + smoker + region, data=insurance)) -> ins_model)
+## Call:
+## lm(formula = charges ~ age + children + bmi + sex + smoker +
+##     region, data = insurance)
+##
+## Coefficients:
+##     (Intercept)              age         children              bmi
+##        -11938.5            256.9            475.5            339.2
+##         sexmale        smokeryes  regionnorthwest  regionsoutheast
+##          -131.3          23848.5           -353.0          -1035.0
+## regionsouthwest
+##          -960.1
+##
+
+## 3.4 评估模型的性能
+(summary (ins_model))
 ```
 ##### [特征选择Boruta](./Boruta_Feature_Selection.R)
 * [Boruta Ozone, form library mlbench's data](./Boruta_Ozone.R)
