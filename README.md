@@ -35,6 +35,7 @@
     - [svm](#svm)
     - [kmeans](#kmeans)
     - [R宏%>%](#r宏)
+    - [特征选择Boruta](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Boruta)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -565,4 +566,19 @@ $texture_mean
 
 ```r
 
+```
+##### [特征选择Boruta](./Boruta_Feature_Selection.R)
+```r
+(library (Boruta))
+('<-' (Boruta.mod, (Boruta (Classes~., data=(train [,-348])))))
+(png ("Boruta_selection.png", width=4000,height=1600))
+(plot (Boruta.mod, las="2"))
+(dev.off ())
+## 将选出来的重要特征保存到一个rda里面
+(library (magrittr))
+(library (dplyr)) #select函数
+(train %>%
+ (function (data) (select (data, zakończyć,zdjęcie,należeć,naprawdę,polski,kobieta,sierpień,zobaczyć,dotyczyć,szczęście,mężczyzna,europejski)))
+    -> train_Boruta)
+(save (train_Boruta, file="train_Boruta.rda"))
 ```
