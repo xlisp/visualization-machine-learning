@@ -4,6 +4,7 @@
 - [R函数式的列表(Lisp表达方式)](#r%E5%87%BD%E6%95%B0%E5%BC%8F%E7%9A%84%E5%88%97%E8%A1%A8lisp%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F)
     - [Emacs `C-x C-e` 执行R的S表达式](#emacs-c-x-c-e-%E6%89%A7%E8%A1%8Cr%E7%9A%84s%E8%A1%A8%E8%BE%BE%E5%BC%8F)
     - [lambda](#lambda)
+    - [let](#let)
     - [if](#if)
     - [plot](#plot)
     - [Reduce](#reduce)
@@ -57,6 +58,17 @@
 (function (y) (function (x) ('+' (x, y))))
 # call
 ((function (x) x) (1)) #=> [1] 1
+```
+##### let
+```r
+## 用高阶函数 和 %>% 管道来 代替let, function(a=111,b=222,c=function(...){...} ) { ... }
+## function的默认参数就是一个局部变量: function(a=1, b=2) <=> let[a 1 b 2]
+((function (x, y=(function (i) ('*' (i, 2))) ) (y (x))) (2)) #=> [1] 4
+
+## 用强大的函数管道
+(library (magrittr))
+((c (1, 2, 3)) %>% (function (x) (Map ((function (x) ('+' (x, 100))), x)))
+    %>% (function (x) (Reduce ('+', x)) ) ) #=> [1] 306
 ```
 ##### if
 ```r
