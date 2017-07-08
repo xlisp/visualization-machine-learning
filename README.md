@@ -40,6 +40,7 @@
     - [kmeans](#kmeans)
     - [R宏%>%](#r宏)
     - [特征选择Boruta](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Boruta)
+    - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
     - [散点图pairs](#%e6%95%a3%e7%82%b9%e5%9b%bepairs)
 
@@ -629,6 +630,40 @@ $texture_mean
  (function (data) (select (data, zakończyć,zdjęcie,należeć,naprawdę,polski,kobieta,sierpień,zobaczyć,dotyczyć,szczęście,mężczyzna,europejski)))
     -> train_Boruta)
 (save (train_Boruta, file="train_Boruta.rda"))
+```
+##### [特征选择Caret](caret_churn_importance.R)
+[importance绘图](./fs_churn_importance_by_caret.png)
+```r
+(library (caret))
+(library (rpart))
+(library (e1071))
+((trainControl (method="repeatedcv", number=10,repeats=3)) -> control)
+((train (churn~., data=trainset, method="rpart",preProcess="scale", trControl=control)) -> model)
+## 2315 samples
+##   16 predictor
+##    2 classes: 'yes', 'no'
+## Pre-processing: scaled (16)
+## Resampling: Cross-Validated (10 fold, repeated 3 times)
+## Summary of sample sizes: 2084, 2084, 2083, 2083, 2082, 2084, ...
+## Resampling results across tuning parameters:
+##   cp          Accuracy   Kappa
+##   0.05555556  0.8995112  0.5174059
+##   0.07456140  0.8593389  0.2124126
+##   0.07602339  0.8567440  0.1898221
+## Accuracy was used to select the optimal model using  the largest value.
+## The final value used for the model was cp = 0.05555556.
+##
+
+((varImp (model, scale=FALSE)) -> importance)
+## rpart variable importance
+##                               Overall
+## number_customer_service_calls 116.015
+## total_day_minutes             106.988
+## total_day_charge              100.648
+## ...
+
+(plot (importance)) ##=> fs_churn_importance_by_caret.png
+
 ```
 ##### 直方图hist
 ```r
