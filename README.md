@@ -98,7 +98,7 @@
 ```r
 ('plot' (('rnorm' (10)), ('rnorm' (10))))
 # 加了额外的参数
-('plot' (('rnorm' (10)), ('rnorm' (10)), ('=' (type, 'b'))))
+('plot' (('rnorm' (10)), ('rnorm' (10)), type='b'))
 ```
 ##### Reduce
 ```r
@@ -127,12 +127,12 @@
 # 如果本来是前缀的表达方式的函数,引号'c'可以省略,function除外必须加引号
 (c (1, 1, 3)) #=> [1] 1 1 3
 ((c (1, 8, 3)) [2]) #=> [1] 8
-('=' (defvar, (c ("A", "B", "C")))) #=> [1] "A" "B" "C"
+((c ("A", "B", "C")) -> defvar) #=> [1] "A" "B" "C"
 ```
 ##### factor
 ```r
 # levels是不能重复出现的
-(factor ((c ("1", "1", "3", "11", "9", "8")), ('=' (levels, (c ("A", "B", "C", "AA", "BB", "CC"))))))
+(factor ((c ("1", "1", "3", "11", "9", "8")), levels=(c ("A", "B", "C", "AA", "BB", "CC"))))
 #=>
 [1] <NA> <NA> <NA> <NA> <NA> <NA>
 Levels: A B C AA BB CC
@@ -175,12 +175,11 @@ Levels: A B C AA BB CC
 ##### data.frame (函数内赋值参数用: x=123)
 ```r
 ## 2d: 2维
-('=' (pt_data,
-  (data.frame (
-    ID=(c (11,12,13)),
-    Name=(c ("Devin","Edward","Wenli")),
-    Gender=(c ("M","M","F")),
-    Birthdate=(c ("1984-12-29","1983-5-6","1986-8-8"))))))
+((data.frame (
+   ID=(c (11,12,13)),
+   Name=(c ("Devin","Edward","Wenli")),
+   Gender=(c ("M","M","F")),
+   Birthdate=(c ("1984-12-29","1983-5-6","1986-8-8")))) -> pt_data)
 #=>
   ID   Name Gender  Birthdate
 1 11  Devin      M 1984-12-29
@@ -309,7 +308,7 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 ```
 ##### csv 表格数据文件
 ```r
-(write.csv (pt_data, ('=' (file, "my-data-frame.csv"))))
+(write.csv (pt_data, file="my-data-frame.csv"))
 # cat my-data-frame.csv #=>
 "","ID","Name","Gender","Birthdate"
 "1",11,"Devin","M","1984-12-29"
