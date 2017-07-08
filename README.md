@@ -1,6 +1,10 @@
 
 ### R函数式的列表(Lisp表达方式)
 
+#### Emacs的Repl开发体验`C-x C-e`, 爽到根本停不下来!
+
+![](./emacs_repl_code.gif)
+
 - [R函数式的列表(Lisp表达方式)](#r%E5%87%BD%E6%95%B0%E5%BC%8F%E7%9A%84%E5%88%97%E8%A1%A8lisp%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F)
     - [Emacs `C-x C-e` 执行R的S表达式](#emacs-c-x-c-e-%E6%89%A7%E8%A1%8Cr%E7%9A%84s%E8%A1%A8%E8%BE%BE%E5%BC%8F)
     - [lambda](#lambda)
