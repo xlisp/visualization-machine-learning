@@ -138,7 +138,7 @@
 Levels: A B C AA BB CC
 
 ### 替换一下数据名称,把B替换为"良性肿块" ==>> 因子的意义: 赋予跟多的标签的意义
-('<-' (wbcd$diagnosis, (factor (wbcd$diagnosis, levels=(c ("B", "M")), labels=(c ("良性肿块", "恶性肿块"))))))
+((factor (wbcd$diagnosis, levels=(c ("B", "M")), labels=(c ("良性肿块", "恶性肿块")))) -> wbcd$diagnosis)
 #=>
     diagnosis radius_mean texture_mean perimeter_mean area_mean smoothness_mean
 1    恶性肿块      17.990        10.38         122.80    1001.0         0.11840
@@ -323,7 +323,7 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 3 3 13  Wenli      F   1986-8-8
 
 # => read from web:
-('<-' (wbcd, (read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE))))
+((read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE)) -> wbcd)
 ```
 
 ##### table记录频数的方法(每一类)
@@ -356,10 +356,9 @@ Max.   :28.110   Max.   :2501.0   Max.   :0.16340
 ```
 ##### min & max 标准化数值型数据,以便确保在标准的范围内
 ```r
-('<-' (normalize,
-  (function (x)
+((function (x)
     ('/' (('-' (x, (min (x)))),
-      ('-' ((max (x)), (min (x)))))))))
+      ('-' ((max (x)), (min (x))))))) -> normalize)
       
 (normalize ((c (10, 20, 30, 40, 50)))) #=>  [1] 0.00 0.25 0.50 0.75 1.00
 ```
@@ -374,7 +373,7 @@ $texture_mean
   [1] 0.02265810 0.27257355 0.39026040 0.36083869 0.15657761 0.20257017
 ...
 
-('<-' (wbcd_n, (as.data.frame ((lapply ((wbcd [2:31]), normalize)))))) 
+((as.data.frame ((lapply ((wbcd [2:31]), normalize)))) -> wbcd_n)
 #=> list列表(可以不同类型): 重新变成data.frame
      radius_mean texture_mean perimeter_mean  area_mean smoothness_mean
  1    0.52103744   0.02265810     0.54598853 0.36373277      0.59375282
@@ -384,13 +383,13 @@ $texture_mean
 
 ##### 一元线性回归
 ```r
-('<-' (x, 1:10))
+(1:10 -> x)
 #=> [1]  1  2  3  4  5  6  7  8  9 10
-('<-' (y, ('+' (x, (rnorm (10, 0, 1))))))
+(('+' (x, (rnorm (10, 0, 1)))) -> y)
 #=> 
 # [1] 0.4150231 1.9585418 1.7173466 3.2213521 4.0119051 4.8112887 5.7995432
 # [8] 7.1943800 9.3619532 9.2997215
-('<-' (fit, (lm (y ~ x))))
+((lm (y ~ x)) -> fit)
 #=>
 #  Call:
 #  lm(formula = y ~ x)
@@ -425,7 +424,7 @@ $texture_mean
 ```r
 (library (class))
 
-('<-' (wbcd_test_pred, (knn (train=wbcd_train, test=wbcd_test, cl=wbcd_train_labels, k=21))))
+((knn (train=wbcd_train, test=wbcd_test, cl=wbcd_train_labels, k=21)) -> wbcd_test_pred)
 # knn返回wbcd_test_pred因子向量,为测试数据集中的每一个案例返回一个预测标签
 
 # 评估模型的性能
@@ -504,17 +503,17 @@ $texture_mean
 
 ```r
 (library (C50))
-('<-' (credit_model, (C5.0 ((credit_train [-17]), credit_train$default))))
-('<-' (credit_pred, (predict (credit_model, credit_test))))
+((C5.0 ((credit_train [-17]), credit_train$default)) -> credit_model)
+((predict (credit_model, credit_test)) -> credit_pred)
 (CrossTable (credit_test$default, credit_pred, prop.chisq=FALSE, prop.c=FALSE, prop.r=FALSE, dnn=(c ('actual default', 'predicted default'))))
 ```
 ##### [neuralnet](./neuralnet.R)
 ```r
 (library (neuralnet))
 ## neuralnet函数用于数值预测的神经网络: 多种原料=>强度预测, 用多层前馈神经网络
-('<-' (concrete_model, (neuralnet (strength ~ cement + slag + ash + water + superplastic + coarseagg + fineagg + age, data=concrete_train))))
+((neuralnet (strength ~ cement + slag + ash + water + superplastic + coarseagg + fineagg + age, data=concrete_train)) -> concrete_model)
 ## 预测强度
-('<-' (predicted_strength, (model_results$net.result)))
+((model_results$net.result) -> predicted_strength)
 ## cor用来获取两个数值向量之间的相关性
 (cor (predicted_strength, concrete_test$strength))
 ##              [,1]
@@ -524,9 +523,9 @@ $texture_mean
 ```r
 (library (kernlab))
 ## 字母分类器: 超平面分割面=>两类数据空间化(填充,龚起来)=>分割完了再降维
-('<-' (letter_classifier, (ksvm (letter ~ ., data=letters_train, kernel="vanilladot"))))
+((ksvm (letter ~ ., data=letters_train, kernel="vanilladot")) -> letter_classifier)
 ## 评估模型的性能: 字母的预测
-('<-' (letter_predictions, (predict (letter_classifier, letters_test))))
+((predict (letter_classifier, letters_test)) -> letter_predictions)
 
 ## 预测的值和真实的值进行比较=>
 (round (('*' ((prop.table (table ('==' (letter_predictions, letters_test$letter)))) ,100)), digits=1))
@@ -537,11 +536,11 @@ $texture_mean
 ##### [kmeans](./kmeans.R)
 ```r
 ## 只是取36个特征:
-('<-' (interests, (teens [5:40])))
-('<-' (interests_z, (as.data.frame (lapply (interests, scale)))))
+((teens [5:40]) -> interests)
+((as.data.frame (lapply (interests, scale))) -> interests_z)
 
 ## k均值聚类:
-('<-' (teen_clusters, (kmeans (interests_z, 5))))
+((kmeans (interests_z, 5)) -> teen_clusters)
 
 ## 看到分出来5类,各自的数量如下
 (teen_clusters$size)
@@ -562,7 +561,7 @@ $texture_mean
 (library (tm))
 (library (magrittr))
 
-('<-' (getTermMatrix, (function (text)
+((function (text)
     (text
         %>% (function (st) (Corpus ((VectorSource (st)))))
         %>% (function (cor) (tm_map (cor, (content_transformer (tolower)))))
@@ -571,7 +570,7 @@ $texture_mean
         %>% (function (cor) (tm_map (cor, removeWords, (c (stopwords("SMART"), "thy", "thou", "thee", "the", "and", "but")))))
         %>% (function (cor) (TermDocumentMatrix (cor, control=(list (minWordLength=1)))))
         %>% (function (mydtm) (as.matrix (mydtm)))
-        %>% (function (m) (sort ((rowSums (m)), decreasing=TRUE))) ))))
+        %>% (function (m) (sort ((rowSums (m)), decreasing=TRUE))) )) -> getTermMatrix)
 
 (getTermMatrix ("The Clojure Programming Language. Clojure is a dynamic, general-purpose programming")) #=>
 ##        clojure    programming        dynamic generalpurpose       language
@@ -618,7 +617,7 @@ $texture_mean
 * [Boruta Madelon](./Boruta_Madelon.R)
 ```r
 (library (Boruta))
-('<-' (Boruta.mod, (Boruta (Classes~., data=(train [,-348])))))
+((Boruta (Classes~., data=(train [,-348]))) -> Boruta.mod)
 (png ("Boruta_selection.png", width=4000,height=1600))
 (plot (Boruta.mod, las="2"))
 (dev.off ())
