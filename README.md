@@ -40,7 +40,7 @@
     - [kmeans](#kmeans)
     - [R宏%>%](#r宏)
     - [特征选择Boruta](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Boruta)
-    - [分布语义模型wordspace](%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
+    - [分布语义模型wordspace](#%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
     - [散点图pairs](#%e6%95%a3%e7%82%b9%e5%9b%bepairs)
