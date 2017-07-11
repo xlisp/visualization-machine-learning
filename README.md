@@ -1,6 +1,10 @@
 
 ### R函数式的列表(Lisp表达方式)
 
+#### Emacs的Repl开发体验`C-x C-e`, 爽到根本停不下来!
+
+![](./emacs_repl_code.gif)
+
 - [R函数式的列表(Lisp表达方式)](#r%E5%87%BD%E6%95%B0%E5%BC%8F%E7%9A%84%E5%88%97%E8%A1%A8lisp%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F)
     - [Emacs `C-x C-e` 执行R的S表达式](#emacs-c-x-c-e-%E6%89%A7%E8%A1%8Cr%E7%9A%84s%E8%A1%A8%E8%BE%BE%E5%BC%8F)
     - [lambda](#lambda)
@@ -37,6 +41,9 @@
     - [R宏%>%](#r宏)
     - [特征选择Boruta](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Boruta)
     - [分布语义模型wordspace](%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
+    - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
+    - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
+    - [散点图pairs](#%e6%95%a3%e7%82%b9%e5%9b%bepairs)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -72,6 +79,17 @@
 (library (magrittr))
 ((c (1, 2, 3)) %>% (function (x) (Map ((function (x) ('+' (x, 100))), x)))
     %>% (function (x) (Reduce ('+', x)) ) ) #=> [1] 306
+
+## let复用前面的变量定义
+((function (x, y=('*' (x, 2))) y) (100)) #=> [1] 200
+## 综合例子: function里面的默认参数,当let来用,可以用前面定义的变量(x,y=x),但是不能覆盖前面定义的变量(x,x=1)
+((function (y, x, mx=(as.matrix (x)), cx=(cbind (Intercept=1, mx)))
+    ('%*%' (('%*%' ((solve ('%*%' ((t (cx)), cx))), (t (cx)))), y)) ) -> reg)
+
+(reg (y=(launch$distress_ct), x=(launch [3])))
+##                    [,1]
+## Intercept    4.30158730
+## temperature -0.05746032
 ```
 ##### if
 ```r
@@ -81,7 +99,7 @@
 ```r
 ('plot' (('rnorm' (10)), ('rnorm' (10))))
 # 加了额外的参数
-('plot' (('rnorm' (10)), ('rnorm' (10)), ('=' (type, 'b'))))
+('plot' (('rnorm' (10)), ('rnorm' (10)), type='b'))
 ```
 ##### Reduce
 ```r
@@ -110,18 +128,18 @@
 # 如果本来是前缀的表达方式的函数,引号'c'可以省略,function除外必须加引号
 (c (1, 1, 3)) #=> [1] 1 1 3
 ((c (1, 8, 3)) [2]) #=> [1] 8
-('=' (defvar, (c ("A", "B", "C")))) #=> [1] "A" "B" "C"
+((c ("A", "B", "C")) -> defvar) #=> [1] "A" "B" "C"
 ```
 ##### factor
 ```r
 # levels是不能重复出现的
-(factor ((c ("1", "1", "3", "11", "9", "8")), ('=' (levels, (c ("A", "B", "C", "AA", "BB", "CC"))))))
+(factor ((c ("1", "1", "3", "11", "9", "8")), levels=(c ("A", "B", "C", "AA", "BB", "CC"))))
 #=>
 [1] <NA> <NA> <NA> <NA> <NA> <NA>
 Levels: A B C AA BB CC
 
 ### 替换一下数据名称,把B替换为"良性肿块" ==>> 因子的意义: 赋予跟多的标签的意义
-('<-' (wbcd$diagnosis, (factor (wbcd$diagnosis, levels=(c ("B", "M")), labels=(c ("良性肿块", "恶性肿块"))))))
+((factor (wbcd$diagnosis, levels=(c ("B", "M")), labels=(c ("良性肿块", "恶性肿块")))) -> wbcd$diagnosis)
 #=>
     diagnosis radius_mean texture_mean perimeter_mean area_mean smoothness_mean
 1    恶性肿块      17.990        10.38         122.80    1001.0         0.11840
@@ -158,12 +176,11 @@ Levels: A B C AA BB CC
 ##### data.frame (函数内赋值参数用: x=123)
 ```r
 ## 2d: 2维
-('=' (pt_data,
-  (data.frame (
-    ID=(c (11,12,13)),
-    Name=(c ("Devin","Edward","Wenli")),
-    Gender=(c ("M","M","F")),
-    Birthdate=(c ("1984-12-29","1983-5-6","1986-8-8"))))))
+((data.frame (
+   ID=(c (11,12,13)),
+   Name=(c ("Devin","Edward","Wenli")),
+   Gender=(c ("M","M","F")),
+   Birthdate=(c ("1984-12-29","1983-5-6","1986-8-8")))) -> pt_data)
 #=>
   ID   Name Gender  Birthdate
 1 11  Devin      M 1984-12-29
@@ -226,6 +243,13 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 #=> 单行矩阵
      [,1] [,2] [,3] [,4]
 [1,]    1    2    4    3
+
+(cbind ((c (1, 1, 1)), (c (1, 0, 1)), (c (0, 1, 0)))) 
+#=> 拼接矩阵
+##      [,1] [,2] [,3]
+## [1,]    1    1    0
+## [2,]    1    0    1
+## [3,]    1    1    0
 
 ## =========== 矩阵线性代数
 ## 矩阵转置: 如果参数里面只有一个参数时,并且是函数调用的时候,可以省略参数标记的一对括号,如下=>
@@ -292,7 +316,7 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 ```
 ##### csv 表格数据文件
 ```r
-(write.csv (pt_data, ('=' (file, "my-data-frame.csv"))))
+(write.csv (pt_data, file="my-data-frame.csv"))
 # cat my-data-frame.csv #=>
 "","ID","Name","Gender","Birthdate"
 "1",11,"Devin","M","1984-12-29"
@@ -307,7 +331,7 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 3 3 13  Wenli      F   1986-8-8
 
 # => read from web:
-('<-' (wbcd, (read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE))))
+((read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE)) -> wbcd)
 ```
 
 ##### table记录频数的方法(每一类)
@@ -340,10 +364,9 @@ Max.   :28.110   Max.   :2501.0   Max.   :0.16340
 ```
 ##### min & max 标准化数值型数据,以便确保在标准的范围内
 ```r
-('<-' (normalize,
-  (function (x)
+((function (x)
     ('/' (('-' (x, (min (x)))),
-      ('-' ((max (x)), (min (x)))))))))
+      ('-' ((max (x)), (min (x))))))) -> normalize)
       
 (normalize ((c (10, 20, 30, 40, 50)))) #=>  [1] 0.00 0.25 0.50 0.75 1.00
 ```
@@ -358,7 +381,7 @@ $texture_mean
   [1] 0.02265810 0.27257355 0.39026040 0.36083869 0.15657761 0.20257017
 ...
 
-('<-' (wbcd_n, (as.data.frame ((lapply ((wbcd [2:31]), normalize)))))) 
+((as.data.frame ((lapply ((wbcd [2:31]), normalize)))) -> wbcd_n)
 #=> list列表(可以不同类型): 重新变成data.frame
      radius_mean texture_mean perimeter_mean  area_mean smoothness_mean
  1    0.52103744   0.02265810     0.54598853 0.36373277      0.59375282
@@ -368,13 +391,13 @@ $texture_mean
 
 ##### 一元线性回归
 ```r
-('<-' (x, 1:10))
+(1:10 -> x)
 #=> [1]  1  2  3  4  5  6  7  8  9 10
-('<-' (y, ('+' (x, (rnorm (10, 0, 1))))))
+(('+' (x, (rnorm (10, 0, 1)))) -> y)
 #=> 
 # [1] 0.4150231 1.9585418 1.7173466 3.2213521 4.0119051 4.8112887 5.7995432
 # [8] 7.1943800 9.3619532 9.2997215
-('<-' (fit, (lm (y ~ x))))
+((lm (y ~ x)) -> fit)
 #=>
 #  Call:
 #  lm(formula = y ~ x)
@@ -409,7 +432,7 @@ $texture_mean
 ```r
 (library (class))
 
-('<-' (wbcd_test_pred, (knn (train=wbcd_train, test=wbcd_test, cl=wbcd_train_labels, k=21))))
+((knn (train=wbcd_train, test=wbcd_test, cl=wbcd_train_labels, k=21)) -> wbcd_test_pred)
 # knn返回wbcd_test_pred因子向量,为测试数据集中的每一个案例返回一个预测标签
 
 # 评估模型的性能
@@ -425,28 +448,14 @@ $texture_mean
 ```r
 (str (credit))
 #=>
-'data.frame':   1000 obs. of  21 variables:
- $ checking_balance    : Factor w/ 4 levels "< 0 DM","> 200 DM",..: 1 3 4 1 1 4 4 3 4 3 ...
- $ months_loan_duration: int  6 48 12 42 24 36 24 36 12 30 ...
- $ credit_history      : Factor w/ 5 levels "critical","delayed",..: 1 5 1 5 2 5 5 5 5 1 ...
- $ purpose             : Factor w/ 10 levels "business","car (new)",..: 8 8 5 6 2 5 6 3 8 2 ...
- $ amount              : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...
- $ savings_balance     : Factor w/ 5 levels "< 100 DM","> 1000 DM",..: 5 1 1 1 1 5 4 1 2 1 ...
- $ employment_length   : Factor w/ 5 levels "> 7 yrs","0 - 1 yrs",..: 1 3 4 4 3 3 1 3 4 5 ...
- $ installment_rate    : int  4 2 2 2 3 2 3 2 2 4 ...
- $ personal_status     : Factor w/ 4 levels "divorced male",..: 4 2 4 4 4 4 4 4 1 3 ...
- $ other_debtors       : Factor w/ 3 levels "co-applicant",..: 3 3 3 2 3 3 3 3 3 3 ...
- $ residence_history   : int  4 2 3 4 4 4 4 2 4 2 ...
- $ property            : Factor w/ 4 levels "building society savings",..: 3 3 3 1 4 4 1 2 3 2 ...
- $ age                 : int  67 22 49 45 53 35 53 35 61 28 ...
- $ installment_plan    : Factor w/ 3 levels "bank","none",..: 2 2 2 2 2 2 2 2 2 2 ...
- $ housing             : Factor w/ 3 levels "for free","own",..: 2 2 2 1 1 1 2 3 2 2 ...
- $ existing_credits    : int  2 1 1 1 2 1 1 1 1 2 ...
- $ default             : int  1 2 1 1 2 1 1 1 1 2 ...
- $ dependents          : int  1 1 2 2 2 2 1 1 1 1 ...
- $ telephone           : Factor w/ 2 levels "none","yes": 2 1 1 1 1 2 1 2 1 1 ...
- $ foreign_worker      : Factor w/ 2 levels "no","yes": 2 2 2 2 2 2 2 2 2 2 ...
- $ job                 : Factor w/ 4 levels "mangement self-employed",..: 2 2 4 2 2 4 2 1 4 1 ...
+## 'data.frame':   1000 obs. of  21 variables:
+##  $ checking_balance    : Factor w/ 4 levels "< 0 DM","> 200 DM",..: 1 3 4 1 1 4 4 3 4 3 ...
+##  $ months_loan_duration: int  6 48 12 42 24 36 24 36 12 30 ...
+##  $ credit_history      : Factor w/ 5 levels "critical","delayed",..: 1 5 1 5 2 5 5 5 5 1 ...
+##  $ purpose             : Factor w/ 10 levels "business","car (new)",..: 8 8 5 6 2 5 6 3 8 2 ...
+##  $ amount              : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...
+##  ... ...
+##  $ job                 : Factor w/ 4 levels "mangement self-employed",..: 2 2 4 2 2 4 2 1 4 1 ...
 ```
 ##### summary总结某列数据的Min/Max,Median,Mean等
 
@@ -488,17 +497,17 @@ $texture_mean
 
 ```r
 (library (C50))
-('<-' (credit_model, (C5.0 ((credit_train [-17]), credit_train$default))))
-('<-' (credit_pred, (predict (credit_model, credit_test))))
+((C5.0 ((credit_train [-17]), credit_train$default)) -> credit_model)
+((predict (credit_model, credit_test)) -> credit_pred)
 (CrossTable (credit_test$default, credit_pred, prop.chisq=FALSE, prop.c=FALSE, prop.r=FALSE, dnn=(c ('actual default', 'predicted default'))))
 ```
 ##### [neuralnet](./neuralnet.R)
 ```r
 (library (neuralnet))
 ## neuralnet函数用于数值预测的神经网络: 多种原料=>强度预测, 用多层前馈神经网络
-('<-' (concrete_model, (neuralnet (strength ~ cement + slag + ash + water + superplastic + coarseagg + fineagg + age, data=concrete_train))))
+((neuralnet (strength ~ cement + slag + ash + water + superplastic + coarseagg + fineagg + age, data=concrete_train)) -> concrete_model)
 ## 预测强度
-('<-' (predicted_strength, (model_results$net.result)))
+((model_results$net.result) -> predicted_strength)
 ## cor用来获取两个数值向量之间的相关性
 (cor (predicted_strength, concrete_test$strength))
 ##              [,1]
@@ -508,9 +517,9 @@ $texture_mean
 ```r
 (library (kernlab))
 ## 字母分类器: 超平面分割面=>两类数据空间化(填充,龚起来)=>分割完了再降维
-('<-' (letter_classifier, (ksvm (letter ~ ., data=letters_train, kernel="vanilladot"))))
+((ksvm (letter ~ ., data=letters_train, kernel="vanilladot")) -> letter_classifier)
 ## 评估模型的性能: 字母的预测
-('<-' (letter_predictions, (predict (letter_classifier, letters_test))))
+((predict (letter_classifier, letters_test)) -> letter_predictions)
 
 ## 预测的值和真实的值进行比较=>
 (round (('*' ((prop.table (table ('==' (letter_predictions, letters_test$letter)))) ,100)), digits=1))
@@ -521,11 +530,11 @@ $texture_mean
 ##### [kmeans](./kmeans.R)
 ```r
 ## 只是取36个特征:
-('<-' (interests, (teens [5:40])))
-('<-' (interests_z, (as.data.frame (lapply (interests, scale)))))
+((teens [5:40]) -> interests)
+((as.data.frame (lapply (interests, scale))) -> interests_z)
 
 ## k均值聚类:
-('<-' (teen_clusters, (kmeans (interests_z, 5))))
+((kmeans (interests_z, 5)) -> teen_clusters)
 
 ## 看到分出来5类,各自的数量如下
 (teen_clusters$size)
@@ -546,7 +555,7 @@ $texture_mean
 (library (tm))
 (library (magrittr))
 
-('<-' (getTermMatrix, (function (text)
+((function (text)
     (text
         %>% (function (st) (Corpus ((VectorSource (st)))))
         %>% (function (cor) (tm_map (cor, (content_transformer (tolower)))))
@@ -555,7 +564,7 @@ $texture_mean
         %>% (function (cor) (tm_map (cor, removeWords, (c (stopwords("SMART"), "thy", "thou", "thee", "the", "and", "but")))))
         %>% (function (cor) (TermDocumentMatrix (cor, control=(list (minWordLength=1)))))
         %>% (function (mydtm) (as.matrix (mydtm)))
-        %>% (function (m) (sort ((rowSums (m)), decreasing=TRUE))) ))))
+        %>% (function (m) (sort ((rowSums (m)), decreasing=TRUE))) )) -> getTermMatrix)
 
 (getTermMatrix ("The Clojure Programming Language. Clojure is a dynamic, general-purpose programming")) #=>
 ##        clojure    programming        dynamic generalpurpose       language
@@ -566,12 +575,43 @@ $texture_mean
 ##### [regression](./regression.R)
 
 ```r
+## 3.1 探索特征之间的关系---相关系数矩阵
+(cor (insurance [(c ("age", "bmi", "children", "charges"))]))
+##                age       bmi   children    charges
+## age      1.0000000 0.1092719 0.04246900 0.29900819
+## bmi      0.1092719 1.0000000 0.01275890 0.19834097
+## children 0.0424690 0.0127589 1.00000000 0.06799823
+## charges  0.2990082 0.1983410 0.06799823 1.00000000
 
+## 3.2 可视化特征之间的关系------散点图矩阵
+## (pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
+(library (psych)) ## pairs.panels可以显示拟合的线
+## (pairs.panels (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_panels_insurance.png
+
+## 3.3 基于数据训练模型 --------------
+((lm (charges ~ age + children + bmi + sex + smoker + region, data=insurance)) -> ins_model)
+## Call:
+## lm(formula = charges ~ age + children + bmi + sex + smoker +
+##     region, data = insurance)
+##
+## Coefficients:
+##     (Intercept)              age         children              bmi
+##        -11938.5            256.9            475.5            339.2
+##         sexmale        smokeryes  regionnorthwest  regionsoutheast
+##          -131.3          23848.5           -353.0          -1035.0
+## regionsouthwest
+##          -960.1
+##
+
+## 3.4 评估模型的性能
+(summary (ins_model))
 ```
 ##### [特征选择Boruta](./Boruta_Feature_Selection.R)
+* [Boruta Ozone, form library mlbench's data](./Boruta_Ozone.R)
+* [Boruta Madelon](./Boruta_Madelon.R)
 ```r
 (library (Boruta))
-('<-' (Boruta.mod, (Boruta (Classes~., data=(train [,-348])))))
+((Boruta (Classes~., data=(train [,-348]))) -> Boruta.mod)
 (png ("Boruta_selection.png", width=4000,height=1600))
 (plot (Boruta.mod, las="2"))
 (dev.off ())
@@ -642,4 +682,45 @@ $texture_mean
 (plot (mds$points, pch=20, col="red"))
 ## 更新图画的内容
 (text (mds$points, labels=nn.terms, pos=3)) #=>> neighbourhood_graph_for_book.png
+##### [特征选择Caret](caret_churn_importance.R)
+[importance绘图](./fs_churn_importance_by_caret.png)
+```r
+(library (caret))
+(library (rpart))
+(library (e1071))
+((trainControl (method="repeatedcv", number=10,repeats=3)) -> control)
+((train (churn~., data=trainset, method="rpart",preProcess="scale", trControl=control)) -> model)
+## 2315 samples
+##   16 predictor
+##    2 classes: 'yes', 'no'
+## Pre-processing: scaled (16)
+## Resampling: Cross-Validated (10 fold, repeated 3 times)
+## Summary of sample sizes: 2084, 2084, 2083, 2083, 2082, 2084, ...
+## Resampling results across tuning parameters:
+##   cp          Accuracy   Kappa
+##   0.05555556  0.8995112  0.5174059
+##   0.07456140  0.8593389  0.2124126
+##   0.07602339  0.8567440  0.1898221
+## Accuracy was used to select the optimal model using  the largest value.
+## The final value used for the model was cp = 0.05555556.
+##
+
+((varImp (model, scale=FALSE)) -> importance)
+## rpart variable importance
+##                               Overall
+## number_customer_service_calls 116.015
+## total_day_minutes             106.988
+## total_day_charge              100.648
+## ...
+
+(plot (importance)) ##=> fs_churn_importance_by_caret.png
+
+```
+##### 直方图hist
+```r
+(hist (insurance$charges)) #==>> charges_hist.png
+```
+##### 散点图pairs
+```r
+(pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
 ```
