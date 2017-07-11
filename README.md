@@ -36,6 +36,7 @@
     - [kmeans](#kmeans)
     - [R宏%>%](#r宏)
     - [特征选择Boruta](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Boruta)
+    - [分布语义模型wordspace](%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -581,4 +582,64 @@ $texture_mean
  (function (data) (select (data, zakończyć,zdjęcie,należeć,naprawdę,polski,kobieta,sierpień,zobaczyć,dotyczyć,szczęście,mężczyzna,europejski)))
     -> train_Boruta)
 (save (train_Boruta, file="train_Boruta.rda"))
+```
+##### [分布语义模型wordspace](./distributional_semantics_with_wordspace.R)
+
+```r
+(library (wordspace))
+((subset (DSM_VerbNounTriples_BNC, mode=="written")) -> Triples)
+(str (Triples))
+## 'data.frame':        236043 obs. of  5 variables:
+##  $ noun: chr  "aa" "aa" "aa" "abandonment" ...
+##  $ rel : chr  "subj" "subj" "subj" "subj" ...
+##  $ verb: chr  "be" "have" "say" "be" ...
+##  $ f   : num  7 5 12 14 45 13 6 23 5 7 ...
+##  $ mode: Factor w/ 2 levels "spoken","written": 2 2 2 2 2 2 2 2 2 2 ...
+##
+
+((dsm (target=Triples$noun, feature=Triples$verb, score=Triples$f, raw.freq=TRUE, sort=TRUE)) -> VObj)
+## Distributional Semantic Model with 10940 rows x 3149 columns
+## * raw co-occurrence matrix M available
+##   - sparse matrix with 199.2k / 34.5M nonzero entries (fill rate = 0.58%)
+##   - in canonical format
+##   - known to be non-negative
+##   - sample size of underlying corpus: 5010.1k tokens
+##
+
+((dsm.projection (VObj, method="rsvd", n=300, oversampling=4)) -> VObj300)
+##                         rsvd1         rsvd2         rsvd3         rsvd4
+## aa               -0.401869162 -5.715081e-01 -8.639994e-04  5.568812e-02
+## abandonment      -0.164028349  7.388197e-02 -7.621238e-02 -6.218919e-02
+## abbey            -0.501348714 -1.529309e-01  1.568900e-01 -3.602057e-02
+## abbot            -0.556840969 -3.608457e-01  4.297981e-02 -1.349133e-02
+## ability          -0.136815703  9.964295e-02 -1.508660e-01  1.483469e-01
+## abnormality      -0.322822789  9.148822e-02  2.325598e-02  5.194156e-02
+
+## correlation 相关性 with RG65 ratings =>>>>
+## distributional model 分布模型 => distributional semantic model: 分布语义模型
+(plot (eval.similarity.correlation (RG65, VObj300, format="HW", details=TRUE))) #=> similarity_correlation.png
+
+((dist.matrix (VObj300, terms=nn.terms, method="cosine")) -> nn.dist)
+##               book    paper  article     poem    works magazine    novel
+## book       0.00000 45.07368 51.91946 53.48004 53.91710 53.94898 54.40499
+## paper     45.07368  0.00000 49.58058 59.41401 63.39080 58.39195 59.63905
+## article   51.91946 49.58058  0.00000 50.85024 63.56611 63.34272 56.34124
+## poem      53.48004 59.41401 50.85024  0.00000 66.11456 64.23977 39.68612
+## works     53.91710 63.39080 63.56611 66.11456  0.00000 64.21008 65.37230
+
+(library (MASS))
+((isoMDS (nn.dist, p=2)) -> mds)
+## initial  value 31.571861
+## iter   5 value 27.057916
+## final  value 23.256689
+## converged
+## $points
+##                 [,1]        [,2]
+## book       -2.887478  -1.8723470
+## paper     -11.206053  -6.0067030
+
+## plot是画板加画图
+(plot (mds$points, pch=20, col="red"))
+## 更新图画的内容
+(text (mds$points, labels=nn.terms, pos=3)) #=>> neighbourhood_graph_for_book.png
 ```
