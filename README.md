@@ -40,6 +40,7 @@
     - [kmeans](#kmeans)
     - [R宏%>%](#r宏)
     - [特征选择Boruta](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Boruta)
+    - [特征筛选FSelector](#%e7%89%b9%e5%be%81%e7%ad%9b%e9%80%89FSelector)
     - [分布语义模型wordspace](#%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
@@ -715,6 +716,17 @@ $texture_mean
 
 (plot (importance)) ##=> fs_churn_importance_by_caret.png
 
+```
+##### [特征筛选FSelector](./FSelector_feature_selection.R)
+```r
+(library (FSelector))
+## 计算每个属性的权值
+((random.forest.importance (churn~., trainset, importance.type=1)) -> weights)
+## 获取权重最高的5个属性
+((cutoff.k (weights, 5)) -> subset)
+## [1] "number_customer_service_calls" "international_plan"
+## [3] "total_day_charge"              "total_day_minutes"
+## [5] "total_intl_calls"
 ```
 ##### 直方图hist
 ```r
