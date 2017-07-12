@@ -45,6 +45,7 @@
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
     - [散点图pairs](#%e6%95%a3%e7%82%b9%e5%9b%bepairs)
+    - [bmp降维svd](#bmp%e9%99%8d%e7%bb%b4svd)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
 * `el-get-install ESS `
@@ -735,4 +736,23 @@ $texture_mean
 ##### 散点图pairs
 ```r
 (pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
+```
+##### bmp降维svd
+```r
+(library (bmp))
+# 将图片导入为数值矩阵
+((read.bmp ("lena512.bmp")) -> lenna)
+## 进行SVD操作,保存到新的变量lenna.svd, 绘制方差的百分比图
+((svd (scale (lenna))) -> lenna.svd)
+(plot (('/' (lenna.svd$d^2, (sum (lenna.svd$d^2)))), type="l", xlab=" Singular vector", ylab = "Variance explained")) #=> variance_percentage.png
+## 找到能解释90%以上变量的奇异向量数据点: 90%相似度需要27个奇异向量才能达到
+(min (which ('>' ((cumsum ('/' (lenna.svd$d^2, (sum (lenna.svd$d^2))))), 0.9)))) ##=>  [1] 27
+
+## 矩阵相乘, u v d
+((function (dim,
+            u=(as.matrix (lenna.svd$u[, 1:dim])),
+            v=(as.matrix (lenna.svd$v[, 1:dim])),
+            d=(as.matrix ((diag (lenna.svd$d)) [1:dim, 1:dim])))
+    (image ('%*%' (('%*%' (u, d)), (t (v)))) ) ) -> lenna_compression)
+(lenna_compression (27))
 ```
