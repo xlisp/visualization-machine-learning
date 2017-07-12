@@ -684,8 +684,11 @@ $texture_mean
 (plot (mds$points, pch=20, col="red"))
 ## 更新图画的内容
 (text (mds$points, labels=nn.terms, pos=3)) #=>> neighbourhood_graph_for_book.png
+```
+
 ##### [特征选择Caret](caret_churn_importance.R)
 [importance绘图](./fs_churn_importance_by_caret.png)
+
 ```r
 (library (caret))
 (library (rpart))
@@ -718,7 +721,9 @@ $texture_mean
 (plot (importance)) ##=> fs_churn_importance_by_caret.png
 
 ```
+
 ##### [特征筛选FSelector](./FSelector_feature_selection.R)
+
 ```r
 (library (FSelector))
 ## 计算每个属性的权值
