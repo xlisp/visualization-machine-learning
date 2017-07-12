@@ -742,7 +742,7 @@ $texture_mean
 ```r
 (pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
 ```
-##### bmp降维svd
+##### [bmp降维svd](./svd_compression_image.R)
 ```r
 (library (bmp))
 # 将图片导入为数值矩阵
