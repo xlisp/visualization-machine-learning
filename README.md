@@ -33,7 +33,7 @@
     - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
     - [散点图pairs](#%e6%95%a3%e7%82%b9%e5%9b%bepairs)
 
-- [R统计学&机器学习](#R%E7%BB%9F%E8%AE%A1%E5%AD%A6&%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0)
+- [R统计学&机器学习](#r统计学机器学习)
     - [一元线性回归](#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92)
     - [knn](#knn)
     - [regression](#regression)
@@ -458,7 +458,7 @@ $texture_mean
 (pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
 ```
 
-## R统计学&机器学习
+### R统计学&机器学习
 
 ##### 一元线性回归
 ```r
