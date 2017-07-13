@@ -18,33 +18,35 @@
     - [factor](#factor)
     - [list](#list)
     - [array](#array)
-    - [data.frame (函数内赋值参数用: x=123)](#dataframe-%E5%87%BD%E6%95%B0%E5%86%85%E8%B5%8B%E5%80%BC%E5%8F%82%E6%95%B0%E7%94%A8-x123)
-    - [matrix (函数内赋值参数用: x=123)](#matrix-%E5%87%BD%E6%95%B0%E5%86%85%E8%B5%8B%E5%80%BC%E5%8F%82%E6%95%B0%E7%94%A8-x123)
+    - [data.frame](#data.frame)
+    - [matrix](#matrix)
     - [csv 表格数据文件](#csv-%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6)
     - [table记录频数的方法(每一类)](#table%E8%AE%B0%E5%BD%95%E9%A2%91%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95%E6%AF%8F%E4%B8%80%E7%B1%BB)
     - [round & prop.table & table计算频率百分比](#round--proptable--table%E8%AE%A1%E7%AE%97%E9%A2%91%E7%8E%87%E7%99%BE%E5%88%86%E6%AF%94)
     - [summary 总结数据特征,极值, 细胞核的3种特征: 最小, 最大, 平均值,中间值等](#summary-%E6%80%BB%E7%BB%93%E6%95%B0%E6%8D%AE%E7%89%B9%E5%BE%81%E6%9E%81%E5%80%BC-%E7%BB%86%E8%83%9E%E6%A0%B8%E7%9A%843%E7%A7%8D%E7%89%B9%E5%BE%81-%E6%9C%80%E5%B0%8F-%E6%9C%80%E5%A4%A7-%E5%B9%B3%E5%9D%87%E5%80%BC%E4%B8%AD%E9%97%B4%E5%80%BC%E7%AD%89)
     - [min & max 标准化数值型数据,以便确保在标准的范围内](#min--max-%E6%A0%87%E5%87%86%E5%8C%96%E6%95%B0%E5%80%BC%E5%9E%8B%E6%95%B0%E6%8D%AE%E4%BB%A5%E4%BE%BF%E7%A1%AE%E4%BF%9D%E5%9C%A8%E6%A0%87%E5%87%86%E7%9A%84%E8%8C%83%E5%9B%B4%E5%86%85)
     - [lapply表格数据每一个数据单元都执行某个操作: 相当于map了,结果变成了list列表](#lapply%E8%A1%A8%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%AF%8F%E4%B8%80%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%8D%95%E5%85%83%E9%83%BD%E6%89%A7%E8%A1%8C%E6%9F%90%E4%B8%AA%E6%93%8D%E4%BD%9C-%E7%9B%B8%E5%BD%93%E4%BA%8Emap%E4%BA%86%E7%BB%93%E6%9E%9C%E5%8F%98%E6%88%90%E4%BA%86list%E5%88%97%E8%A1%A8)
+    - [str 查看dataframe特征 & 类型 & 总数, 数据轮廓](#str-%E6%9F%A5%E7%9C%8Bdataframe%E7%89%B9%E5%BE%81--%E7%B1%BB%E5%9E%8B--%E6%80%BB%E6%95%B0-%E6%95%B0%E6%8D%AE%E8%BD%AE%E5%BB%93)
+    - [summary总结某列数据的Min/Max,Median,Mean等](#summary%E6%80%BB%E7%BB%93%E6%9F%90%E5%88%97%E6%95%B0%E6%8D%AE%E7%9A%84minmaxmedianmean%E7%AD%89)
+    - [head看数据前几个值,tail-log](#head%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%89%8D%E5%87%A0%E4%B8%AA%E5%80%BCtail-log)
+    - [R宏%>%](#r宏)
+    - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
+    - [散点图pairs](#%e6%95%a3%e7%82%b9%e5%9b%bepairs)
+
+- [R统计学&机器学习](#R%E7%BB%9F%E8%AE%A1%E5%AD%A6&%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0)
     - [一元线性回归](#%E4%B8%80%E5%85%83%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92)
     - [knn](#knn)
     - [regression](#regression)
     - [bayes](#bayes)
-    - [str 查看dataframe特征 & 类型 & 总数, 数据轮廓](#str-%E6%9F%A5%E7%9C%8Bdataframe%E7%89%B9%E5%BE%81--%E7%B1%BB%E5%9E%8B--%E6%80%BB%E6%95%B0-%E6%95%B0%E6%8D%AE%E8%BD%AE%E5%BB%93)
-    - [summary总结某列数据的Min/Max,Median,Mean等](#summary%E6%80%BB%E7%BB%93%E6%9F%90%E5%88%97%E6%95%B0%E6%8D%AE%E7%9A%84minmaxmedianmean%E7%AD%89)
-    - [head看数据前几个值,tail-log](#head%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%89%8D%E5%87%A0%E4%B8%AA%E5%80%BCtail-log)
     - [评估模型的性能: gmodels/CrossTable](#%E8%AF%84%E4%BC%B0%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%80%A7%E8%83%BD-gmodelscrosstable)
     - [c50决策树](#c50%E5%86%B3%E7%AD%96%E6%A0%91)
     - [neuralnet](#neuralnet)
     - [svm](#svm)
     - [kmeans](#kmeans)
-    - [R宏%>%](#r宏)
     - [特征选择Boruta](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Boruta)
     - [特征筛选FSelector](#%e7%89%b9%e5%be%81%e7%ad%9b%e9%80%89FSelector)
     - [分布语义模型wordspace](#%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
-    - [直方图hist](#%e7%9b%b4%e6%96%b9%e5%9b%behist)
-    - [散点图pairs](#%e6%95%a3%e7%82%b9%e5%9b%bepairs)
     - [bmp降维svd](#bmp%e9%99%8d%e7%bb%b4svd)
 
 ##### Emacs `C-x C-e` 执行R的S表达式
@@ -175,8 +177,9 @@ Levels: A B C AA BB CC
 ## [2,]    8   10   12
 ##
 ```
-##### data.frame (函数内赋值参数用: x=123)
+##### data.frame
 ```r
+# (函数内赋值参数用: x=123)
 ## 2d: 2维
 ((data.frame (
    ID=(c (11,12,13)),
@@ -217,8 +220,9 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 2 Edward      M
 3  Wenli      F
 ```
-##### matrix (函数内赋值参数用: x=123)
+##### matrix
 ```r
+# (函数内赋值参数用: x=123)
 ## 2d: 2维
 (matrix ((c (1, 2, 1, 3, 5, 8)), nrow=2)) 
 #=>  2行->3列
