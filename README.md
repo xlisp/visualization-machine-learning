@@ -394,6 +394,71 @@ $texture_mean
  2    0.64314449   0.27257355     0.61578329 0.50159067      0.28987993
 
 ```
+##### str 查看dataframe特征 & 类型 & 总数, 数据轮廓
+```r
+(str (credit))
+#=>
+## 'data.frame':   1000 obs. of  21 variables:
+##  $ checking_balance    : Factor w/ 4 levels "< 0 DM","> 200 DM",..: 1 3 4 1 1 4 4 3 4 3 ...
+##  $ months_loan_duration: int  6 48 12 42 24 36 24 36 12 30 ...
+##  $ credit_history      : Factor w/ 5 levels "critical","delayed",..: 1 5 1 5 2 5 5 5 5 1 ...
+##  $ purpose             : Factor w/ 10 levels "business","car (new)",..: 8 8 5 6 2 5 6 3 8 2 ...
+##  $ amount              : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...
+##  ... ...
+##  $ job                 : Factor w/ 4 levels "mangement self-employed",..: 2 2 4 2 2 4 2 1 4 1 ...
+```
+##### summary总结某列数据的Min/Max,Median,Mean等
+
+```r
+(summary (credit$months_loan_duration))
+#=>
+ Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+ 4.0    12.0    18.0    20.9    24.0    72.0
+```
+##### head看数据前几个值,tail-log
+```r
+(head (credit_rand$amount))
+#=>
+[1] 2346 2030 1082 2631 3069 1333
+```
+
+##### R宏%>%
+```r
+(library (magrittr))
+(1 %>% (function (x) ('+' (x, 100)))
+    %>% (function (x) (print (x))) ) #=> [1] 101
+```
+* 对于function里面定义临时变量,用pipe
+```r
+(library (tm))
+(library (magrittr))
+
+((function (text)
+    (text
+        %>% (function (st) (Corpus ((VectorSource (st)))))
+        %>% (function (cor) (tm_map (cor, (content_transformer (tolower)))))
+        %>% (function (cor) (tm_map (cor, removePunctuation)))
+        %>% (function (cor) (tm_map (cor, removeNumbers)))
+        %>% (function (cor) (tm_map (cor, removeWords, (c (stopwords("SMART"), "thy", "thou", "thee", "the", "and", "but")))))
+        %>% (function (cor) (TermDocumentMatrix (cor, control=(list (minWordLength=1)))))
+        %>% (function (mydtm) (as.matrix (mydtm)))
+        %>% (function (m) (sort ((rowSums (m)), decreasing=TRUE))) )) -> getTermMatrix)
+
+(getTermMatrix ("The Clojure Programming Language. Clojure is a dynamic, general-purpose programming")) #=>
+##        clojure    programming        dynamic generalpurpose       language
+##              2              2              1              1              1
+
+```
+##### 直方图hist
+```r
+(hist (insurance$charges)) #==>> charges_hist.png
+```
+##### 散点图pairs
+```r
+(pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
+```
+
+## R统计学&机器学习
 
 ##### 一元线性回归
 ```r
@@ -449,33 +514,6 @@ $texture_mean
 ##### [bayes](./bayes.R)
 ```r
 
-```
-##### str 查看dataframe特征 & 类型 & 总数, 数据轮廓
-```r
-(str (credit))
-#=>
-## 'data.frame':   1000 obs. of  21 variables:
-##  $ checking_balance    : Factor w/ 4 levels "< 0 DM","> 200 DM",..: 1 3 4 1 1 4 4 3 4 3 ...
-##  $ months_loan_duration: int  6 48 12 42 24 36 24 36 12 30 ...
-##  $ credit_history      : Factor w/ 5 levels "critical","delayed",..: 1 5 1 5 2 5 5 5 5 1 ...
-##  $ purpose             : Factor w/ 10 levels "business","car (new)",..: 8 8 5 6 2 5 6 3 8 2 ...
-##  $ amount              : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...
-##  ... ...
-##  $ job                 : Factor w/ 4 levels "mangement self-employed",..: 2 2 4 2 2 4 2 1 4 1 ...
-```
-##### summary总结某列数据的Min/Max,Median,Mean等
-
-```r
-(summary (credit$months_loan_duration))
-#=>
- Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
- 4.0    12.0    18.0    20.9    24.0    72.0
-```
-##### head看数据前几个值,tail-log
-```r
-(head (credit_rand$amount))
-#=>
-[1] 2346 2030 1082 2631 3069 1333
 ```
 ##### 评估模型的性能: gmodels/CrossTable
 ```r
@@ -548,34 +586,6 @@ $texture_mean
 
 # 分量teen_clusters$centers查看聚类质心的坐标,所有的特征
 (teen_clusters$centers) 
-```
-
-##### R宏%>%
-```r
-(library (magrittr))
-(1 %>% (function (x) ('+' (x, 100)))
-    %>% (function (x) (print (x))) ) #=> [1] 101
-```
-* 对于function里面定义临时变量,用pipe
-```r
-(library (tm))
-(library (magrittr))
-
-((function (text)
-    (text
-        %>% (function (st) (Corpus ((VectorSource (st)))))
-        %>% (function (cor) (tm_map (cor, (content_transformer (tolower)))))
-        %>% (function (cor) (tm_map (cor, removePunctuation)))
-        %>% (function (cor) (tm_map (cor, removeNumbers)))
-        %>% (function (cor) (tm_map (cor, removeWords, (c (stopwords("SMART"), "thy", "thou", "thee", "the", "and", "but")))))
-        %>% (function (cor) (TermDocumentMatrix (cor, control=(list (minWordLength=1)))))
-        %>% (function (mydtm) (as.matrix (mydtm)))
-        %>% (function (m) (sort ((rowSums (m)), decreasing=TRUE))) )) -> getTermMatrix)
-
-(getTermMatrix ("The Clojure Programming Language. Clojure is a dynamic, general-purpose programming")) #=>
-##        clojure    programming        dynamic generalpurpose       language
-##              2              2              1              1              1
-
 ```
 
 ##### [regression](./regression.R)
@@ -738,14 +748,7 @@ $texture_mean
 ## [3] "total_day_charge"              "total_day_minutes"
 ## [5] "total_intl_calls"
 ```
-##### 直方图hist
-```r
-(hist (insurance$charges)) #==>> charges_hist.png
-```
-##### 散点图pairs
-```r
-(pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
-```
+
 ##### [bmp降维svd](./svd_compression_image.R)
 ```r
 (library (bmp))
