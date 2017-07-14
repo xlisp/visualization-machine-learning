@@ -149,6 +149,35 @@ Levels: A B C AA BB CC
 1    恶性肿块      17.990        10.38         122.80    1001.0         0.11840
 2    恶性肿块      20.570        17.77         132.90    1326.0         0.08474
 21   良性肿块      13.080        15.71          85.63     520.0         0.10750
+
+((c ("A", "A", "B", "C", "A", "AA", "BB", "B", "CC")) -> hair)
+
+## type check
+(is.character (hair)) #=> [1] TRUE
+(is.factor (hair)) #=>  [1] FALSE
+
+((factor (hair)) -> hair) #=> 转成分类数据或者次序数据(没有重复的数据) => 因子
+## [1] A  A  B  C  A  AA BB B  CC
+## Levels: A AA B BB C CC ## 因子水平
+
+(levels (hair)) #=> [1] "A"  "AA" "B"  "BB" "C"  "CC"
+
+(factor (hair, levels=(c ("A", "A", "B", "C", "A", "AA", "BB", "B", "CC"))))
+
+((factor ((c ("A", "A", "B", "C", "A", "AA", "BB", "B", "CC")), levels=(c ("A", "AA", "B", "BB", "C", "CC")))) -> hairs)
+## [1] A  A  B  C  A  AA BB B  CC
+## Levels: A AA B BB C CC
+##
+
+(table (hairs))
+##  A AA  B BB  C CC
+##  3  1  2  1  1  1
+
+(str (hairs))
+##=> Factor w/ 6 levels "A","AA","B","BB",..: 1 1 3 5 1 2 4 3 6
+
+(is.factor (hairs)) #=>  [1] TRUE
+
 ```
 ##### list
 ```r
