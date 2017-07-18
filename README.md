@@ -1,11 +1,11 @@
 # Lisp like R (Native support) & statistics, machine learning
 
-#### Emacs的Repl开发体验`C-x C-e`, 爽到根本停不下来!
+#### Live coding with R and Emacs, eval last sexp `C-x C-e` (Emacs的Repl开发体验`C-x C-e`, 爽到根本停不下来!)
 
 ![](./emacs_repl_code.gif)
 
-- [R函数式的列表(Lisp表达方式)](#r%E5%87%BD%E6%95%B0%E5%BC%8F%E7%9A%84%E5%88%97%E8%A1%A8lisp%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F)
-    - [Emacs `C-x C-e` 执行R的S表达式](#emacs-c-x-c-e-%E6%89%A7%E8%A1%8Cr%E7%9A%84s%E8%A1%A8%E8%BE%BE%E5%BC%8F)
+- [R function programming list](#R%20function%20programming%20list)
+    - [Emacs eval last sexp setting](#Emacs%20eval%20last%20sexp%20setting)
     - [lambda](#lambda)
     - [let](#let)
     - [if](#if)
@@ -31,7 +31,7 @@
     - [hist](#hist)
     - [pairs](#pairs)
 
-- [R统计学&机器学习](#r统计学机器学习)
+- [R statistics, machine learning](#R%20statistics,%20machine%20learning)
     - [lm](#lm)
     - [knn](#knn)
     - [regression](#regression)
@@ -47,11 +47,11 @@
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [bmp降维svd](#bmp%e9%99%8d%e7%bb%b4svd)
 
-### R函数式的列表(Lisp表达方式)
+### R function programming list
 
-##### Emacs `C-x C-e` 执行R的S表达式
+##### Emacs eval last sexp setting
 * `el-get-install ESS `
-* `C-c C-k` 打开R的Repl, `C-c C-l`eval当前文件缓冲到Repl里面
+* `C-c C-k` open R Repl, `C-c C-l` eval current file buffer to R repl (eval当前文件缓冲到Repl里面)
 * `C-x C-e` fun r lisp!
 ```emacs-lisp
 ;; 将这里的配置放到启动脚本init.el或者是`.emacs`
@@ -496,7 +496,7 @@ $texture_mean
 (pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
 ```
 
-### R统计学&机器学习
+### R statistics, machine learning
 
 ##### lm
 ```r
