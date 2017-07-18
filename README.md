@@ -5,7 +5,7 @@
 ![](./emacs_repl_code.gif)
 
 - [R function programming list](#R%20function%20programming%20list)
-    - [Emacs eval last sexp setting](#Emacs%20eval%20last%20sexp%20setting)
+    - [Emacs eval last sexp setting](#emacs-eval-last-sexp-setting)
     - [lambda](#lambda)
     - [let](#let)
     - [if](#if)
