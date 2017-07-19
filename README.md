@@ -10,6 +10,7 @@
     - [let](#let)
     - [if](#if)
     - [plot](#plot)
+    - [boxplot](#boxplot)
     - [Reduce](#reduce)
     - [Filter](#filter)
     - [Map](#map)
@@ -46,6 +47,10 @@
     - [分布语义模型wordspace](#%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [bmp降维svd](#bmp%e9%99%8d%e7%bb%b4svd)
+
+- [R datasets & resource](#R%20datasets%20&%20resource)
+    - [UCI](#UCI)
+    
 
 ### R function programming list
 
@@ -104,6 +109,30 @@
 ('plot' (('rnorm' (10)), ('rnorm' (10))))
 # 加了额外的参数
 ('plot' (('rnorm' (10)), ('rnorm' (10)), type='b'))
+```
+##### boxplot
+```r
+## 盒子图, 箱线图: 
+(boxplot (Petal.Width ~ Species, data=iris)) #=> boxplot.png
+$stats
+     [,1] [,2] [,3]
+[1,]  0.1  1.0  1.4
+[2,]  0.2  1.2  1.8
+[3,]  0.2  1.3  2.0
+[4,]  0.3  1.5  2.3
+[5,]  0.4  1.8  2.5
+$n
+[1] 50 50 50
+$conf
+          [,1]     [,2]     [,3]
+[1,] 0.1776554 1.232966 1.888277
+[2,] 0.2223446 1.367034 2.111723
+$out
+[1] 0.5 0.6
+$group
+[1] 1 1
+$names
+[1] "setosa"     "versicolor" "virginica"
 ```
 ##### Reduce
 ```r
@@ -492,8 +521,13 @@ $texture_mean
 ```
 ##### pairs
 ```r
+(data (iris)) # R 自带的所有数据查看: (data ())
 # 散点图
 (pairs (insurance [(c ("age", "bmi", "children", "charges"))])) #=> pairs_insurance.png
+# 多散点图, N个不同特征的"太阳花"数据iris
+(pairs (iris[1:4], main="Sun flower", pch=21, bg=((c ("red", "green3", "blue")) [(unclass (iris$Species))]))) #=> pairs_sun_flower_iris.png
+
+# (unclass (iris$Species)) #=> attr(,"levels") => [1] "setosa"     "versicolor" "virginica" 
 ```
 
 ### R statistics, machine learning
@@ -808,4 +842,12 @@ $texture_mean
             d=(as.matrix ((diag (lenna.svd$d)) [1:dim, 1:dim])))
     (image ('%*%' (('%*%' (u, d)), (t (v)))) ) ) -> lenna_compression)
 (lenna_compression (27))
+```
+
+### R datasets & resource
+
+##### UCI
+```bash
+# http://archive.ics.uci.edu/ml
+
 ```
