@@ -48,6 +48,9 @@
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [bmp降维svd](#bmp%e9%99%8d%e7%bb%b4svd)
 
+- [Model Combining](#Model%20Combining)
+    - [Poisson model for generalized linear regression](#Poisson%20model%20for%20generalized%20linear%20regression)
+
 - [R datasets & resource](#R%20datasets%20&%20resource)
     - [UCI](#UCI)
     
@@ -842,6 +845,33 @@ $texture_mean
             d=(as.matrix ((diag (lenna.svd$d)) [1:dim, 1:dim])))
     (image ('%*%' (('%*%' (u, d)), (t (v)))) ) ) -> lenna_compression)
 (lenna_compression (27))
+```
+
+### Model Combining
+
+##### [Poisson model for generalized linear regression](./glm_poisson.R)
+```r
+(head (warpbreaks))
+##   breaks wool tension
+## 1     26    A       L
+## 2     30    A       L
+
+((glm (breaks ~ tension, data=warpbreaks, family="poisson")) -> rs1)
+## Coefficients:
+## (Intercept)     tensionM     tensionH
+##      3.5943      -0.3213      -0.5185
+
+(summary (rs1))
+## Deviance Residuals:
+##     Min       1Q   Median       3Q      Max
+## -4.2464  -1.6031  -0.5872   1.2813   4.9366
+##
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)
+## (Intercept)  3.59426    0.03907  91.988  < 2e-16 ***
+## tensionM    -0.32132    0.06027  -5.332 9.73e-08 ***
+## tensionH    -0.51849    0.06396  -8.107 5.21e-16 ***
+
 ```
 
 ### R datasets & resource
