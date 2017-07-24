@@ -8,6 +8,8 @@
 ## [1] "Boruta"    "ranger"    "stats"     "graphics"  "grDevices" "utils"    
 ## [7] "datasets"  "methods"   "base"     
 
+(train$Classes) #=> [1] 0 0 0 0 1 0 0 0 0 1 0 1 0 0 0 0 0 1 0 0 1 1 0 1 1 0 0 1 1 0 1 1 0 0 0 0 1 [371] ... , class => [1] "numeric"
+
 ('<-' (Boruta.mod, (Boruta (Classes~., data=(train [,-348])))))
 ## Starting evaluation...
 ## Boruta performed 99 iterations in 32.76533 secs.
