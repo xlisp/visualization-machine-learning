@@ -47,8 +47,8 @@
     - [分布语义模型wordspace](#%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [bmp降维svd](#bmp%e9%99%8d%e7%bb%b4svd)
-    - [生孩子数量的决定因素Poisson](#%E7%94%9F%E5%AD%A9%E5%AD%90%E6%95%B0%E9%87%8F%E7%9A%84%E5%86%B3%E5%AE%9A%E5%9B%A0%E7%B4%A0Poisson)
-    - [硬币正面朝上的概率-二项分布-正态分布](#%E7%A1%AC%E5%B8%81%E6%AD%A3%E9%9D%A2%E6%9C%9D%E4%B8%8A%E7%9A%84%E6%A6%82%E7%8E%87-%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83-%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83)
+    - [生孩子数量的决定因素Poisson](#生孩子数量的决定因素poisson)
+    - [硬币正面朝上的概率-二项分布-正态分布](#硬币正面朝上的概率-二项分布-正态分布)
 
 - [Model Combining](#Model%20Combining)
     - [Poisson model for generalized linear regression](#Poisson%20model%20for%20generalized%20linear%20regression)
