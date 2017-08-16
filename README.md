@@ -47,6 +47,8 @@
     - [分布语义模型wordspace](#%e5%88%86%e5%b8%83%e8%af%ad%e4%b9%89%e6%a8%a1%e5%9e%8bwordspace)
     - [特征选择Caret](#%e7%89%b9%e5%be%81%e9%80%89%e6%8b%a9Caret)
     - [bmp降维svd](#bmp%e9%99%8d%e7%bb%b4svd)
+    - [生孩子数量的决定因素Poisson](#%E7%94%9F%E5%AD%A9%E5%AD%90%E6%95%B0%E9%87%8F%E7%9A%84%E5%86%B3%E5%AE%9A%E5%9B%A0%E7%B4%A0Poisson)
+    - [硬币正面朝上的概率-二项分布-正态分布](#%E7%A1%AC%E5%B8%81%E6%AD%A3%E9%9D%A2%E6%9C%9D%E4%B8%8A%E7%9A%84%E6%A6%82%E7%8E%87-%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83-%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83)
 
 - [Model Combining](#Model%20Combining)
     - [Poisson model for generalized linear regression](#Poisson%20model%20for%20generalized%20linear%20regression)
@@ -846,7 +848,94 @@ $texture_mean
     (image ('%*%' (('%*%' (u, d)), (t (v)))) ) ) -> lenna_compression)
 (lenna_compression (27))
 ```
+##### [生孩子数量的决定因素Poisson](./children_ever_born.R)
+```r
+((read.table ("http://data.princeton.edu/wws509/datasets/ceb.dat")) -> ceb)
 
+(str (ceb))
+## 'data.frame':	70 obs. of  7 variables:
+##  $ dur : Factor w/ 6 levels "0-4","10-14",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ res : Factor w/ 3 levels "rural","Suva",..: 2 2 2 2 3 3 3 3 1 1 ...
+##  $ educ: Factor w/ 4 levels "lower","none",..: 2 1 4 3 2 1 4 3 2 1 ...
+##  $ mean: num  0.5 1.14 0.9 0.73 1.17 0.85 1.05 0.69 0.97 0.96 ...
+##  $ var : num  1.14 0.73 0.67 0.48 1.06 1.59 0.73 0.54 0.88 0.81 ...
+##  $ n   : int  8 21 42 51 12 27 39 51 62 102 ...
+##  $ y   : num  4 23.9 37.8 37.2 14 ...
+
+## 泊松分布用直方图表示: 给响应变量 育子数 做直方图，可以清楚看到其偏倚度
+(hist (ceb$y, breaks = 50, xlab = "children ever born", main = "Distribution of CEB"))
+## => number_of_children_ever_born_poisson.png
+
+## The cell number (1 to 71, cell 68 has no observations), 
+## “dur” = marriage duration (1=0-4, 2=5-9, 3=10-14, 4=15-19, 5=20-24, 6=25-29), 
+## “res” = residence (1=Suva, 2=Urban, 3=Rural), 
+## “educ” = education (1=none, 2=lower primary, 3=upper primary, 4=secondary+), 
+## “mean” = mean number of children ever born (e.g. 0.50), 
+## “var” = variance of children ever born (e.g. 1.14), and 
+## “n” = number of women in the cell (e.g. 8), 
+## “y” = number of children ever born.
+
+((glm (y ~ educ + res + dur, offset = log(n), family = poisson(), data = ceb)) -> fit)
+
+(summary (fit))
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.2912  -0.6649   0.0759   0.6606   3.6790  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  0.05695    0.04805   1.185    0.236    
+## educnone    -0.02308    0.02266  -1.019    0.308    
+## educsec+    -0.33266    0.05388  -6.174 6.67e-10 ***
+## educupper   -0.12475    0.03000  -4.158 3.21e-05 ***
+## resSuva     -0.15122    0.02833  -5.338 9.37e-08 ***
+## resurban    -0.03896    0.02462  -1.582    0.114    
+## dur10-14     1.37053    0.05108  26.833  < 2e-16 ***
+## dur15-19     1.61423    0.05121  31.524  < 2e-16 ***
+## dur20-24     1.78549    0.05122  34.856  < 2e-16 ***
+## dur25-29     1.97679    0.05005  39.500  < 2e-16 ***
+## dur5-9       0.99765    0.05275  18.912  < 2e-16 ***
+## ---
+## Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 3731.525  on 69  degrees of freedom
+## Residual deviance:   70.653  on 59  degrees of freedom
+## AIC: Inf
+## 
+## Number of Fisher Scoring iterations: 4
+
+(exp (coef (fit))) #=> 可见随着婚龄的增长，期望的育子数将相应增长；教育程度越高，期望育子数越低；农村预期育子数比城市高等。
+## (Intercept)    educnone    educsec+   educupper     resSuva    resurban 
+##   1.0586073   0.9771840   0.7170105   0.8827213   0.8596609   0.9617909 
+##    dur10-14    dur15-19    dur20-24    dur25-29      dur5-9 
+##   3.9374452   5.0240232   5.9624936   7.2195649   2.7119024 
+
+```
+##### [硬币正面朝上的概率-二项分布-正态分布](./binomial_distribution.R)
+```r
+## 0 ~ 50 ==> x轴
+((seq (0 , 50, by=1)) -> x)
+
+## 创建一个二项分布 => y轴
+((dbinom (x, 50, 0.5)) -> y)
+## dbinom(x, size, prob) ==>> 此函数可以让每个点显示的概率密度分布, 最好的和最坏的都占少数, 大部分人都是平平凡凡的
+## pbinom(x, size, prob) ==>> 此函数给出了一个事件的累积概率。它是表示单个值的概率: ` (pbinom (26,51,0.5)) ` =>  [1] 0.610116
+## qbinom(p, size, prob) ==>> 这个函数的概率值，并给出了一个数字，其累加值相匹配概率值: ` (qbinom (0.25,51,1/2)) ` =>  [1] 23
+## rbinom(n, size, prob) ==>> 这个函数从给定的样本生成概率随机值所需的数目: ` (rbinom (8,150,.4)) ` =>  [1] 57 56 52 60 75 63 71 61
+##* x 是数字向量。
+##* p 是概率的向量。
+##* n 是观测次数。
+##* size 是试验次数。
+##* prob 是每次试验的成功概率。
+
+(png (file="dbinom.png"))
+
+(plot (x,y))
+## 保存
+(dev.off ())
+```
 ### Model Combining
 
 ##### [Poisson model for generalized linear regression](./glm_poisson.R)
