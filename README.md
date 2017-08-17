@@ -167,6 +167,7 @@ $names
 ##### vector
 ```r
 ## 1d: 1维
+###### 多维度转换解决问题: 关系型表格数据框dataframe是二维的, 矩阵是二维行列的, 数组是N维度的, dataframe的一列(data_f$aaa)是一维的, 维度转换SVM, 解决问题中是多维混合转换的, 但是结果说明是一维度的
 # 如果本来是前缀的表达方式的函数,引号'c'可以省略,function除外必须加引号
 (c (1, 1, 3)) #=> [1] 1 1 3
 ((c (1, 8, 3)) [2]) #=> [1] 8
@@ -595,6 +596,52 @@ $texture_mean
 ```
 ##### [bayes](./bayes.R)
 ```r
+## 垃圾邮件分类训练
+('<-' (sms_raw, (read.csv ("http://127.0.0.1:8003/sms_spam.csv", stringsAsFactors=FALSE))))
+('<-' (sms_raw$type, (factor (sms_raw$type)))) #=> 修改"type是个字符串的向量"为因子, 方便table分析
+(library (tm)) #=> NLP自然语言处理的包
+('<-' (sms_corpus, (Corpus ((VectorSource (sms_raw$text)))))) ##Corpus来创建语料库,包含5574条训练数据短信, Corpus还支持PDF和office文档
+('<-' (corpus_clean, (tm_map ((tm_map (sms_corpus, removeNumbers)), tolower))))
+## 去除停用词,和标点符号
+('<-' (corpus_clean, (tm_map ((tm_map (corpus_clean, removeWords, (stopwords ()))), removePunctuation))))
+## 将空格都变成单个空格
+('<-' (corpus_clean, (tm_map (corpus_clean, stripWhitespace))))
+('<-' (sms_dtm, (DocumentTermMatrix (corpus_clean)))) #=> 将清洗好的语料库变成矩阵
+
+## 建立训练数据集合测试数据集 (同一数据源大部分数据作为训练数据, 小部分作为测试数据)
+('<-' (sms_raw_train, (sms_raw [1:4169, ])))
+('<-' (sms_raw_test, (sms_raw [4170:5574, ])))
+## 语料库矩阵数据  [1] "DocumentTermMatrix"    "simple_triplet_matrix"
+('<-' (sms_dtm_train, (sms_dtm [1:4169, ])))
+('<-' (sms_dtm_test, (sms_dtm [4170:5574, ])))
+## 语料库
+('<-' (sms_corpus_train, (corpus_clean [1:4169])))
+('<-' (sms_corpus_test, (corpus_clean [4170:5574])))
+## 确保训练数据和测试数据无误
+(round (('*' ((prop.table (table (sms_raw_train$type))) ,100)), digits=1))
+##  ham spam
+## 86.5 13.5
+(round (('*' ((prop.table (table (sms_raw_test$type))) ,100)), digits=1))
+##  ham spam
+##   87   13
+
+((findFreqTerms (sms_dtm_train, 5)) -> sms_dict)
+((DocumentTermMatrix (sms_corpus_train, (list (dictionary=sms_dict)))) -> sms_train)
+((DocumentTermMatrix (sms_corpus_test, (list (dictionary=sms_dict)))) -> sms_test)
+
+## (convert_counts (-1)) #=>[1] No, 量化或者是因子化
+((function (x, y=(ifelse (x > 0, 1, 0)))
+    (factor (y, levels=(c (0, 1)), labels=(c ("No", "Yes"))))) -> convert_counts)
+
+((apply (sms_train, MARGIN=2, convert_counts)) -> sms_train)
+((apply (sms_test, MARGIN=2, convert_counts)) -> sms_test)
+
+(library (e1071))
+## naiveBayes("训练数据的矩阵或者dataframe", "训练数据每行的分类的一个因子向量")
+((naiveBayes (sms_train, sms_raw_train$type)) -> sms_classifier)
+
+## 进行预测
+## (predict (sms_classifier, "测试数据的矩阵", type="class")
 
 ```
 ##### CrossTable
