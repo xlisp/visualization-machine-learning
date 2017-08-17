@@ -99,5 +99,198 @@
 ## 从tm语料库sms_corpus_train里直接创建词云: 已经生成了标签云的图了, 演示数据使用如只是看垃圾的标签数据
 (wordcloud (sms_corpus_train, min.freq=40, random.order=FALSE)) #=> wordcloud_01.png
 
-## ########### 5. 为频繁出现的单词创建指示特征 ===>> 未完待续。。。
+## ########### 5. 为频繁出现的单词创建指示特征 ===>> 未完待续。。。在需要它的时候,分布式更新它 7-01创建 ~> 8-17回归更新
+## 该向量中的单词,在矩阵sms_dtm_train中至少出现5次=>
+((findFreqTerms (sms_dtm_train, 5)) -> sms_dict)
+## ... ...
+## [1217] "murdered"        "murderer"        "police"          "budget"         
+## [1221] "happens"         "thurs"          
+
+((DocumentTermMatrix (sms_corpus_train, (list (dictionary=sms_dict)))) -> sms_train)
+## <<DocumentTermMatrix (documents: 4169, terms: 1222)>>
+## Non-/sparse entries: 24047/5070471
+## Sparsity           : 100%
+## Maximal term length: 15
+## Weighting          : term frequency (tf)
+
+((DocumentTermMatrix (sms_corpus_test, (list (dictionary=sms_dict)))) -> sms_test)
+## <<DocumentTermMatrix (documents: 1405, terms: 1222)>>
+## Non-/sparse entries: 7775/1709135
+## Sparsity           : 100%
+## Maximal term length: 15
+## Weighting          : term frequency (tf)
+
+## (convert_counts (-1)) #=>[1] No, 量化或者是因子化
+((function (x, y=(ifelse (x > 0, 1, 0)))
+    (factor (y, levels=(c (0, 1)), labels=(c ("No", "Yes"))))) -> convert_counts)
+
+((apply (sms_train, MARGIN=2, convert_counts)) -> sms_train)
+((apply (sms_test, MARGIN=2, convert_counts)) -> sms_test)
+
+## ########## 6. 基于数据训练模型
+
+(library (e1071))
+## [1] "e1071"        "wordcloud"    "RColorBrewer" "tm"           "NLP"         
+## [6] "stats"        "graphics"     "grDevices"    "utils"        "datasets"    
+##[11] "methods"      "base"        
+
+## naiveBayes("训练数据的矩阵或者dataframe", "训练数据每行的分类的一个因子向量")
+((naiveBayes (sms_train, sms_raw_train$type)) -> sms_classifier)
+
+## 进行预测
+## (predict (sms_classifier, "测试数据的矩阵", type="class")
+
+## (str (sms_raw_train)) #==>>
+##'data.frame':	4169 obs. of  2 variables:
+## $ type: Factor w/ 2 levels "ham","spam": 1 1 2 1 1 2 1 1 2 2 ...
+## $ text: chr  "Go until jurong point, crazy.. Available only in bugis n great world la e buffet... Cine there got amore wat..." "Ok lar... Joking wif u oni..." "Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 2005. Text FA to 87121 to receive entry question("| __truncated__ "U dun say so early hor... U c already then say..." ...
+##
+##
+
+
+### sms_classifier ===>>> sms_raw_train$type
+##Naive Bayes Classifier for Discrete Predictors
+##
+##Call:
+##naiveBayes.default(x = sms_train, y = sms_raw_train$type)
+##
+##A-priori probabilities:
+##sms_raw_train$type
+##      ham      spam 
+##0.8647158 0.1352842 
+##
+##Conditional probabilities:
+##                  available
+##sms_raw_train$type          No         Yes
+##              ham  0.996393897 0.003606103
+##              spam 0.996453901 0.003546099
+##
+##                  bugis
+##sms_raw_train$type          No         Yes
+##              ham  0.998335645 0.001664355
+##              spam 1.000000000 0.000000000
+##
+##                  cine
+##sms_raw_train$type          No         Yes
+##              ham  0.998058252 0.001941748
+##              spam 1.000000000 0.000000000
+##
+##                  crazy
+##sms_raw_train$type          No         Yes
+##              ham  0.997780860 0.002219140
+##              spam 0.996453901 0.003546099
+##
+##                  got
+##sms_raw_train$type          No         Yes
+##              ham  0.954230236 0.045769764
+##              spam 0.994680851 0.005319149
+##
+##                  great
+##sms_raw_train$type          No         Yes
+##              ham  0.981137309 0.018862691
+##              spam 0.991134752 0.008865248
+##
+##                  point
+##sms_raw_train$type          No         Yes
+##              ham  0.996948682 0.003051318
+##              spam 1.000000000 0.000000000
+##
+##                  wat
+##sms_raw_train$type         No        Yes
+##              ham  0.98085992 0.01914008
+##              spam 1.00000000 0.00000000
+##
+##                  world
+##sms_raw_train$type          No         Yes
+##              ham  0.993065187 0.006934813
+##              spam 0.998226950 0.001773050
+##
+##                  lar
+##sms_raw_train$type          No         Yes
+##              ham  0.991955617 0.008044383
+##              spam 1.000000000 0.000000000
+##
+##                  wif
+##sms_raw_train$type          No         Yes
+##              ham  0.995006935 0.004993065
+##              spam 1.000000000 0.000000000
+##
+##                  apply
+##sms_raw_train$type          No         Yes
+##              ham  0.999445215 0.000554785
+##              spam 0.959219858 0.040780142
+##
+##                  comp
+##sms_raw_train$type         No        Yes
+##              ham  1.00000000 0.00000000
+##              spam 0.98758865 0.01241135
+##
+##                  cup
+##sms_raw_train$type           No          Yes
+##              ham  0.9991678225 0.0008321775
+##              spam 0.9911347518 0.0088652482
+##
+##                  entry
+##sms_raw_train$type         No        Yes
+##              ham  1.00000000 0.00000000
+##              spam 0.96985816 0.03014184
+##
+##                  final
+##sms_raw_train$type          No         Yes
+##              ham  0.999445215 0.000554785
+##              spam 0.975177305 0.024822695
+##
+##
+##                  free
+##sms_raw_train$type         No        Yes
+##              ham  0.98834951 0.01165049
+##              spam 0.77127660 0.22872340
+##
+##                  may
+##sms_raw_train$type          No         Yes
+##              ham  0.991400832 0.008599168
+##              spam 0.989361702 0.010638298
+##
+##                  receive
+##sms_raw_train$type          No         Yes
+##              ham  0.998613037 0.001386963
+##              spam 0.960992908 0.039007092
+##
+##                  text
+##sms_raw_train$type         No        Yes
+##              ham  0.98557559 0.01442441
+##              spam 0.86347518 0.13652482
+##
+##                  txt
+##sms_raw_train$type          No         Yes
+##              ham  0.998058252 0.001941748
+##              spam 0.796099291 0.203900709
+##
+##                  win
+##sms_raw_train$type          No         Yes
+##              ham  0.998335645 0.001664355
+##              spam 0.913120567 0.086879433
+##
+##                  wkly
+##sms_raw_train$type         No        Yes
+##              ham  1.00000000 0.00000000
+##              spam 0.98404255 0.01595745
+##
+##                  already
+##sms_raw_train$type         No        Yes
+##              ham  0.98141470 0.01858530
+##              spam 0.99822695 0.00177305
+##
+##                  dun
+##sms_raw_train$type         No        Yes
+##              ham  0.99001387 0.00998613
+##              spam 1.00000000 0.00000000
+##
+##                  early
+##sms_raw_train$type          No         Yes
+##              ham  0.992510402 0.007489598
+##              spam 1.000000000 0.000000000
+##
+##
+## ... ... ...
 
