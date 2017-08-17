@@ -85,6 +85,10 @@
 ```
 ##### let
 ```r
+## (convert_counts (-1)) #=>[1] No
+((function (x, y=(ifelse (x > 0, 1, 0)))
+    (factor (y, levels=(c (0, 1)), labels=(c ("No", "Yes"))))) -> convert_counts)
+
 ## 用高阶函数 和 %>% 管道来 代替let, function(a=111,b=222,c=function(...){...} ) { ... }
 ## function的默认参数就是一个局部变量: function(a=1, b=2) <=> let[a 1 b 2]
 ((function (x, y=(function (i) ('*' (i, 2))) ) (y (x))) (2)) #=> [1] 4
