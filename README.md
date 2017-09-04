@@ -415,6 +415,20 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 
 # => read from web:
 ((read.csv ("http://127.0.0.1:8003/wisc_bc_data.csv", stringsAsFactors=FALSE)) -> wbcd)
+
+# => read csv to dataframe, e.g. csv
+# UID MVID SCORE OTHER
+# 1 1 5 874965758
+# 1 2 3 876893171
+# 1 3 4 878542960
+
+((read.table ("ua.base.dataframe.csv", header=TRUE, sep=" ", stringsAsFactors=FALSE)) -> datas)
+(str (datas)) #=>
+'data.frame':	90570 obs. of  4 variables:
+ $ UID  : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ MVID : int  1 2 3 4 5 6 7 8 9 10 ...
+ $ SCORE: int  5 3 4 3 3 5 4 1 5 3 ...
+ $ OTHER: int  874965758 876893171 878542960 876893119 889751712 887431973 875071561 875072484 878543541 875693118 ...
 ```
 
 ##### table
