@@ -287,6 +287,14 @@ Levels: 1983-5-6 1984-12-29 1986-8-8
 1  Devin      M
 2 Edward      M
 3  Wenli      F
+
+(str (pt_data)) 
+#=> str数据流轮廓,对手听桥
+'data.frame':	3 obs. of  4 variables:
+ $ ID       : num  11 12 13
+ $ Name     : Factor w/ 3 levels "Devin","Edward",..: 1 2 3
+ $ Gender   : Factor w/ 2 levels "F","M": 2 2 1
+ $ Birthdate: Factor w/ 3 levels "1983-5-6","1984-12-29",..: 2 1 3
 ```
 ##### matrix
 ```r
