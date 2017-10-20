@@ -1,10 +1,9 @@
 
-
-
 # Lisp like R (Native support) & statistics, machine learning
 
 #### Live coding with R and Emacs, eval last sexp `C-x C-e` (Emacs的Repl开发体验`C-x C-e`, 爽到根本停不下来!)
 ![](./emacs_repl_code.gif)
+
 
 
 - [Lisp like R (Native support) & statistics, machine learning](#lisp-like-r-native-support--statistics-machine-learning)
@@ -57,7 +56,7 @@
         - [Poisson model for generalized linear regression](#poisson-model-for-generalized-linear-regression)
     - [R datasets & resource](#r-datasets--resource)
         - [UCI](#uci)
-
+        - [Kaggle: Your Home for Data Science](#kaggle-your-home-for-data-science)
 
 
 
@@ -1059,4 +1058,10 @@ $texture_mean
 ```bash
 # http://archive.ics.uci.edu/ml
 
+```
+##### Kaggle: Your Home for Data Science
+```bash
+# https://www.kaggle.com/
+我那个时候感觉最好的办法就是做题
+做一百道题 肯定就会了
 ```
