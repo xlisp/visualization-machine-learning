@@ -3,6 +3,7 @@
 * [R Machine Learning](https://github.com/chanshunli/jim-emacs-machine-learning/tree/master/R-Lang-machine-learning)
 
 ## kmeans
+* [kmeans log analysis](./kmeans_log_analysis.py)
 
 ```python
 from sklearn.feature_extraction.text import TfidfVectorizer
