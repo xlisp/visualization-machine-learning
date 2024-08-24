@@ -15,13 +15,20 @@ def cluster_error_messages(error_messages, num_clusters=5):
 
     kmeans = KMeans(n_clusters=num_clusters, random_state=0)
     kmeans.fit(X)
-    ... ...
+
+    labels = kmeans.labels_
+    clustered_errors = {}
+    for i, label in enumerate(labels):
+        if label not in clustered_errors:
+            clustered_errors[label] = []
+        clustered_errors[label].append(error_messages[i])
+    return clustered_errors
 ```
 
 ## Data cleaning
 * [log clean utils](./log_utils.py)
 ```python
-## split 
+## split
 def split_log_file(input_file, split_pattern, output_pattern):
     with open(input_file, 'r') as file:
         log_content = file.read()
