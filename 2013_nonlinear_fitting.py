@@ -31,7 +31,7 @@ criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
 # Step 4: Train the model
-epochs = 1000
+epochs = 5000
 for epoch in range(epochs):
     model.train()
     
@@ -70,3 +70,55 @@ plt.show()
 #Epoch [900/1000], Loss: 0.2317
 #Epoch [1000/1000], Loss: 0.2315
 
+## when 5000 , is overfiting: 	2013_nonlinear_fitting_overfitting.png
+# Epoch [100/5000], Loss: 0.0964
+# Epoch [200/5000], Loss: 0.0210
+# Epoch [300/5000], Loss: 0.0203
+# Epoch [400/5000], Loss: 0.0190
+# Epoch [500/5000], Loss: 0.0184
+# Epoch [600/5000], Loss: 0.0177
+# Epoch [700/5000], Loss: 0.0168
+# Epoch [800/5000], Loss: 0.0162
+# Epoch [900/5000], Loss: 0.0158
+# Epoch [1000/5000], Loss: 0.0153
+# Epoch [1100/5000], Loss: 0.0146
+# Epoch [1200/5000], Loss: 0.0141
+# Epoch [1300/5000], Loss: 0.0136
+# Epoch [1400/5000], Loss: 0.0132
+# Epoch [1500/5000], Loss: 0.0131
+# Epoch [1600/5000], Loss: 0.0130
+# Epoch [1700/5000], Loss: 0.0128
+# Epoch [1800/5000], Loss: 0.0127
+# Epoch [1900/5000], Loss: 0.0127
+# Epoch [2000/5000], Loss: 0.0126
+# Epoch [2100/5000], Loss: 0.0126
+# Epoch [2200/5000], Loss: 0.0130
+# Epoch [2300/5000], Loss: 0.0126
+# Epoch [2400/5000], Loss: 0.0126
+# Epoch [2500/5000], Loss: 0.0125
+# Epoch [2600/5000], Loss: 0.0125
+# Epoch [2700/5000], Loss: 0.0125
+# Epoch [2800/5000], Loss: 0.0126
+# Epoch [2900/5000], Loss: 0.0128
+# Epoch [3000/5000], Loss: 0.0124
+# Epoch [3100/5000], Loss: 0.0124
+# Epoch [3200/5000], Loss: 0.0124
+# Epoch [3300/5000], Loss: 0.0125
+# Epoch [3400/5000], Loss: 0.0126
+# Epoch [3500/5000], Loss: 0.0125
+# Epoch [3600/5000], Loss: 0.0124
+# Epoch [3700/5000], Loss: 0.0125
+# Epoch [3800/5000], Loss: 0.0124
+# Epoch [3900/5000], Loss: 0.0125
+# Epoch [4000/5000], Loss: 0.0125
+# Epoch [4100/5000], Loss: 0.0125
+# Epoch [4200/5000], Loss: 0.0124
+# Epoch [4300/5000], Loss: 0.0124
+# Epoch [4400/5000], Loss: 0.0125
+# Epoch [4500/5000], Loss: 0.0124
+# Epoch [4600/5000], Loss: 0.0124
+# Epoch [4700/5000], Loss: 0.0124
+# Epoch [4800/5000], Loss: 0.0124
+# Epoch [4900/5000], Loss: 0.0124
+# Epoch [5000/5000], Loss: 0.0124
+# 
