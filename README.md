@@ -66,7 +66,7 @@ plt.show()
 ```
 
 ## nonlinear fitting
-<img src="2013_nonlinear_fitting.png" width="200" >
+<img src="2013_nonlinear_fitting.png" width="500" >
 
 ```python
 import torch
@@ -129,7 +129,7 @@ plt.show()
 
 ```
 ## polar coordinate classification
-<img src="polar_coordinate_classification.png" width="200" >
+<img src="polar_coordinate_classification.png" width="500" >
 
 ```python
 import torch
