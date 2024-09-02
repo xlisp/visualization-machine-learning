@@ -1,6 +1,6 @@
 #!/Applications/Mathematica.app/Contents/MacOS/WolframScript -script
 
-(* Define the neural network parameters *)
+(* Implement this algorithm using  Mathematica => Define the neural network parameters *)
 l = 3; (* Number of layers *)
 inputDim = 10;
 outputDim = 1;
