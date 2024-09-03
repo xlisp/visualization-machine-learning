@@ -1,3 +1,4 @@
 model_parameters.lmdb/
 data/
 mnist_model.pth
+mnist_model.onnx
