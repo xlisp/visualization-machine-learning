@@ -1,14 +1,15 @@
 # Python & R Machine Learning
 
 - [Python & R Machine Learning](#python--r-machine-learning)
+  - [R Machine Learning](https://github.com/chanshunli/jim-emacs-machine-learning/tree/master/R-Lang-machine-learning)
   - [kmeans](#kmeans)
   - [least squares method](#least-squares-method)
   - [nonlinear fitting](#nonlinear-fitting)
   - [polar coordinate classification](#polar-coordinate-classification)
   - [Data cleaning](#data-cleaning)
+  - [mnist ocr](#mnist-ocr)
+  - [use mnist](#use-mnist)
 
-
-* [R Machine Learning](https://github.com/chanshunli/jim-emacs-machine-learning/tree/master/R-Lang-machine-learning)
 
 ## kmeans
 * [kmeans log analysis](./kmeans_log_analysis.py)
@@ -219,6 +220,110 @@ ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 plt.title('3D Visualization of PolarNet Classifications')
 plt.show()
+```
+
+## mnist ocr
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+
+batch_size = 64
+learning_rate = 0.01
+epochs = 100
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.1307,), (0.3081,))
+])
+train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+test_dataset = datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
+
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.fc1 = nn.Linear(28 * 28, 128)
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, 10)
+
+    def forward(self, x):
+        x = x.view(-1, 28 * 28)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+model = Net()
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+
+for epoch in range(epochs):
+    model.train()
+    for batch_idx, (data, target) in enumerate(train_loader):
+        optimizer.zero_grad()
+        output = model(data)
+        loss = criterion(output, target)
+        loss.backward()
+        optimizer.step()
+        if batch_idx % 100 == 0:
+            print(f'Epoch: {epoch+1}/{epochs} [Batch: {batch_idx*len(data)}/{len(train_loader.dataset)}] Loss: {loss.item():.6f}')
+
+model.eval()
+test_loss = 0
+correct = 0
+
+with torch.no_grad():
+    for data, target in test_loader:
+        output = model(data)
+        test_loss += criterion(output, target).item()
+        pred = output.argmax(dim=1, keepdim=True)
+        correct += pred.eq(target.view_as(pred)).sum().item()
+
+test_loss /= len(test_loader.dataset)
+accuracy = 100. * correct / len(test_loader.dataset)
+print(f'Test set: Average loss: {test_loss:.4f}, Accuracy: {correct}/{len(test_loader.dataset)} ({accuracy:.2f}%)')
+torch.save(model.state_dict(), "mnist_model.pth")
+
+```
+## use mnist
+
+```python
+model = Net()
+### 3. Load the Trained Model Weights
+model.load_state_dict(torch.load("mnist_model.pth"))
+model.eval()  # Set the model to evaluation mode
+
+### 4. Prepare the Handwritten Input Image
+#You need to preprocess the handwritten image to match the format of the MNIST dataset (28x28 pixels, grayscale).
+def preprocess_image(image_path):
+    transform = transforms.Compose([
+        transforms.Grayscale(),  # Ensure the image is grayscale
+        transforms.Resize((28, 28)),  # Resize to 28x28 pixels
+        transforms.ToTensor(),  # Convert to tensor
+        transforms.Normalize((0.1307,), (0.3081,))  # Normalize with the same mean and std as MNIST
+    ])
+    image = Image.open(image_path)
+    image = transform(image).unsqueeze(0)  # Add batch dimension
+    return image
+
+### 5. Perform Inference
+def recognize_digit(image_path):
+    image = preprocess_image(image_path)
+    with torch.no_grad():
+        output = model(image)
+        prediction = output.argmax(dim=1, keepdim=True)
+    return prediction.item()
+
+# Example usage
+image_path = 'path_to_your_handwritten_digit_image3.png'
+predicted_digit = recognize_digit(image_path)
+print(f'Predicted Digit: {predicted_digit}')
+
 ```
 
 ## Data cleaning
