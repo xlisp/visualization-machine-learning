@@ -9,6 +9,7 @@
   - [Data cleaning](#data-cleaning)
   - [mnist ocr](#mnist-ocr)
   - [use mnist](#use-mnist)
+  - [calculator neural network](#calculator-neural-network)
 
 
 ## kmeans
@@ -323,6 +324,62 @@ def recognize_digit(image_path):
 image_path = 'path_to_your_handwritten_digit_image3.png'
 predicted_digit = recognize_digit(image_path)
 print(f'Predicted Digit: {predicted_digit}')
+
+```
+
+## calculator neural network
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import random
+import numpy as np
+
+# Define the neural network architecture
+class CalculatorNN(nn.Module):
+    def __init__(self):
+        super(CalculatorNN, self).__init__()
+        self.fc1 = nn.Linear(3, 128)  # Input: 2 numbers + operation
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, 1)   # Output: the result
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+model = CalculatorNN()
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# Training loop
+num_epochs = 50000 # loss is too large if is 5000.
+for epoch in range(num_epochs):
+    model.train()
+    # Forward pass
+    predictions = model(X_train)
+    loss = criterion(predictions, y_train)
+    # Backward pass and optimization
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    if (epoch + 1) % 10 == 0:
+        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+
+# ---- use
+model = CalculatorNN()
+model.load_state_dict(torch.load('calculator_model.pth'))
+model.eval()
+
+
+# Perform the prediction
+with torch.no_grad():
+    # Prepare the input (32 * 3)
+    input_data = torch.tensor([[32.0, 3.0, 2]], dtype=torch.float32)  # 2 corresponds to multiplication
+    prediction = model(input_data)
+    print(f'Prediction for 32 * 3: {prediction.item():.4f}')
 
 ```
 
