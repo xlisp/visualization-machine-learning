@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 
 batch_size = 64
 learning_rate = 0.01
-epochs = 10
+epochs = 100
 
 ### 4. Prepare the MNIST Dataset
 
