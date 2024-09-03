@@ -42,7 +42,7 @@ class CalculatorNN(nn.Module):
 
 # ```python
 # Function to generate random training data
-def generate_data(num_samples=10000):
+def generate_data(num_samples=100000):
     data = []
     for _ in range(num_samples):
         num1 = random.uniform(1, 100)
@@ -75,11 +75,11 @@ def preprocess_data(data):
     return X, y
 
 # Generate and preprocess training data
-train_data = generate_data(10000)
+train_data = generate_data(50000)
 X_train, y_train = preprocess_data(train_data)
 
 # Generate and preprocess test data
-test_data = generate_data(1000)
+test_data = generate_data(10000)
 X_test, y_test = preprocess_data(test_data)
 # ```
 
@@ -94,7 +94,7 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
-num_epochs = 100
+num_epochs = 10000 # loss is too large if is 5000.
 for epoch in range(num_epochs):
     model.train()
 
@@ -130,13 +130,30 @@ model = CalculatorNN()
 model.load_state_dict(torch.load('calculator_model.pth'))
 model.eval()
 
-# Prepare the input (32 * 3)
-input_data = torch.tensor([[32.0, 3.0, 2]], dtype=torch.float32)  # 2 corresponds to multiplication
 
 # Perform the prediction
 with torch.no_grad():
+    # Prepare the input (32 * 3)
+    input_data = torch.tensor([[32.0, 3.0, 2]], dtype=torch.float32)  # 2 corresponds to multiplication
     prediction = model(input_data)
     print(f'Prediction for 32 * 3: {prediction.item():.4f}')
+
+with torch.no_grad():
+    input_data = torch.tensor([[389.0, 88.0, 0]], dtype=torch.float32)
+    prediction = model(input_data)
+    print(f'Prediction for 389 + 88: {prediction.item():.4f}')
+
+with torch.no_grad():
+    input_data = torch.tensor([[32.0, 9.0, 1]], dtype=torch.float32)
+    prediction = model(input_data)
+    print(f'Prediction for 32 - 9: {prediction.item():.4f}')
+
+with torch.no_grad():
+    input_data = torch.tensor([[132.0, 3.0, 3]], dtype=torch.float32)
+    prediction = model(input_data)
+    print(f'Prediction for 132 / 3: {prediction.item():.4f}')
+
+
 # ```
 
 # This approach trains a simple feedforward neural network to perform basic arithmetic operations. The network learns to generalize from the training data, and once trained, it can be used to predict the result of unseen operations like `32 * 3`.
@@ -157,3 +174,27 @@ with torch.no_grad():
 #   model.load_state_dict(torch.load('calculator_model.pth'))
 # Prediction for 32 * 3: 296.8100
 #
+## run 2 -----  The loss number is too large
+# Epoch [10/10000], Loss: 2740012.0000
+# Epoch [20/10000], Loss: 2666472.7500
+# Epoch [30/10000], Loss: 2571905.2500
+# Epoch [40/10000], Loss: 2459822.7500
+# Epoch [50/10000], Loss: 2343407.0000
+# Epoch [60/10000], Loss: 2246428.0000
+# ....
+# Epoch [9920/10000], Loss: 769.0888
+# Epoch [9930/10000], Loss: 762.4312
+# Epoch [9940/10000], Loss: 758.2349
+# Epoch [9950/10000], Loss: 756.1877
+# Epoch [9960/10000], Loss: 753.9565
+# Epoch [9970/10000], Loss: 753.6160
+# Epoch [9980/10000], Loss: 770.8453
+# Epoch [9990/10000], Loss: 1039.6040
+# Epoch [10000/10000], Loss: 764.2101
+# 
+# Prediction for 32 * 3: 142.4004
+# Prediction for 389 + 88: -964.8940
+# Prediction for 32 - 9: 11.2077
+# Prediction for 132 / 3: -50.9661
+#       126.65 real       538.60 user        98.07 sys
+# 
