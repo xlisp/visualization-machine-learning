@@ -94,7 +94,7 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Training loop
-num_epochs = 10000 # loss is too large if is 5000.
+num_epochs = 50000 # loss is too large if is 5000.
 for epoch in range(num_epochs):
     model.train()
 
@@ -197,4 +197,34 @@ with torch.no_grad():
 # Prediction for 32 - 9: 11.2077
 # Prediction for 132 / 3: -50.9661
 #       126.65 real       538.60 user        98.07 sys
+#
+
+## run3 ---- loss is good !
+# ....
+# Epoch [49910/50000], Loss: 23.3893
+# Epoch [49920/50000], Loss: 33.1785
+# Epoch [49930/50000], Loss: 24.7953
+# Epoch [49940/50000], Loss: 22.4183
+# Epoch [49950/50000], Loss: 22.5419
+# Epoch [49960/50000], Loss: 22.4495
+# Epoch [49970/50000], Loss: 22.3448
+# Epoch [49980/50000], Loss: 22.2945
+# Epoch [49990/50000], Loss: 22.2918
+# Epoch [50000/50000], Loss: 22.2687
+# Prediction for 32 * 3: 94.7790
+# Prediction for 389 + 88: 468.5115
+# Prediction for 32 - 9: 29.0565
+# Prediction for 132 / 3: -21.8687
+#       634.37 real      2687.37 user       493.88 sys
+# In [1]: 32 * 3
+# Out[1]: 96
 # 
+# In [2]: 389 + 88
+# Out[2]: 477
+# 
+# In [3]: 32 - 9
+# Out[3]: 23
+# 
+# In [4]: 132 / 3
+# Out[4]: 44.0
+#  
