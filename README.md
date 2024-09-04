@@ -4,6 +4,7 @@
   - [R Machine Learning](https://github.com/chanshunli/jim-emacs-machine-learning/tree/master/R-Lang-machine-learning)
   - [kmeans](#kmeans)
   - [least squares method](#least-squares-method)
+  - [least squares method by neural network](#least-squares-method-by-neural-network)
   - [nonlinear fitting](#nonlinear-fitting)
   - [polar coordinate classification](#polar-coordinate-classification)
   - [Data cleaning](#data-cleaning)
@@ -67,6 +68,50 @@ plt.legend()
 plt.show()
 ```
 
+## least squares method by neural network
+
+![](./training_animation.gif)
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import matplotlib.pyplot as plt
+
+# graph show the  pytorch torch.optim.Adam and plot it How it works
+
+# Define a simple linear model
+class LinearModel(nn.Module):
+    def __init__(self):
+        super(LinearModel, self).__init__()
+        self.linear = nn.Linear(1, 1)
+
+    def forward(self, x):
+        return self.linear(x)
+
+# Initialize the model, loss function, and optimizer
+model = LinearModel()
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.01)
+
+# Generate some synthetic data (y = 2x + 1 with some noise)
+x_train = torch.linspace(-1, 1, 100).reshape(-1, 1)
+y_train = 2 * x_train + 1 + 0.2 * torch.randn(x_train.size())
+
+# List to store the loss values
+loss_values = []
+
+# Training loop
+for epoch in range(1000):
+    model.train()
+    optimizer.zero_grad()
+    outputs = model(x_train)
+    loss = criterion(outputs, y_train)
+    loss.backward()
+    optimizer.step()
+    loss_values.append(loss.item())
+```
+
 ## nonlinear fitting
 <img src="2013_nonlinear_fitting.png" width="500" >
 
@@ -88,7 +133,7 @@ class NonlinearModel(nn.Module):
         self.fc1 = nn.Linear(1, 10)
         self.fc2 = nn.Linear(10, 10)
         self.fc3 = nn.Linear(10, 1)
-    
+
     def forward(self, x):
         x = torch.relu(self.fc1(x))
         x = torch.relu(self.fc2(x))
@@ -105,16 +150,16 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 epochs = 1000
 for epoch in range(epochs):
     model.train()
-    
+
     # Forward pass
     outputs = model(x)
     loss = criterion(outputs, y)
-    
+
     # Backward pass and optimization
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-    
+
     if (epoch+1) % 100 == 0:
         print(f'Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}')
 
