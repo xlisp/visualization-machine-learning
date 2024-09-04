@@ -113,6 +113,9 @@ for epoch in range(1000):
 ```
 
 ## nonlinear fitting
+
+![](./training_process.gif)
+
 <img src="2013_nonlinear_fitting.png" width="500" >
 
 ```python
