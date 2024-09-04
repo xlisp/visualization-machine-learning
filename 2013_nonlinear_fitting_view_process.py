@@ -40,7 +40,7 @@ if not os.path.exists('gif_images'):
     os.makedirs('gif_images')
 
 # Step 4: Train the model
-epochs = 10000
+epochs = 1000
 for epoch in range(epochs):
     model.train()
 
@@ -56,7 +56,7 @@ for epoch in range(epochs):
     # Save the loss value for this epoch
     loss_history.append(loss.item())
 
-    if (epoch + 1) % 100 == 0:
+    if (epoch + 1) % 10 == 0:
         print(f'Epoch [{epoch+1}/{epochs}], Loss: {loss.item():.4f}')
 
         # Plot the original data and the fitted curve
