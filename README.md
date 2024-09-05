@@ -179,7 +179,7 @@ plt.show()
 
 ```
 ## polar coordinate classification
-<img src="polar_coordinate_classification.png" width="500" >
+<img src="polar_coordinate_classification.gif" width="500" >
 
 ```python
 import torch
