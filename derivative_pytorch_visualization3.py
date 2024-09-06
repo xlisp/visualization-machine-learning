@@ -8,7 +8,7 @@ x = (torch.rand(100) * 20) - 10  # 100 random numbers in range [-10, 10]
 x.requires_grad_(True)  # Enable gradient tracking for x
 
 # Step 2: Define the sine function
-y = torch.sin(x)
+y = torch.sin(x) #x * 2 look : derivative_pytorch_visualization3_x2.png 
 
 # Step 3: Compute the derivative of the sine function using backward
 y.sum().backward()  # Sum is necessary for backward()
