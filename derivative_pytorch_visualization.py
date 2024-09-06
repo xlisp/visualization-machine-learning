@@ -1,4 +1,18 @@
 import torch
+
+# Define a tensor with requires_grad=True to compute its derivative
+x = torch.tensor(2.0, requires_grad=True)
+
+# Define the function
+y = x**2
+
+# Compute the derivative by backpropagation
+y.backward()
+
+# The derivative is stored in x.grad
+print(f"The derivative of y = x^2 at x=2 is: {x.grad}")
+# ----- The derivative of y = x^2 at x=2 is: 4.0
+
 import matplotlib.pyplot as plt
 
 # Define a range of x values using PyTorch
