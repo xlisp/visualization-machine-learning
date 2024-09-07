@@ -3,4 +3,4 @@ data/
 mnist_model.pth
 mnist_model.onnx
 calculator_model.pth
-
+log_file.log
