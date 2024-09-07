@@ -156,3 +156,16 @@ visualize_attention(model, testloader)
 # - **Visualization**: The attention maps are visualized by overlaying them on the original images to see where the model "looks" during classification.
 
 # You can experiment with different datasets, models, and attention mechanisms for improved performance.
+
+# --- run ------ => attention_visualization.png Heatmap so cool！
+# @ python attention_visualization.py
+# Downloading https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz to ./data/cifar-10-python.tar.gz
+# 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 170498071/170498071 [00:12<00:00, 13340346.39it/s]
+# Extracting ./data/cifar-10-python.tar.gz to ./data
+# Files already downloaded and verified
+# Epoch [1/5], Loss: 1.249887264392655
+# Epoch [2/5], Loss: 0.8511413313300656
+# Epoch [3/5], Loss: 0.6426525164111944
+# Epoch [4/5], Loss: 0.4692297567180236
+# Epoch [5/5], Loss: 0.3019894320358089
+# 
