@@ -1,5 +1,5 @@
 # --- python log  kmeans visualization
-
+import sys
 # To visualize K-means clustering results for log data in Python, we can use libraries like `matplotlib`, `seaborn`, or `plotly`. Here's a step-by-step example showing how to preprocess logs, apply K-means clustering, and visualize the clusters in 2D using `matplotlib` and `sklearn`.
 
 # ### Example Workflow:
@@ -79,7 +79,7 @@ def load_log_data(log_file):
         return f.readlines()
 
 # 3. Automatically detect log pattern
-log_lines = load_log_data('log_file.log')
+log_lines = load_log_data(sys.argv[1]) #('log_file.log')
 log_pattern = infer_log_pattern(log_lines)
 print(f"Auto-detected log pattern: {log_pattern}")
 
@@ -134,3 +134,5 @@ plt.show()
 
 # ----- run ----- @ python kmeans_visualization.py -----=>  kmeans_visualization.png
 # Auto-detected log pattern: (.*)
+# python kmeans_visualization.py log_file.log
+
