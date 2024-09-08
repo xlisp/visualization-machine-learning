@@ -12,8 +12,6 @@
   - [use mnist](#use-mnist)
   - [calculator neural network](#calculator-neural-network)
 
-
-
 ## least squares method
 
 ```python
@@ -520,4 +518,24 @@ def cluster_error_messages(error_messages, num_clusters=5):
         clustered_errors[label].append(error_messages[i])
     return clustered_errors
 ```
-
+## Decision Tree Classifier
+<img src="DecisionTreeClassifier.png" width="500" >
+```python
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn import metrics
+iris = load_iris()
+X = iris.data  # Features
+y = iris.target  # Labels
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = metrics.accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy * 100:.2f}%")
+plt.figure(figsize=(12,8))
+plot_tree(clf, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
+plt.show()
+```
