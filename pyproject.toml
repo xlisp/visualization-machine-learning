@@ -11,6 +11,8 @@ torch = "^2.4.1"
 torchvision = "^0.19.1"
 tensorboard = "^2.17.1"
 numpy = "^2.1.1"
+scikit-learn = "^1.5.1"
+matplotlib = "^3.9.2"
 
 [build-system]
 requires = ["poetry-core"]
