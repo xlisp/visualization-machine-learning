@@ -2,15 +2,17 @@
 
 - [Python & R Machine Learning](#python--r-machine-learning)
   - [R Machine Learning](https://github.com/chanshunli/jim-emacs-machine-learning/tree/master/R-Lang-machine-learning)
-  - [kmeans](#kmeans)
   - [least squares method](#least-squares-method)
   - [least squares method by neural network](#least-squares-method-by-neural-network)
   - [nonlinear fitting](#nonlinear-fitting)
   - [polar coordinate classification](#polar-coordinate-classification)
-  - [Data cleaning](#data-cleaning)
   - [mnist ocr](#mnist-ocr)
   - [use mnist](#use-mnist)
   - [calculator neural network](#calculator-neural-network)
+  - [Data cleaning](#data-cleaning)
+  - [SVM](#svm)
+  - [kmeans](#kmeans)
+  - [Decision Tree Classifier](#decision-tree-classifier)
 
 ## least squares method
 
