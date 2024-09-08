@@ -24,5 +24,6 @@ writer.flush()
 
 writer.close()
 
-## tensorboard --logdir=runs
+##   prun tensorboard --logdir=runs  =>  tensorboard_and_pytorch.png
+
 
