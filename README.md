@@ -13,28 +13,6 @@
   - [calculator neural network](#calculator-neural-network)
 
 
-## kmeans
-* [kmeans log analysis](./kmeans_log_analysis.py)
-
-```python
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.cluster import KMeans
-
-def cluster_error_messages(error_messages, num_clusters=5):
-    vectorizer = TfidfVectorizer(stop_words='english')
-    X = vectorizer.fit_transform(error_messages)
-
-    kmeans = KMeans(n_clusters=num_clusters, random_state=0)
-    kmeans.fit(X)
-
-    labels = kmeans.labels_
-    clustered_errors = {}
-    for i, label in enumerate(labels):
-        if label not in clustered_errors:
-            clustered_errors[label] = []
-        clustered_errors[label].append(error_messages[i])
-    return clustered_errors
-```
 
 ## least squares method
 
@@ -518,5 +496,28 @@ def plot_svm_decision_boundary_3d(model, X, y):
     ax.add_artist(legend1)
     plt.show()
 plot_svm_decision_boundary_3d(model, X_train, y_train)
+```
+
+## kmeans
+* [kmeans log analysis](./kmeans_log_analysis.py)
+
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+
+def cluster_error_messages(error_messages, num_clusters=5):
+    vectorizer = TfidfVectorizer(stop_words='english')
+    X = vectorizer.fit_transform(error_messages)
+
+    kmeans = KMeans(n_clusters=num_clusters, random_state=0)
+    kmeans.fit(X)
+
+    labels = kmeans.labels_
+    clustered_errors = {}
+    for i, label in enumerate(labels):
+        if label not in clustered_errors:
+            clustered_errors[label] = []
+        clustered_errors[label].append(error_messages[i])
+    return clustered_errors
 ```
 
