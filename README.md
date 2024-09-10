@@ -1,5 +1,12 @@
 # Python & R Machine Learning
 
+## First principle
+
+* Find the same probability distribution in a large amount of data and make predictions based on the same probability distribution: `y = f(x)`
+* Just like learning a function relationship, the inverse function or reverse engineering function requires DL. You just know that the data has a certain pattern and then guess what the original function that generated the data is. For example, you train to get a calculator neural network.
+* The idea of high-dimensional space: the code is cut into high-dimensional space, and then a very detailed high-dimensional classification is done to separate it. Then the search is also high-dimensional, just like the code, it is entered into the treesitter to do training to obtain logical learning relationships. Most of NLP is a multi-classification problem in high-dimensional space.
+* Collect the input x and output y around you as training data, and mine their mapping relationship f(x) at any time. You can use GPT to generate certain data for your model training needs.
+
 - [Python & R Machine Learning](#python--r-machine-learning)
   - [R Machine Learning](https://github.com/chanshunli/jim-emacs-machine-learning/tree/master/R-Lang-machine-learning)
   - [least squares method](#least-squares-method)
