@@ -5,3 +5,4 @@ mnist_model.onnx
 calculator_model.pth
 log_file.log
 runs/
+model_db/
