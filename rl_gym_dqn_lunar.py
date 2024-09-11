@@ -15,6 +15,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
+import random
 
 # Define a simple fully connected neural network
 class DQN(nn.Module):
@@ -72,23 +73,36 @@ def choose_action(state, epsilon):
 def train_model(memory, batch_size=64):
     if len(memory) < batch_size:
         return
-    batch = np.random.choice(memory, batch_size)
 
-    for state, action, reward, next_state, done in batch:
-        state = torch.FloatTensor(state).unsqueeze(0)
-        next_state = torch.FloatTensor(next_state).unsqueeze(0)
-        reward = torch.FloatTensor([reward])
-        done = torch.FloatTensor([done])
+    # Randomly sample a batch from memory
+    batch = random.sample(memory, batch_size)
 
-        q_value = model(state)[0, action]
-        next_q_value = torch.max(model(next_state)).item()
+    # Extract states, actions, rewards, next_states, and dones from the batch
+    states, actions, rewards, next_states, dones = zip(*batch)
 
-        q_target = reward + (1 - done) * gamma * next_q_value
+    # Convert them to tensors
+    states = torch.FloatTensor(states)
+    actions = torch.LongTensor(actions)
+    rewards = torch.FloatTensor(rewards)
+    next_states = torch.FloatTensor(next_states)
+    dones = torch.FloatTensor(dones)
 
-        loss = F.mse_loss(q_value, q_target)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+    # Compute Q values for the current states
+    q_values = model(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+
+    # Compute the maximum Q values for the next states
+    next_q_values = model(next_states).max(1)[0]
+
+    # Compute the target Q values
+    q_targets = rewards + (1 - dones) * gamma * next_q_values
+
+    # Compute the loss
+    loss = F.mse_loss(q_values, q_targets)
+
+    # Optimize the model
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
 
 # Main loop
 memory = []
