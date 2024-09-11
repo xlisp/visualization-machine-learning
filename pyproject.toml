@@ -15,6 +15,7 @@ scikit-learn = "^1.5.1"
 matplotlib = "^3.9.2"
 torchtext = "^0.18.0"
 nltk = "^3.9.1"
+gymnasium = "^0.29.1"
 
 [build-system]
 requires = ["poetry-core"]
