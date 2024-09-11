@@ -279,6 +279,10 @@ def play_cartpole_with_loaded_model(num_episodes=10):
         for t in count():
             action = select_action(state)  # Use the policy_net to select actions
             observation, reward, terminated, truncated, _ = env.step(action.item())
+
+            # Render the environment UI at every step
+            env.render()
+
             reward = torch.tensor([reward], device=device)
             done = terminated or truncated
 
@@ -293,7 +297,10 @@ def play_cartpole_with_loaded_model(num_episodes=10):
                 print(f"Episode {i_episode + 1} finished after {t + 1} timesteps")
                 break
 
-# Play the game using the saved and loaded model
+    # Make sure to close the environment to release resources
+    env.close()
+
+# Play the game using the saved and loaded model with UI
 play_cartpole_with_loaded_model()
 
 ## === run ------
