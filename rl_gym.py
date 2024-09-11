@@ -16,7 +16,8 @@ import torch.nn.functional as F
 import lmdb
 import io
 
-env = gym.make("CartPole-v1")
+#env = gym.make("CartPole-v1")
+env= gym.make("CartPole-v1", render_mode="rgb_array")
 
 # set up matplotlib
 is_ipython = 'inline' in matplotlib.get_backend()
