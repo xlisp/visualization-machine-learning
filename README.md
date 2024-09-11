@@ -530,8 +530,11 @@ def cluster_error_messages(error_messages, num_clusters=5):
     return clustered_errors
 ```
 ## Decision Tree Classifier
-<img src="DecisionTreeClassifier.png" width="500" >
+
+<img src="DecisionTreeClassifier.png" width="500">
+
 ```python
+
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
@@ -549,6 +552,7 @@ print(f"Accuracy: {accuracy * 100:.2f}%")
 plt.figure(figsize=(12,8))
 plot_tree(clf, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
 plt.show()
+
 ```
 
 ## Reinforcement Learning (DQN)
