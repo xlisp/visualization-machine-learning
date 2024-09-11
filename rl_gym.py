@@ -197,7 +197,7 @@ def optimize_model():
 
 ## -----
 if torch.cuda.is_available() or torch.backends.mps.is_available():
-    num_episodes = 400  ##600
+    num_episodes = 1000  ##600
 else:
     num_episodes = 50
 
