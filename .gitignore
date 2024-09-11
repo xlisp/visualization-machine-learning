@@ -6,3 +6,4 @@ calculator_model.pth
 log_file.log
 runs/
 model_db/
+model.lmdb/

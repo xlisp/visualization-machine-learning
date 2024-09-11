@@ -13,6 +13,9 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 
+import lmdb
+import io
+
 env = gym.make("CartPole-v1")
 
 # set up matplotlib
@@ -194,7 +197,7 @@ def optimize_model():
 
 ## -----
 if torch.cuda.is_available() or torch.backends.mps.is_available():
-    num_episodes = 600
+    num_episodes = 400  ##600
 else:
     num_episodes = 50
 
@@ -239,4 +242,73 @@ print('Complete')
 plot_durations(show_result=True)
 plt.ioff()
 plt.show()
+
+## ----- save model to lmdb and then use model to play CartPole-v1 games
+
+# Function to save model to LMDB
+def save_model_to_lmdb(model, lmdb_path='model.lmdb'):
+    env = lmdb.open(lmdb_path, map_size=int(1e9))  # 1 GB map size
+    with env.begin(write=True) as txn:
+        # Convert the model's state_dict to bytes using torch.save and BytesIO
+        buffer = io.BytesIO()
+        torch.save(model.state_dict(), buffer)
+        txn.put(b'policy_net', buffer.getvalue())  # Save the bytes to LMDB
+    env.close()
+
+# Save the policy_net after training
+save_model_to_lmdb(policy_net)
+
+# Function to load model from LMDB
+def load_model_from_lmdb(model, lmdb_path='model.lmdb'):
+    env = lmdb.open(lmdb_path, readonly=True)
+    with env.begin() as txn:
+        model_bytes = txn.get(b'policy_net')
+        if model_bytes is None:
+            raise ValueError("Model not found in LMDB")
+        buffer = io.BytesIO(model_bytes)
+        model.load_state_dict(torch.load(buffer))
+    env.close()
+
+# To load the saved policy_net for playing games later
+#=== load_model_from_lmdb(policy_net)
+
+def play_cartpole_with_loaded_model(num_episodes=10):
+    for i_episode in range(num_episodes):
+        state, info = env.reset()
+        state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
+        for t in count():
+            action = select_action(state)  # Use the policy_net to select actions
+            observation, reward, terminated, truncated, _ = env.step(action.item())
+            reward = torch.tensor([reward], device=device)
+            done = terminated or truncated
+
+            if terminated:
+                next_state = None
+            else:
+                next_state = torch.tensor(observation, dtype=torch.float32, device=device).unsqueeze(0)
+
+            state = next_state
+
+            if done:
+                print(f"Episode {i_episode + 1} finished after {t + 1} timesteps")
+                break
+
+# Play the game using the saved and loaded model
+play_cartpole_with_loaded_model()
+
+## === run ------
+# @ prunp rl_gym.py
+# Skipping virtualenv creation, as specified in config file.
+# Complete
+# Episode 1 finished after 317 timesteps
+# Episode 2 finished after 283 timesteps
+# Episode 3 finished after 284 timesteps
+# Episode 4 finished after 287 timesteps
+# Episode 5 finished after 330 timesteps
+# Episode 6 finished after 330 timesteps
+# Episode 7 finished after 276 timesteps
+# Episode 8 finished after 281 timesteps
+# Episode 9 finished after 323 timesteps
+# Episode 10 finished after 281 timesteps
+#  @ du -sh model.lmdb/ => 136K	model.lmdb/
 
