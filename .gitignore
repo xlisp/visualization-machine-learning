@@ -7,3 +7,5 @@ log_file.log
 runs/
 model_db/
 model.lmdb/
+__pycache__/
+*.pyc
