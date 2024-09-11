@@ -9,3 +9,4 @@ model_db/
 model.lmdb/
 __pycache__/
 *.pyc
+dqn_model.lmdb/

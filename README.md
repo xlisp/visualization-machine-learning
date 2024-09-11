@@ -20,6 +20,7 @@
   - [SVM](#svm)
   - [kmeans](#kmeans)
   - [Decision Tree Classifier](#decision-tree-classifier)
+  - [Reinforcement Learning (DQN)](#reinforcement-learning-dqn)
 
 ## least squares method
 

@@ -104,6 +104,27 @@ def train_model(memory, batch_size=64):
     loss.backward()
     optimizer.step()
 
+###### -------- lmdb -------
+import lmdb
+import pickle
+import torch
+
+# Function to save model to LMDB
+def save_model_lmdb(model, lmdb_path="dqn_model.lmdb"):
+    with lmdb.open(lmdb_path, map_size=10**9) as env:  # map_size is in bytes, so 1e9 = 1 GB
+        with env.begin(write=True) as txn:
+            # Serialize the model
+            model_data = pickle.dumps(model.state_dict())
+            txn.put(b'model', model_data)
+
+# Function to load model from LMDB
+def load_model_lmdb(model, lmdb_path="dqn_model.lmdb"):
+    with lmdb.open(lmdb_path, map_size=10**9) as env:
+        with env.begin(write=False) as txn:
+            model_data = txn.get(b'model')
+            model.load_state_dict(pickle.loads(model_data))
+###
+
 # Main loop
 memory = []
 
@@ -125,6 +146,10 @@ for episode in range(episodes):
 
     epsilon = max(epsilon_min, epsilon * epsilon_decay)
     print(f"Episode {episode + 1}, Total Reward: {total_reward}")
+
+    # Save the model to LMDB every 10 episodes
+    if (episode + 1) % 10 == 0:
+        save_model_lmdb(model, "dqn_model.lmdb")
 
 env.close()
 # ```
