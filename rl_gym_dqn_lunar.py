@@ -167,7 +167,7 @@ for episode in range(episodes):
         plt.plot(rewards_per_episode)
         plt.xlabel('Episodes')
         plt.ylabel('Total Reward')
-        plt.show()
+        #plt.show() # will block. TODO: plt.pause(0.001) no effect
 
 writer.close()
 
