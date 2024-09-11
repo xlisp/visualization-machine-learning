@@ -548,3 +548,121 @@ plt.figure(figsize=(12,8))
 plot_tree(clf, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
 plt.show()
 ```
+
+## Reinforcement Learning (DQN)
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+import numpy as np
+import random
+
+# Define a simple fully connected neural network
+class DQN(nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(DQN, self).__init__()
+        self.fc1 = nn.Linear(input_dim, 128)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, output_dim)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        return self.fc3(x)
+
+# ### 3. **Initialize the environment and model:**
+
+import gymnasium as gym
+import torch
+
+env = gym.make("LunarLander-v2", render_mode="human")
+state_dim = env.observation_space.shape[0]
+action_dim = env.action_space.n
+
+# Create the DQN model
+model = DQN(input_dim=state_dim, output_dim=action_dim)
+
+# ### 4. **Define the training loop:**
+# In this section, we'll define how the agent interacts with the environment, how rewards are collected, and how the model is updated.
+
+# Parameters
+learning_rate = 0.001
+gamma = 0.99  # Discount factor
+epsilon = 1.0  # Exploration rate
+epsilon_decay = 0.995
+epsilon_min = 0.01
+episodes = 500
+
+# Optimizer
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# Function to choose action (using epsilon-greedy policy)
+def choose_action(state, epsilon):
+    if np.random.rand() <= epsilon:
+        return np.random.choice(action_dim)  # Random action
+    state = torch.FloatTensor(state).unsqueeze(0)
+    with torch.no_grad():
+        q_values = model(state)
+    return torch.argmax(q_values).item()
+
+# Function to train the model
+def train_model(memory, batch_size=64):
+    if len(memory) < batch_size:
+        return
+
+    # Randomly sample a batch from memory
+    batch = random.sample(memory, batch_size)
+
+    # Extract states, actions, rewards, next_states, and dones from the batch
+    states, actions, rewards, next_states, dones = zip(*batch)
+
+    # Convert them to tensors
+    states = torch.FloatTensor(states)
+    actions = torch.LongTensor(actions)
+    rewards = torch.FloatTensor(rewards)
+    next_states = torch.FloatTensor(next_states)
+    dones = torch.FloatTensor(dones)
+
+    # Compute Q values for the current states
+    q_values = model(states).gather(1, actions.unsqueeze(1)).squeeze(1)
+
+    # Compute the maximum Q values for the next states
+    next_q_values = model(next_states).max(1)[0]
+
+    # Compute the target Q values
+    q_targets = rewards + (1 - dones) * gamma * next_q_values
+
+    # Compute the loss
+    loss = F.mse_loss(q_values, q_targets)
+
+    # Optimize the model
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+# Main loop
+memory = []
+
+for episode in range(episodes):
+    state = env.reset()[0]
+    total_reward = 0
+
+    for t in range(1000):
+        action = choose_action(state, epsilon)
+        next_state, reward, done, truncated, _ = env.step(action)
+        memory.append((state, action, reward, next_state, done))
+
+        train_model(memory)
+
+        state = next_state
+        total_reward += reward
+        if done or truncated:
+            break
+
+    epsilon = max(epsilon_min, epsilon * epsilon_decay)
+    print(f"Episode {episode + 1}, Total Reward: {total_reward}")
+
+env.close()
+```
