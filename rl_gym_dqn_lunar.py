@@ -124,6 +124,13 @@ def load_model_lmdb(model, lmdb_path="dqn_model.lmdb"):
             model_data = txn.get(b'model')
             model.load_state_dict(pickle.loads(model_data))
 ###
+import matplotlib.pyplot as plt
+from torch.utils.tensorboard import SummaryWriter
+# Store rewards for each episode
+rewards_per_episode = []
+# Initialize TensorBoard writer
+writer = SummaryWriter()
+###
 
 # Main loop
 memory = []
@@ -151,7 +158,21 @@ for episode in range(episodes):
     if (episode + 1) % 10 == 0:
         save_model_lmdb(model, "dqn_model.lmdb")
 
+    # Log the total reward for each episode
+    writer.add_scalar('Reward per episode', total_reward, episode)
+
+    # Plot the total rewards every 10 episodes
+    rewards_per_episode.append(total_reward)
+    if (episode + 1) % 10 == 0:
+        plt.plot(rewards_per_episode)
+        plt.xlabel('Episodes')
+        plt.ylabel('Total Reward')
+        plt.show()
+
+writer.close()
+
 env.close()
+
 # ```
 
 # ### 5. **Explanation of Key Components:**
