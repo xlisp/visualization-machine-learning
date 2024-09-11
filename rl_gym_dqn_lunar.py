@@ -688,3 +688,7 @@ env.close()
 # Episode 499, Total Reward: 59.89703039051626
 # Episode 500, Total Reward: 66.99724347652008
 # 
+
+## --- emacspy-machine-learning  master @ tensorboard --logdir=runs => rl_gym_dqn_lunar_tensorboard_log.png
+## du -sh dqn_model.lmdb => 424K	dqn_model.lmdb
+
