@@ -551,6 +551,8 @@ plt.show()
 
 ## Reinforcement Learning (DQN)
 
+![](./rl_gym_dqn_lunar.gif)
+
 ```python
 import torch
 import torch.nn as nn
