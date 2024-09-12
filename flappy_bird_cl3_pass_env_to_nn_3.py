@@ -68,8 +68,8 @@ class FlappyBirdEnv(gym.Env):
                 return True
 
             # bug: bug: the bird no hit pipe will stop game
-            #if bird_rect.colliderect(bottom_pipe_rect):
-            #    print("Collision with bottom_pipe_rect pipe detected.")
+            if bird_rect.colliderect(bottom_pipe_rect):
+                print("Collision with bottom_pipe_rect pipe detected.")
             #    return True
     
         return False
