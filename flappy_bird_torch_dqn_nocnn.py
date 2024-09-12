@@ -149,4 +149,10 @@ if __name__ == "__main__":
     env.close()
 
 ## run yes --------- some times can pass ,get 0 Score
+# .... log_flappy.txt
+## Episode: 5850, Score: -1, Epsilon: 0.01
+#Episode: 5860, Score: 0, Epsilon: 0.01
+#Episode: 5870, Score: 6, Epsilon: 0.01
+#Episode: 5880, Score: 2, Epsilon: 0.01
+## Final Score: 4
 
