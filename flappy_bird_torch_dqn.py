@@ -79,10 +79,10 @@ class DQNAgent:
         batch = random.sample(self.memory, self.batch_size)
         states, actions, rewards, next_states, dones = zip(*batch)
 
-        states = torch.FloatTensor(states).to(self.device)
+        states = torch.FloatTensor(np.array(states)).to(self.device)
         actions = torch.LongTensor(actions).to(self.device)
         rewards = torch.FloatTensor(rewards).to(self.device)
-        next_states = torch.FloatTensor(next_states).to(self.device)
+        next_states = torch.FloatTensor(np.array(next_states)).to(self.device)
         dones = torch.FloatTensor(dones).to(self.device)
 
         current_q_values = self.model(states).gather(1, actions.unsqueeze(1))
@@ -102,11 +102,13 @@ def train_dqn(env, episodes=1000, max_steps=1000):
 
     for episode in range(episodes):
         state = env.reset()
+        state = np.transpose(state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
         score = 0
 
         for step in range(max_steps):
             action = agent.get_action(state)
             next_state, reward, done, _, _ = env.step(action)
+            next_state = np.transpose(next_state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
             agent.remember(state, action, reward, next_state, done)
             agent.train()
 
@@ -131,13 +133,16 @@ if __name__ == "__main__":
 
     # Test the trained agent
     state = env.reset()
+    state = np.transpose(state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
     done = False
     score = 0
 
     while not done:
         env.render()
         action = agent.get_action(state)
-        state, reward, done, _, _ = env.step(action)
+        next_state, reward, done, _, _ = env.step(action)
+        next_state = np.transpose(next_state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
+        state = next_state
         score += reward
 
         for event in pygame.event.get():
@@ -146,4 +151,8 @@ if __name__ == "__main__":
 
     print(f"Final Score: {score}")
     env.close()
+
+## ----------run ----
+# @ python flappy_bird_torch_dqn.py
+# Episode: 0, Score: 4.899999999999995, Epsilon: 0.99
 
