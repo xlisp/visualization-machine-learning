@@ -66,6 +66,10 @@ class FlappyBirdEnv(gym.Env):
         #    reward = -1
         #    return self.get_state(), reward, True, False, {}
 
+        if self.bird_y < 0:
+            reward = -1
+            return self.get_state(), reward, True, False, {}
+
         # Don't end the game if the bird goes above the screen, but do if it hits the ground
         if self.bird_y > self.SCREEN_HEIGHT:
             reward = -1
