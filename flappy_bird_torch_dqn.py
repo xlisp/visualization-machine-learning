@@ -11,7 +11,6 @@ import time
 
 from flappy_bird_cl2 import FlappyBirdEnv
 
-# DQN Model
 class DQN(nn.Module):
     def __init__(self, input_shape, n_actions):
         super(DQN, self).__init__()
@@ -62,9 +61,10 @@ class DQNAgent:
         if random.random() < self.epsilon:
             return random.randint(0, self.n_actions - 1)
         
-        state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
-        q_values = self.model(state)
-        return torch.argmax(q_values).item()
+        with torch.no_grad():
+            state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+            q_values = self.model(state)
+            return torch.argmax(q_values).item()
 
     def update_epsilon(self):
         self.epsilon = max(self.epsilon_final, self.epsilon * self.epsilon_decay)
@@ -86,7 +86,8 @@ class DQNAgent:
         dones = torch.FloatTensor(dones).to(self.device)
 
         current_q_values = self.model(states).gather(1, actions.unsqueeze(1))
-        next_q_values = self.model(next_states).max(1)[0].detach()
+        with torch.no_grad():
+            next_q_values = self.model(next_states).max(1)[0]
         target_q_values = rewards + (1 - dones) * self.gamma * next_q_values
 
         loss = self.criterion(current_q_values.squeeze(), target_q_values)
@@ -95,20 +96,22 @@ class DQNAgent:
         loss.backward()
         self.optimizer.step()
 
-def train_dqn(env, episodes=1000, max_steps=1000):
+def train_dqn(env, episodes=1000, max_steps=1000, render_interval=10):
     agent = DQNAgent(env)
     scores = []
 
     for episode in range(episodes):
         state = env.reset()
-        state = np.transpose(state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
+        state = np.transpose(state, (2, 0, 1))
         score = 0
 
         for step in range(max_steps):
-            env.render()  # Render each step
+            if episode % render_interval == 0:
+                env.render()
+
             action = agent.get_action(state)
             next_state, reward, done, _, _ = env.step(action)
-            next_state = np.transpose(next_state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
+            next_state = np.transpose(next_state, (2, 0, 1))
             agent.remember(state, action, reward, next_state, done)
             agent.train()
 
@@ -118,8 +121,8 @@ def train_dqn(env, episodes=1000, max_steps=1000):
             if done:
                 break
 
-            # Add a small delay to make the game visible
-            time.sleep(0.01)
+            if episode % render_interval == 0:
+                pygame.event.pump()
 
         agent.update_epsilon()
         scores.append(score)
@@ -131,11 +134,11 @@ def train_dqn(env, episodes=1000, max_steps=1000):
 
 if __name__ == "__main__":
     env = FlappyBirdEnv()
-    agent, scores = train_dqn(env, episodes=100)  # Reduced episodes for quicker testing
+    agent, scores = train_dqn(env, episodes=1000, render_interval=50)
 
     # Test the trained agent
     state = env.reset()
-    state = np.transpose(state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
+    state = np.transpose(state, (2, 0, 1))
     done = False
     score = 0
 
@@ -143,7 +146,7 @@ if __name__ == "__main__":
         env.render()
         action = agent.get_action(state)
         next_state, reward, done, _, _ = env.step(action)
-        next_state = np.transpose(next_state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
+        next_state = np.transpose(next_state, (2, 0, 1))
         state = next_state
         score += reward
 
@@ -151,8 +154,9 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 done = True
 
-        # Add a small delay to make the game visible
+        pygame.event.pump()
         time.sleep(0.03)
 
     print(f"Final Score: {score}")
     env.close()
+
