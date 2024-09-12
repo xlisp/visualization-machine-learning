@@ -180,7 +180,7 @@ class DQNAgent:
         loss.backward()
         self.optimizer.step()
 
-def train_dqn(env, episodes=1000, max_steps=1000, render_interval=10):
+def train_dqn(env, episodes=2000, max_steps=1000, render_interval=10):
     agent = DQNAgent(env)
     scores = []
 
@@ -216,7 +216,7 @@ def train_dqn(env, episodes=1000, max_steps=1000, render_interval=10):
 
 if __name__ == "__main__":
     env = FlappyBirdEnv()
-    agent, scores = train_dqn(env, episodes=1000, render_interval=50)
+    agent, scores = train_dqn(env, episodes=6000, render_interval=50)
 
     # Test the trained agent
     state = env.reset()
