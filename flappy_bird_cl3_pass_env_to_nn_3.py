@@ -46,7 +46,7 @@ class FlappyBirdEnv(gym.Env):
         bird_rect = pygame.Rect(50, self.bird_y, self.BIRD_WIDTH, self.BIRD_HEIGHT)
     
         # Debugging: Output bird and pipe positions
-        print(f"Bird position: Y = {self.bird_y}")
+        #print(f"Bird position: Y = {self.bird_y}")
     
         # Check if the bird hits the ground
         if self.bird_y + self.BIRD_HEIGHT >= self.SCREEN_HEIGHT:
@@ -63,8 +63,8 @@ class FlappyBirdEnv(gym.Env):
             bottom_pipe_rect = pygame.Rect(pipe[0], pipe[1], self.PIPE_WIDTH, self.SCREEN_HEIGHT - pipe[1])
     
             # Debugging: Output pipe positions
-            print(f"Top pipe position: X = {pipe[0]}, Y = {pipe[1] - self.PIPE_GAP - 320}")
-            print(f"Bottom pipe position: X = {pipe[0]}, Y = {pipe[1]}")
+            #print(f"Top pipe position: X = {pipe[0]}, Y = {pipe[1] - self.PIPE_GAP - 320}")
+            #print(f"Bottom pipe position: X = {pipe[0]}, Y = {pipe[1]}")
     
             # ==== is work fine for debug:
             if bird_rect.colliderect(top_pipe_rect):
@@ -72,8 +72,8 @@ class FlappyBirdEnv(gym.Env):
                 return True
 
             # bug: bug: the bird no hit pipe will stop game
-            if bird_rect.colliderect(bottom_pipe_rect):
-                print("Collision with bottom_pipe_rect pipe detected.")
+            #if bird_rect.colliderect(bottom_pipe_rect):
+            #    print("Collision with bottom_pipe_rect pipe detected.")
             #    return True
     
         return False
@@ -118,7 +118,7 @@ class FlappyBirdEnv(gym.Env):
         # Draw pipes
         for pipe in self.pipes:
             self.screen.blit(self.pipe_img, (pipe[0], pipe[1] - self.PIPE_GAP - 320))
-            self.screen.blit(pygame.transform.flip(self.pipe_img, False, True), (pipe[0], pipe[1] + self.PIPE_GAP))
+            #self.screen.blit(pygame.transform.flip(self.pipe_img, False, True), (pipe[0], pipe[1] + self.PIPE_GAP))
 
         # Draw bird
         self.screen.blit(self.bird_img, (50, self.bird_y))
