@@ -2,7 +2,6 @@ import pygame
 import numpy as np
 from gymnasium import spaces
 import gymnasium as gym
-
 import random
 
 class FlappyBirdEnv(gym.Env):
@@ -29,7 +28,7 @@ class FlappyBirdEnv(gym.Env):
         self.background_img = pygame.image.load('background.png').convert()
         self.bird_img = pygame.image.load('bird.png').convert_alpha()
         self.pipe_img = pygame.image.load('pipe.png').convert_alpha()
-        
+
         self.reset()
 
     def get_state(self):
@@ -61,14 +60,18 @@ class FlappyBirdEnv(gym.Env):
             new_pipe = [self.SCREEN_WIDTH, random.randint(100, self.SCREEN_HEIGHT - 100 - self.PIPE_GAP)]
             self.pipes.append(new_pipe)
 
-        # Check for collisions
-        if (self.bird_y < 0 or self.bird_y > self.SCREEN_HEIGHT or
-            (0 < self.pipes[0][0] < self.BIRD_WIDTH + 50 and
-             (self.bird_y < self.pipes[0][1] or self.bird_y > self.pipes[0][1] + self.PIPE_GAP))):
+        # Check for collisions with pipes (only game-ending if it hits a pipe, not if bird is out of bounds)
+        #if (50 < self.pipes[0][0] < 50 + self.BIRD_WIDTH and
+        #    (self.bird_y < self.pipes[0][1] or self.bird_y > self.pipes[0][1] + self.PIPE_GAP)):
+        #    reward = -1
+        #    return self.get_state(), reward, True, False, {}
+
+        # Don't end the game if the bird goes above the screen, but do if it hits the ground
+        if self.bird_y > self.SCREEN_HEIGHT:
             reward = -1
             return self.get_state(), reward, True, False, {}
 
-        print(f'score====={self.score}')
+        #print(f'score====={self.score}')
 
         return self.get_state(), reward, False, False, {}
 
@@ -81,7 +84,7 @@ class FlappyBirdEnv(gym.Env):
 
     def render(self):
         self.screen.blit(self.background_img, (0, 0))
-        
+
         # Draw pipes
         for pipe in self.pipes:
             self.screen.blit(self.pipe_img, (pipe[0], pipe[1] - self.PIPE_GAP - 320))
@@ -123,9 +126,8 @@ if __name__ == "__main__":
         obs, reward, done, _, info = env.step(action)
 
         if done:
-            print(f"Game Over! Final Score:")
+            print(f"Game Over! Final Score: {env.score}")
             # Wait for a moment before closing
             pygame.time.wait(2000)
 
     env.close()
-
