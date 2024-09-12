@@ -62,9 +62,15 @@ class FlappyBirdEnv(gym.Env):
             print(f"Top pipe position: X = {pipe[0]}, Y = {pipe[1] - self.PIPE_GAP - 320}")
             print(f"Bottom pipe position: X = {pipe[0]}, Y = {pipe[1]}")
     
-            if bird_rect.colliderect(top_pipe_rect) or bird_rect.colliderect(bottom_pipe_rect):
-                print("Collision with pipe detected.")
+            # ==== is work fine for debug:
+            if bird_rect.colliderect(top_pipe_rect):
+                print("Collision with top_pipe_rect pipe detected.")
                 return True
+
+            # bug: bug: the bird no hit pipe will stop game
+            #if bird_rect.colliderect(bottom_pipe_rect):
+            #    print("Collision with bottom_pipe_rect pipe detected.")
+            #    return True
     
         return False
 
