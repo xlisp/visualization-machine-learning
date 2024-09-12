@@ -60,12 +60,6 @@ class FlappyBirdEnv(gym.Env):
             new_pipe = [self.SCREEN_WIDTH, random.randint(100, self.SCREEN_HEIGHT - 100 - self.PIPE_GAP)]
             self.pipes.append(new_pipe)
 
-        # Check for collisions with pipes (only game-ending if it hits a pipe, not if bird is out of bounds)
-        #if (50 < self.pipes[0][0] < 50 + self.BIRD_WIDTH and
-        #    (self.bird_y < self.pipes[0][1] or self.bird_y > self.pipes[0][1] + self.PIPE_GAP)):
-        #    reward = -1
-        #    return self.get_state(), reward, True, False, {}
-
         if self.bird_y < 0:
             reward = -1
             return self.get_state(), reward, True, False, {}
@@ -74,8 +68,6 @@ class FlappyBirdEnv(gym.Env):
         if self.bird_y > self.SCREEN_HEIGHT:
             reward = -1
             return self.get_state(), reward, True, False, {}
-
-        #print(f'score====={self.score}')
 
         return self.get_state(), reward, False, False, {}
 
