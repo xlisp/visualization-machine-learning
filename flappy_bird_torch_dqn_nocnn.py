@@ -13,7 +13,7 @@ import pygame
 import numpy as np
 from gymnasium import spaces
 
-from flappy_bird_cl3_pass_env_to_nn_2 import FlappyBirdEnv
+from flappy_bird_cl3_pass_env_to_nn_3 import FlappyBirdEnv
 
 class DQN(nn.Module):
     def __init__(self, input_size, n_actions):

@@ -52,6 +52,10 @@ class FlappyBirdEnv(gym.Env):
         if self.bird_y + self.BIRD_HEIGHT >= self.SCREEN_HEIGHT:
             print("Collision with ground detected.")
             return True  # Game over if bird hits the ground
+
+        if self.bird_y < 0:
+            print("Collision with sky detected.")
+            return True  # Game over if bird hits the sky
     
         # Check if the bird collides with pipes
         for pipe in self.pipes:
