@@ -74,6 +74,7 @@ class FlappyBirdEnv(gym.Env):
 
         return observation, reward, self.game_over, False, info
 
+# ------------
     def render(self):
         self.screen.fill((135, 206, 250))  # Sky blue background
 

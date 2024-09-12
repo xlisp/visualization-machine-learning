@@ -7,6 +7,7 @@ import torch.nn as nn
 import torch.optim as optim
 import random
 from collections import deque
+import time
 
 from flappy_bird_cl2 import FlappyBirdEnv
 
@@ -38,7 +39,6 @@ class DQN(nn.Module):
         conv_out = self.conv(x).view(x.size()[0], -1)
         return self.fc(conv_out)
 
-# Agent
 class DQNAgent:
     def __init__(self, env, learning_rate=1e-4, gamma=0.99, epsilon_start=1.0, epsilon_final=0.01, epsilon_decay=0.995):
         self.env = env
@@ -95,7 +95,6 @@ class DQNAgent:
         loss.backward()
         self.optimizer.step()
 
-# Training loop
 def train_dqn(env, episodes=1000, max_steps=1000):
     agent = DQNAgent(env)
     scores = []
@@ -106,6 +105,7 @@ def train_dqn(env, episodes=1000, max_steps=1000):
         score = 0
 
         for step in range(max_steps):
+            env.render()  # Render each step
             action = agent.get_action(state)
             next_state, reward, done, _, _ = env.step(action)
             next_state = np.transpose(next_state, (2, 0, 1))  # Change from (H, W, C) to (C, H, W)
@@ -118,6 +118,9 @@ def train_dqn(env, episodes=1000, max_steps=1000):
             if done:
                 break
 
+            # Add a small delay to make the game visible
+            time.sleep(0.01)
+
         agent.update_epsilon()
         scores.append(score)
 
@@ -126,10 +129,9 @@ def train_dqn(env, episodes=1000, max_steps=1000):
 
     return agent, scores
 
-# Main execution
 if __name__ == "__main__":
     env = FlappyBirdEnv()
-    agent, scores = train_dqn(env)
+    agent, scores = train_dqn(env, episodes=100)  # Reduced episodes for quicker testing
 
     # Test the trained agent
     state = env.reset()
@@ -149,10 +151,8 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 done = True
 
+        # Add a small delay to make the game visible
+        time.sleep(0.03)
+
     print(f"Final Score: {score}")
     env.close()
-
-## ----------run ----
-# @ python flappy_bird_torch_dqn.py
-# Episode: 0, Score: 4.899999999999995, Epsilon: 0.99
-
