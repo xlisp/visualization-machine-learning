@@ -559,6 +559,8 @@ plt.show()
 
 ![](./rl_gym_dqn_lunar.gif)
 
+![](./flappy_bird_torch_dqn_nocnn.gif)
+
 ```python
 import torch
 import torch.nn as nn
