@@ -42,7 +42,7 @@ class DQNAgent:
     def __init__(self, env, learning_rate=1e-4, gamma=0.99, epsilon_start=1.0, epsilon_final=0.01, epsilon_decay=0.995):
         self.env = env
         self.n_actions = env.action_space.n
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 
         self.epsilon = epsilon_start
         self.epsilon_final = epsilon_final
