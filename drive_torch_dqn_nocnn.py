@@ -9,7 +9,7 @@ import random
 from collections import deque
 import time
 
-from drive_game import DrivingEnv
+from drive_game2 import DrivingEnv
 
 class DQN(nn.Module):
     def __init__(self, input_size, n_actions):
@@ -29,7 +29,7 @@ class DQNAgent:
     def __init__(self, env, learning_rate=1e-3, gamma=0.99, epsilon_start=1.0, epsilon_final=0.01, epsilon_decay=0.995):
         self.env = env
         self.n_actions = env.action_space.n
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "mps")
 
         self.epsilon = epsilon_start
         self.epsilon_final = epsilon_final
@@ -120,7 +120,7 @@ def train_dqn(env, episodes=2000, max_steps=1000, render_interval=10):
 
 if __name__ == "__main__":
     env = DrivingEnv()
-    agent, scores = train_dqn(env, episodes=1000, render_interval=50)
+    agent, scores = train_dqn(env, episodes=3000, render_interval=50)
 
     # Test the trained agent
     state = env.reset()
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     env.close()
 
 ## ------ run good ---------
-@ python drive_torch_dqn_nocnn.py
+# @ python drive_torch_dqn_nocnn.py
 # Episode: 0, Score: 201, Epsilon: 0.99
 # Episode: 10, Score: 538, Epsilon: 0.95
 # Episode: 20, Score: 357, Epsilon: 0.90
