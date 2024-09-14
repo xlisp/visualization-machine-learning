@@ -41,6 +41,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
 
 class RNNModel(nn.Module):
     def __init__(self, vocab_size, embed_size, hidden_size, num_layers):
@@ -60,6 +61,47 @@ class RNNModel(nn.Module):
         return (weight.new(self.num_layers, batch_size, self.hidden_size).zero_(),
                 weight.new(self.num_layers, batch_size, self.hidden_size).zero_())
 
+# --------- data set
+# Example text dataset
+class TextDataset(Dataset):
+    def __init__(self, text, vocab, sequence_length):
+        self.vocab = vocab
+        self.sequence_length = sequence_length
+        self.data = self.tokenize_and_encode(text)
+
+    def tokenize_and_encode(self, text):
+        tokens = text.split()  # Simple tokenization (split by spaces)
+        return [self.vocab.stoi[token] for token in tokens if token in self.vocab.stoi]
+
+    def __len__(self):
+        return len(self.data) - self.sequence_length
+
+    def __getitem__(self, idx):
+        x = self.data[idx:idx + self.sequence_length]
+        y = self.data[idx + 1:idx + 1 + self.sequence_length]
+        return torch.tensor(x, dtype=torch.long), torch.tensor(y, dtype=torch.long)
+
+# Example vocabulary
+class Vocab:
+    def __init__(self, stoi, itos):
+        self.stoi = stoi
+        self.itos = itos
+
+vocab = Vocab(stoi={'<pad>': 0, 'hello': 1, 'world': 2, 'the': 3, '<eos>': 4}, itos=['<pad>', 'hello', 'world', 'the', '<eos>'])
+
+# Sample text
+text = "hello world the hello world the <eos>"
+sequence_length = 5
+batch_size = 2
+
+# Create dataset and dataloader
+dataset = TextDataset(text, vocab, sequence_length)
+train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+
+# ----------
+
+
 # Hyperparameters
 vocab_size = 10000  # Example value, adjust based on your dataset
 embed_size = 300
@@ -68,6 +110,7 @@ num_layers = 2
 learning_rate = 0.001
 batch_size = 64
 num_epochs = 10
+
 
 # Initialize the model, loss function, and optimizer
 model = RNNModel(vocab_size, embed_size, hidden_size, num_layers)
@@ -128,3 +171,16 @@ print(generated_text)
 # - **PyTorch**: [PyTorch](https://pytorch.org/)
 
 # By combining these components, you can train a powerful news generator using Wikipedia data.
+
+# ---------- @ python rnn_news_generator.py
+# Traceback (most recent call last):
+#   File "/Users/emacspy/EmacsPyPro/emacspy-machine-learning/rnn_news_generator.py", line 124, in <module>
+#     hidden = model.init_hidden(batch_size)
+#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/Users/emacspy/EmacsPyPro/emacspy-machine-learning/rnn_news_generator.py", line 61, in init_hidden
+#     return (weight.new(self.num_layers, batch_size, self.hidden_size).zero_(),
+#                        ^^^^^^^^^^^^^^^
+#   File "/opt/anaconda3/envs/emacspy/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1729, in __getattr__
+#     raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+# AttributeError: 'RNNModel' object has no attribute 'num_layers'
+#
