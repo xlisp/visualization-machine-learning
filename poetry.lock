@@ -1820,7 +1820,31 @@ MarkupSafe = ">=2.1.1"
 [package.extras]
 watchdog = ["watchdog (>=2.3)"]
 
+[[package]]
+name = "wikiextractor"
+version = "3.0.6"
+description = "A tool for extracting plain text from Wikipedia dumps"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "wikiextractor-3.0.6-py3-none-any.whl", hash = "sha256:f4506990bf9c14e3cc92dc85a0a89554fef975cc1b28dcb9a4d31c73a8ef2133"},
+    {file = "wikiextractor-3.0.6.tar.gz", hash = "sha256:7041ff57884c16409e9b911ccd0106c218b88cbceabb86dd1443637afa8284de"},
+]
+
+[[package]]
+name = "wikipedia-api"
+version = "0.7.1"
+description = "Python Wrapper for Wikipedia"
+optional = false
+python-versions = "*"
+files = [
+    {file = "wikipedia_api-0.7.1.tar.gz", hash = "sha256:c72296adc0a6d8166d353a501f907add5db140179df462fc1cc0171c1c1bca00"},
+]
+
+[package.dependencies]
+requests = "*"
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "29f68785e4d4759dd75cb821ec0d62fad33424a48139c44564c6a43debecb0fa"
+content-hash = "8c5988d9276bfa34b2e0b3836fa6acd9a9ba45168121d7bf980566762deae22e"
