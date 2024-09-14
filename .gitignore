@@ -10,3 +10,4 @@ model.lmdb/
 __pycache__/
 *.pyc
 dqn_model.lmdb/
+rnn_model.pth

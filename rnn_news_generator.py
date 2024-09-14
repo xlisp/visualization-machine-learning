@@ -46,6 +46,8 @@ from torch.utils.data import Dataset, DataLoader
 class RNNModel(nn.Module):
     def __init__(self, vocab_size, embed_size, hidden_size, num_layers):
         super(RNNModel, self).__init__()
+        self.num_layers = num_layers  # Store num_layers
+        self.hidden_size = hidden_size  # Store hidden_size
         self.embedding = nn.Embedding(vocab_size, embed_size)
         self.rnn = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
         self.fc = nn.Linear(hidden_size, vocab_size)
@@ -62,6 +64,8 @@ class RNNModel(nn.Module):
                 weight.new(self.num_layers, batch_size, self.hidden_size).zero_())
 
 # --------- data set
+# Example text dataset
+
 # Example text dataset
 class TextDataset(Dataset):
     def __init__(self, text, vocab, sequence_length):
@@ -98,28 +102,21 @@ batch_size = 2
 dataset = TextDataset(text, vocab, sequence_length)
 train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-
-# ----------
-
-
-# Hyperparameters
-vocab_size = 10000  # Example value, adjust based on your dataset
-embed_size = 300
-hidden_size = 512
+# Define model, loss function, and optimizer
+vocab_size = len(vocab.stoi)
+embed_size = 10
+hidden_size = 20
 num_layers = 2
+num_epochs = 5
 learning_rate = 0.001
-batch_size = 64
-num_epochs = 10
 
-
-# Initialize the model, loss function, and optimizer
 model = RNNModel(vocab_size, embed_size, hidden_size, num_layers)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-# Training loop (simplified)
+# Training loop
 for epoch in range(num_epochs):
-    for batch in train_loader:  # Assuming `train_loader` is a DataLoader for your dataset
+    for batch in train_loader:
         inputs, targets = batch
         hidden = model.init_hidden(batch_size)
         outputs, hidden = model(inputs, hidden)
@@ -131,6 +128,7 @@ for epoch in range(num_epochs):
 
     print(f'Epoch {epoch+1}, Loss: {loss.item()}')
 
+##
 torch.save(model.state_dict(), 'rnn_model.pth')
 
 # Recreate the model architecture
@@ -173,14 +171,10 @@ print(generated_text)
 # By combining these components, you can train a powerful news generator using Wikipedia data.
 
 # ---------- @ python rnn_news_generator.py
-# Traceback (most recent call last):
-#   File "/Users/emacspy/EmacsPyPro/emacspy-machine-learning/rnn_news_generator.py", line 124, in <module>
-#     hidden = model.init_hidden(batch_size)
-#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-#   File "/Users/emacspy/EmacsPyPro/emacspy-machine-learning/rnn_news_generator.py", line 61, in init_hidden
-#     return (weight.new(self.num_layers, batch_size, self.hidden_size).zero_(),
-#                        ^^^^^^^^^^^^^^^
-#   File "/opt/anaconda3/envs/emacspy/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1729, in __getattr__
-#     raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
-# AttributeError: 'RNNModel' object has no attribute 'num_layers'
+# Epoch 1, Loss: 1.707576036453247
+# Epoch 2, Loss: 1.7037283182144165
+# Epoch 3, Loss: 1.6999328136444092
+# Epoch 4, Loss: 1.6961854696273804
+# Epoch 5, Loss: 1.6924810409545898
+# hello world <pad> the <pad> world world <pad> the hello hello <pad> <pad> hello <eos> world <pad> world world <pad> the the world <eos> world world world <eos> world the world hello world world <pad> <pad> <eos> <eos> <eos> hello hello <eos> hello <eos> world <pad> world <eos> <pad> <eos> world world <eos> world <pad> <pad> world world hello <pad> hello <pad> the world <pad> <eos> <pad> the <pad> the hello the the <eos> the <eos> <eos> hello <eos> world world world world the hello hello <eos> <eos> world hello world <eos> world <eos> hello <pad> the <eos> <eos> the <eos>
 #
