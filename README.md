@@ -24,6 +24,7 @@
   - [Flappy bird dqn](#flappy-bird-dqn)
   - [SGD](#sgd)
   - [CNN with Attention](#CNN-with-Attention)
+  - [LSTM generator](#LSTM-generator)
 
 ## least squares method
 
@@ -987,3 +988,132 @@ for epoch in range(5):  # Train for 5 epochs
 
 ```
 
+## LSTM generator
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import Dataset, DataLoader
+
+
+class Vocab:
+    def __init__(self, stoi, itos):
+        self.stoi = stoi
+        self.itos = itos
+
+# Provided corpus (AI history)
+corpus = """
+The history of artificial intelligence (AI) began in antiquity, with myths, stories and rumors of artificial beings endowed with intelligence or consciousness by master craftsmen.
+... ...
+"""
+
+# Simple tokenization (splitting by spaces)
+corpus = corpus.replace("\n", " ")  # Remove newlines
+
+# Tokenization can be improved using libraries like nltk or spacy, but we'll use a simple split here
+tokens = corpus.split()
+
+# You can build a vocabulary from this corpus as you did before, for instance:
+from collections import Counter
+
+# Create a vocabulary from the corpus
+token_counts = Counter(tokens)
+vocab_stoi = {token: idx for idx, (token, count) in enumerate(token_counts.items())}
+vocab_itos = {idx: token for token, idx in vocab_stoi.items()}
+
+# Create the Vocab object
+vocab = Vocab(stoi=vocab_stoi, itos=vocab_itos)
+
+class RNNModel(nn.Module):
+    def __init__(self, vocab_size, embed_size, hidden_size, num_layers):
+        super(RNNModel, self).__init__()
+        self.num_layers = num_layers
+        self.hidden_size = hidden_size
+        self.embedding = nn.Embedding(vocab_size, embed_size)
+        self.rnn = nn.LSTM(embed_size, hidden_size, num_layers, batch_first=True)
+        self.fc = nn.Linear(hidden_size, vocab_size)
+
+    def forward(self, x, hidden):
+        x = self.embedding(x)
+        out, hidden = self.rnn(x, hidden)
+        out = self.fc(out)
+        return out, hidden
+
+    def init_hidden(self, batch_size):
+        # Initialize hidden states (h_0) and cell states (c_0) with correct batch size
+        weight = next(self.parameters()).data
+        return (weight.new_zeros(self.num_layers, batch_size, self.hidden_size),
+                weight.new_zeros(self.num_layers, batch_size, self.hidden_size))
+
+class TextDataset(Dataset):
+    def __init__(self, text, vocab, sequence_length):
+        self.vocab = vocab
+        self.sequence_length = sequence_length
+        self.data = self.tokenize_and_encode(text)
+    def tokenize_and_encode(self, text):
+        tokens = text.split()  # Simple tokenization (split by spaces)
+        return [self.vocab.stoi[token] for token in tokens if token in self.vocab.stoi]
+    def __len__(self):
+        return len(self.data) - self.sequence_length
+    def __getitem__(self, idx):
+        x = self.data[idx:idx + self.sequence_length]
+        y = self.data[idx + 1:idx + 1 + self.sequence_length]
+        return torch.tensor(x, dtype=torch.long), torch.tensor(y, dtype=torch.long)
+
+# Define sequence length and batch size
+sequence_length = 10  # Can be tuned
+batch_size = 100
+
+# Create the dataset and dataloader
+dataset = TextDataset(corpus, vocab, sequence_length)
+train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+# Now you're ready to train the model using the provided corpus
+
+# Define model, loss function, and optimizer
+vocab_size = len(vocab.stoi)
+embed_size = 50  # Adjust as needed
+hidden_size = 100  # Adjust as needed
+num_layers = 2
+num_epochs = 100  # Adjust based on performance
+learning_rate = 0.001
+
+model = RNNModel(vocab_size, embed_size, hidden_size, num_layers)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# Training loop
+for epoch in range(num_epochs):
+    for batch in train_loader:
+        inputs, targets = batch
+        batch_size = inputs.size(0)  # Get the actual batch size for this iteration
+        hidden = model.init_hidden(batch_size)  # Initialize hidden state with correct batch size
+
+        outputs, hidden = model(inputs, hidden)
+        loss = criterion(outputs.view(-1, vocab_size), targets.view(-1))
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    print(f'Epoch {epoch+1}, Loss: {loss.item()}')
+
+torch.save(model.state_dict(), 'rnn_model_ai.pth')
+def generate_text(model, start_text, max_length=100):
+    model.eval()
+    hidden = model.init_hidden(1)  # Start with batch size 1
+    input = torch.tensor([[vocab.stoi[start_text]]])  # Convert start_text to input tensor
+    result = [start_text]
+    for _ in range(max_length):
+        output, hidden = model(input, hidden)
+        prob = nn.functional.softmax(output[0, -1], dim=0).data
+        next_word = torch.multinomial(prob, 1).item()
+        result.append(vocab.itos[next_word])  # Convert back to word using vocab
+        input = torch.tensor([[next_word]])  # Feed the next word as input
+    return ' '.join(result)
+start_text = 'AI'  # The starting word
+generated_text = generate_text(model, start_text, max_length=100)
+print(generated_text)
+
+```
