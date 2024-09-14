@@ -98,7 +98,7 @@ vocab_size = len(vocab.stoi)
 embed_size = 50  # Adjust as needed
 hidden_size = 100  # Adjust as needed
 num_layers = 2
-num_epochs = 10  # Adjust based on performance
+num_epochs = 100  # Adjust based on performance
 learning_rate = 0.001
 
 model = RNNModel(vocab_size, embed_size, hidden_size, num_layers)
@@ -151,4 +151,17 @@ print(generated_text)
 # Epoch 9, Loss: 4.935778617858887
 # Epoch 10, Loss: 4.8720784187316895
 # AI 1940s, mechanical impressive the into later, during of enthusiasm humans the within begin to all to led the used a true. The to other another intelligence. of the The the and based Lighthill learning the handful symbols. in now until exist. led of architecture of and research scientists research undirected was philosophical beings was Governments would in was the or on ideas that 2000s, of private in with summer the During of and digital the advancements and by funds, of of now led AI possibility or enthusiasm AI breakthrough become applications. the funding. of would hardware, discussing by U.S. endowed
-# 
+#
+
+## ----- run batch 100 , Epoch 100, Loss: 0.25984522700309753 ---------
+# ...
+# Epoch 93, Loss: 0.24792470037937164
+# Epoch 94, Loss: 0.26825472712516785
+# Epoch 95, Loss: 0.24857144057750702
+# Epoch 96, Loss: 0.24556078016757965
+# Epoch 97, Loss: 0.24988001585006714
+# Epoch 98, Loss: 0.24758602678775787
+# Epoch 99, Loss: 0.2425476312637329
+# Epoch 100, Loss: 0.25984522700309753
+# AI with billions of dollars of computer computer hardware, the collection of immense data sets and the application would of scientists workshop of become the leaders of AI, driving research for decades. Many of them predicted that within a generation, machines as intelligent as humans would would exist. Governments and private investors provided millions of dollars to make this vision come true. Eventually, it became obvious that researchers had grossly underestimated the difficulty of the project. project. In 1974, criticism from James Lighthill and pressure from the U.S. Congress led to the U.S. and artificial Seven years later, a visionary initiative
+#  
