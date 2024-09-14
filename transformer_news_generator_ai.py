@@ -18,19 +18,13 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import math
+from corpus_ai import corpus
 
 class Vocab:
     def __init__(self, stoi, itos):
         self.stoi = stoi
         self.itos = itos
 
-# Provided corpus (AI history) remains the same
-corpus = """
-The history of artificial intelligence (AI) began in antiquity, with myths, stories and rumors of artificial beings endowed with intelligence or consciousness by master craftsmen.
-Modern AI concepts were later developed by philosophers who attempted to describe human thought as a mechanical manipulation of symbols.
-This philosophical work culminated in the invention of the programmable digital computer in the 1940s, a machine based on the abstract essence of mathematical reasoning.
-...
-"""
 
 # Tokenization and vocabulary building remains the same
 corpus = corpus.replace("\n", " ")
@@ -104,7 +98,7 @@ num_heads = 2  # Number of attention heads
 hidden_size = 100  # Hidden layer size in feedforward network
 num_layers = 88  # Number of Transformer layers
 dropout = 0.1
-num_epochs = 100  # Adjust based on performance
+num_epochs = 300  # Adjust based on performance
 learning_rate = 0.001
 
 model = TransformerModel(vocab_size, embed_size, num_heads, hidden_size, num_layers, dropout)
