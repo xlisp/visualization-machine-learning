@@ -18,6 +18,8 @@ nltk = "^3.9.1"
 gymnasium = {extras = ["classic-control", "box2d"], version = "^0.29.1"}
 wikiextractor = "^3.0.6"
 wikipedia-api = "^0.7.1"
+python-socketio = "^5.11.3"
+flask-socketio = "^5.3.6"
 
 [build-system]
 requires = ["poetry-core"]
