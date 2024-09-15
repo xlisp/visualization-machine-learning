@@ -13,3 +13,4 @@ dqn_model.lmdb/
 rnn_model.pth
 rnn_model_ai.pth
 transformer_model_ai.pth
+transformer_model_ai_chinese.pth
