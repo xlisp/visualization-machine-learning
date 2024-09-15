@@ -6,6 +6,8 @@ import random
 from collections import deque
 import numpy as np
 
+from requests.adapters import HTTPAdapter
+
 # Define the neural network for DQN
 class DQN(nn.Module):
     def __init__(self, input_size, n_actions):
@@ -51,7 +53,18 @@ class DQNAgent:
     def get_state_from_backend(self):
         # Get the current game state from FastAPI
         url = "http://localhost:8000/game/state/"
-        response = requests.get(url)
+        #response = requests.get(url)
+        # Create a new requests session
+        session = requests.Session()
+
+        # Disable retries by setting max_retries to 0
+        adapter = HTTPAdapter(max_retries=0)
+        session.mount('http://', adapter)
+
+        # Use the session for your requests
+        response = session.get('http://localhost:8000/game/state/')
+
+
         game_state = response.json()
 
         # Simplify the game state to a vector (e.g., birdY and first pipe positions)
@@ -61,7 +74,7 @@ class DQNAgent:
         except KeyError:
             birdY = 0  # Default value or some error handling
             print("Warning: birdY is missing in the game state")
-    
+
         pipes = game_state["pipes"]
         if len(pipes) > 0:
             first_pipe_x = pipes[0]['x']
@@ -148,4 +161,3 @@ if __name__ == "__main__":
 # run 2 ---- flappy_bird_app  master @  python  dqn.py
 ## Episode 0, Total Reward: 0, Epsilon: 0.995
 ## requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /game/action/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1088f4ed0>: Failed to establish a new connection: [Errno 61] Connection refused'))
-
