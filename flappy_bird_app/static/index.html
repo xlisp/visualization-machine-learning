@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flappy Bird AI</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+</head>
+<body>
+
+<script>
+  class FlappyBirdGame extends Phaser.Scene {
+    constructor() {
+      super({ key: 'FlappyBirdGame' });
+    }
+
+    preload() {
+      this.load.image('bird', 'static/assets/bird.png');
+      this.load.image('pipe', 'static/assets/pipe.png');
+    }
+
+    create() {
+      // Game variables
+      this.bird = this.physics.add.sprite(100, 245, 'bird').setScale(0.5);
+      this.bird.setGravityY(1000);
+      this.pipes = this.physics.add.group();
+      this.score = 0;
+      this.isGameOver = false;
+
+      // Create pipes
+      this.createPipes();
+      this.time.addEvent({
+        delay: 1500,
+        callback: this.createPipes,
+        callbackScope: this,
+        loop: true
+      });
+
+      // Game state update loop (send game state to FastAPI and receive actions)
+      this.time.addEvent({
+        delay: 100,  // Update every 100ms
+        callback: this.sendStateToAPI,
+        callbackScope: this,
+        loop: true
+      });
+    }
+
+    createPipes() {
+      const pipeX = 400;
+      const pipeGap = 120;
+      const pipeY = Phaser.Math.Between(50, 300);
+
+      const upperPipe = this.pipes.create(pipeX, pipeY - pipeGap / 2, 'pipe').setOrigin(0, 1);
+      const lowerPipe = this.pipes.create(pipeX, pipeY + pipeGap / 2, 'pipe').setOrigin(0, 0);
+
+      upperPipe.body.velocity.x = -200;
+      lowerPipe.body.velocity.x = -200;
+
+      this.pipes.children.iterate((pipe) => {
+        if (pipe.x < -50) {
+          pipe.destroy();
+        }
+      });
+
+      this.physics.add.overlap(this.bird, this.pipes, this.gameOver, null, this);
+    }
+
+    update() {
+      if (this.bird.y < 0 || this.bird.y > 490) {
+        this.gameOver();
+      }
+
+      if (!this.isGameOver) {
+        this.score += 1;
+      }
+    }
+
+    flap() {
+      if (!this.isGameOver) {
+        this.bird.setVelocityY(-350);
+      }
+    }
+
+    gameOver() {
+      this.isGameOver = true;
+      this.physics.pause();
+      this.bird.setTint(0xff0000);
+      this.time.removeAllEvents();
+    }
+
+    // Send game state to FastAPI and receive action (0: no flap, 1: flap)
+    async sendStateToAPI() {
+      if (this.isGameOver) return;
+
+      const state = {
+        birdY: this.bird.y,
+        pipes: this.pipes.getChildren().map(pipe => ({ x: pipe.x, y: pipe.y })),
+        score: this.score,
+        isGameOver: this.isGameOver
+      };
+
+      // Send the state to FastAPI
+      const response = await fetch('http://localhost:8000/game/state/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(state),
+      });
+
+      const data = await response.json();
+
+      // Receive action from FastAPI
+      const actionResponse = await fetch('http://localhost:8000/game/action/');
+      const actionData = await actionResponse.json();
+
+      if (actionData.action === 1) {
+        this.flap();
+      }
+    }
+  }
+
+  const config = {
+    type: Phaser.AUTO,
+    width: 400,
+    height: 490,
+    physics: {
+      default: 'arcade',
+      arcade: {
+        gravity: { y: 300 },
+        debug: false
+      }
+    },
+    scene: FlappyBirdGame
+  };
+
+  const game = new Phaser.Game(config);
+</script>
+
+</body>
+</html>
+
