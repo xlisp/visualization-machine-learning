@@ -38,7 +38,13 @@ async def get_action():
 async def receive_state(request: Request):
     data = await request.json()
     game_state.update(data)  # Update the global game state
+    print("------receive_state------")
+    print(data)  # Debugging: Print received data
     return {"status": "state_received"}
+
+@app.get("/game/state/")
+async def get_game_state():
+    return game_state
 
 # Serve the main HTML file
 @app.get("/")

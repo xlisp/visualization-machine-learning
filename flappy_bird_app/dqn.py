@@ -55,7 +55,13 @@ class DQNAgent:
         game_state = response.json()
 
         # Simplify the game state to a vector (e.g., birdY and first pipe positions)
-        birdY = game_state["birdY"]
+        ## birdY = game_state["birdY"] ---
+        try:
+            birdY = game_state["birdY"]
+        except KeyError:
+            birdY = 0  # Default value or some error handling
+            print("Warning: birdY is missing in the game state")
+    
         pipes = game_state["pipes"]
         if len(pipes) > 0:
             first_pipe_x = pipes[0]['x']
@@ -137,4 +143,9 @@ class DQNAgent:
 if __name__ == "__main__":
     agent = DQNAgent()
     agent.train_on_backend(episodes=2000)
+
+## run------ flappy_bird_app  master @ uvicorn api:app --reload
+# run 2 ---- flappy_bird_app  master @  python  dqn.py
+## Episode 0, Total Reward: 0, Epsilon: 0.995
+## requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /game/action/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1088f4ed0>: Failed to establish a new connection: [Errno 61] Connection refused'))
 
