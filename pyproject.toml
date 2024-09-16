@@ -21,6 +21,8 @@ wikipedia-api = "^0.7.1"
 python-socketio = "^5.11.3"
 flask-socketio = "^5.3.6"
 jieba = "^0.42.1"
+fastapi-socketio = "^0.0.10"
+fastapi-cors = "^0.0.6"
 
 [build-system]
 requires = ["poetry-core"]
