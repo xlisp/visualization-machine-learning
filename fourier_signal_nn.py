@@ -89,19 +89,30 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Train the model
-n_epochs = 1000
+n_epochs = 3000
+losses = []
+
 for epoch in range(n_epochs):
     model.train()
-
+    
     optimizer.zero_grad()
     outputs = model(X_train)
-
+    
     loss = criterion(outputs, y_train)
     loss.backward()
     optimizer.step()
-
+    
+    losses.append(loss.item())
+    
     if epoch % 100 == 0:
         print(f'Epoch {epoch+1}/{n_epochs}, Loss: {loss.item()}')
+
+torch.save(model.state_dict(), 'fourier_predictor_model.pth')
+
+# Load the model (for future use)
+#loaded_model = FourierPredictor(length, n_components)
+#loaded_model.load_state_dict(torch.load('fourier_predictor_model.pth'))
+
 # ```
 
 # ### 6. Test the Model
@@ -116,6 +127,52 @@ with torch.no_grad():
     predicted_coeffs = model(test_signal_tensor).numpy()
     print("Predicted Fourier Coefficients:", predicted_coeffs)
     print("True Fourier Coefficients:", test_coeffs)
+
+import matplotlib.pyplot as plt
+
+# Plot the loss curve
+plt.plot(losses)
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.title('Training Loss Curve')
+plt.show()
+
+####
+
+# Generate a test signal
+test_signal, test_coeffs = generate_signal(1, n_components, length)
+test_signal_tensor = torch.tensor(test_signal, dtype=torch.float32)
+
+# Get the predicted Fourier coefficients
+model.eval()
+with torch.no_grad():
+    predicted_coeffs = model(test_signal_tensor).numpy()
+
+# Generate signals based on true and predicted Fourier coefficients
+def reconstruct_signal(x, coeffs):
+    signal = np.zeros_like(x)
+    for amplitude, frequency, phase in coeffs[0]:
+        signal += amplitude * np.sin(frequency * x + phase)
+    return signal
+
+# Create x values for the signal
+x = np.linspace(0, 2 * np.pi, length)
+
+# Reconstruct the signals
+true_signal = reconstruct_signal(x, test_coeffs)
+predicted_signal = reconstruct_signal(x, predicted_coeffs)
+
+# Plot the original, predicted, and true signals
+plt.figure(figsize=(10, 6))
+plt.plot(x, test_signal[0], label='Original Signal', color='blue', alpha=0.5)
+plt.plot(x, true_signal, label='True Reconstructed Signal', color='green', linestyle='--')
+plt.plot(x, predicted_signal, label='Predicted Reconstructed Signal', color='red', linestyle='--')
+plt.legend()
+plt.title('True vs Predicted Signal')
+plt.xlabel('Time')
+plt.ylabel('Amplitude')
+plt.show()
+
 # ```
 
 # ### Explanation:
