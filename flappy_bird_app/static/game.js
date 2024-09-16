@@ -1,5 +1,8 @@
 // Connect to the FastAPI server via Socket.IO
-const socket = io('http://localhost:8000');  // Ensure this matches the FastAPI server URL
+
+const socket = io('http://0.0.0.0:8000', {
+    transports: ['websocket'],  // Force WebSocket transport
+});
 
 // Game variables
 let bird = {
@@ -131,4 +134,3 @@ function drawGame() {
 
 // Start the game loop
 gameLoop();
-
