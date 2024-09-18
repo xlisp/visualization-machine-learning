@@ -425,7 +425,7 @@ with torch.no_grad():
 ## Data cleaning
 * [log clean utils](./log_utils.py)
 ```python
-## split
+## split by pattern, a full log for instance
 def split_log_file(input_file, split_pattern, output_pattern):
     with open(input_file, 'r') as file:
         log_content = file.read()
@@ -443,7 +443,8 @@ def split_log_file(input_file, split_pattern, output_pattern):
             with open(output_file, 'w') as file:
                 file.write(segment)
             print(f"Segment saved as {output_file}")
-## patterns
+
+## difference patterns save log
 def move_patterns_logs(destination_path, patterns):
     current_directory = os.getcwd()
     log_files = glob.glob("*.log")
