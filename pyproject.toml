@@ -23,6 +23,8 @@ flask-socketio = "^5.3.6"
 jieba = "^0.42.1"
 fastapi-socketio = "^0.0.10"
 fastapi-cors = "^0.0.6"
+pgmpy = "^0.1.26"
+bottleneck = "^1.4.0"
 
 [build-system]
 requires = ["poetry-core"]
