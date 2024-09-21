@@ -4,7 +4,7 @@ SHELL=/bin/bash
 ## vm emacspy && make install 
 
 # Variables
-PYTHON_VERSION = 3.11
+PYTHON_VERSION = 3.12
 
 # ANSI color codes
 GREEN=$(shell tput -Txterm setaf 2)
