@@ -1,11 +1,11 @@
-import autogen
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
-from transformers import GPT2Tokenizer, GPT2ForSequenceClassification
+
+#from transformers import GPT2Tokenizer, GPT2ForSequenceClassification
 
 # Step 1: Log Analysis
 
