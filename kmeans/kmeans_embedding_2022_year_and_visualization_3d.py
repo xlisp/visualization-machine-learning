@@ -64,7 +64,7 @@ def main():
     markdown_files = get_markdown_files()
 
     if not markdown_files:
-        print("No markdown files found from 2023 in the specified directory.")
+        print("No markdown files found from 2022 in the specified directory.")
         return
 
     labels, embeddings = cluster_files(markdown_files)
