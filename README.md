@@ -28,6 +28,12 @@
   - [LSTM generator](#LSTM-generator)
   - [Transformer generator](#Transformer-generator)
 
+## init env
+
+```bash
+conda activate emacspy
+```
+
 ## least squares method
 
 ```python
