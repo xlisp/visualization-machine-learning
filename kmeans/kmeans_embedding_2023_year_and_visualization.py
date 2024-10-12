@@ -30,7 +30,7 @@ def get_markdown_files():
 
     return md_files
 
-def cluster_files(files, n_clusters=5):
+def cluster_files(files, n_clusters=10):
     embeddings = [get_embedding(file) for file in files]
     kmeans = KMeans(n_clusters=n_clusters)
     kmeans.fit(embeddings)
