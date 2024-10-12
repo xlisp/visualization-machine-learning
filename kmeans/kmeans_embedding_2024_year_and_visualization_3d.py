@@ -18,7 +18,7 @@ def get_embedding(text):
 path = sys.argv[1]
 
 def get_markdown_files():
-    target_year = 2022
+    target_year = 2024
     md_files = []
 
     for root, dirs, files in os.walk(path):
@@ -31,7 +31,7 @@ def get_markdown_files():
 
     return md_files
 
-def cluster_files(files, n_clusters=5):
+def cluster_files(files, n_clusters=10):
     embeddings = [get_embedding(file) for file in files]
     kmeans = KMeans(n_clusters=n_clusters)
     kmeans.fit(embeddings)
@@ -64,7 +64,7 @@ def main():
     markdown_files = get_markdown_files()
 
     if not markdown_files:
-        print("No markdown files found from 2022 in the specified directory.")
+        print("No markdown files found from 2024 in the specified directory.")
         return
 
     labels, embeddings = cluster_files(markdown_files)
