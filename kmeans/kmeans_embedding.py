@@ -14,7 +14,7 @@ def get_embedding(text):
     return response['data'][0]['embedding']
 
 def get_markdown_files():
-    return [f for f in os.listdir('/Users/emacspy/Documents/_我的本地库思考') if f.endswith('.md')]
+    return [f for f in os.listdir('/Users/emacspy/Documents/_think_different_everday') if f.endswith('.md')]
 
 def cluster_files(files, n_clusters=5):
     embeddings = [get_embedding(file) for file in files]
