@@ -25,9 +25,9 @@ def get_markdown_files():
         for file in files:
             if file.endswith('.md'):
                 file_path = os.path.join(root, file)
-                mod_time = datetime.datetime.fromtimestamp(os.path.getmtime(file_path))
-                if mod_time.year == target_year:
-                    md_files.append(file_path)
+                #mod_time = datetime.datetime.fromtimestamp(os.path.getmtime(file_path))
+                #if mod_time.year == target_year:
+                md_files.append(file_path)
 
     return md_files
 
