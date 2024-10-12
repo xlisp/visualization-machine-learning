@@ -1,5 +1,7 @@
 import os
-import openai
+from openai import OpenAI
+
+client = OpenAI()
 from sklearn.cluster import KMeans
 import numpy as np
 
@@ -7,11 +9,9 @@ import numpy as np
 #openai.api_key = "your-api-key-here"
 
 def get_embedding(text):
-    response = openai.Embedding.create(
-        input=text,
-        model="text-embedding-ada-002"
-    )
-    return response['data'][0]['embedding']
+    response = client.embeddings.create(input=text,
+    model="text-embedding-ada-002")
+    return response.data[0].embedding
 
 def get_markdown_files():
     return [f for f in os.listdir('/Users/emacspy/Documents/_think_different_everday') if f.endswith('.md')]
@@ -24,7 +24,7 @@ def cluster_files(files, n_clusters=5):
 
 def main():
     markdown_files = get_markdown_files()
-    
+
     if not markdown_files:
         print("No markdown files found in the current directory.")
         return
