@@ -57,10 +57,10 @@ def get_or_calculate_embeddings(todo_items):
             print(f"Calculating embedding for: {todo}")
             embeddings_dict[todo] = get_embedding(todo)
 
-    save_embeddings_to_lmdb(embeddings_dict)
+    #save_embeddings_to_lmdb(embeddings_dict) # TODO: lmdb.BadValsizeError: mdb_put: MDB_BAD_VALSIZE: Unsupported size of key/DB name/data, or wrong DUPFIXED size
     return [embeddings_dict[todo] for _, todo in todo_items]
 
-def group_todos(todo_items, embeddings, n_clusters=10):
+def group_todos(todo_items, embeddings, n_clusters=20):
     X = np.array(embeddings)
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     labels = kmeans.fit_predict(X)
@@ -108,7 +108,7 @@ def main():
     todo_items = get_todo_items()
     embeddings = get_or_calculate_embeddings(todo_items)
     
-    n_clusters = min(10, len(todo_items))
+    n_clusters = min(20, len(todo_items))
     
     groups, labels, cluster_centers = group_todos(todo_items, embeddings, n_clusters)
     
