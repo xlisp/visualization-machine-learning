@@ -16,7 +16,7 @@ def get_embedding(text):
     return response.json()['embedding']
 
 def group_files(files, embeddings, n_clusters=10):
-    X = np.array(embeddings)  # Convert list to numpy array
+    X = np.array(embeddings)
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     labels = kmeans.fit_predict(X)
     
@@ -29,13 +29,18 @@ def group_files(files, embeddings, n_clusters=10):
     return groups, labels, kmeans.cluster_centers_
 
 def visualize_clusters(embeddings, labels, cluster_centers, files):
-    # Convert embeddings to numpy array if it's not already
     embeddings = np.array(embeddings)
     
-    # Reduce dimensionality for visualization
+    # Combine embeddings and cluster centers
+    combined = np.vstack((embeddings, cluster_centers))
+    
+    # Apply t-SNE to the combined data
     tsne = TSNE(n_components=2, random_state=42)
-    embeddings_2d = tsne.fit_transform(embeddings)
-    centers_2d = tsne.transform(cluster_centers)
+    combined_2d = tsne.fit_transform(combined)
+    
+    # Separate the results
+    embeddings_2d = combined_2d[:len(embeddings)]
+    centers_2d = combined_2d[len(embeddings):]
 
     # Create a scatter plot
     plt.figure(figsize=(12, 8))
