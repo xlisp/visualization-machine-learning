@@ -17,3 +17,5 @@ transformer_model_ai_chinese.pth
 fourier_predictor_model.pth
 embeddings.lmdb
 ollama_embeddings.lmdb
+ollama_nomic_embeddings.lmdb
+
