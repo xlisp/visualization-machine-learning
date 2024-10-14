@@ -50,7 +50,7 @@ def get_or_calculate_embeddings(files):
     save_embeddings_to_lmdb(embeddings_dict)
     return [embeddings_dict[file] for file in files]
 
-def group_files(files, embeddings, n_clusters=10):
+def group_files(files, embeddings, n_clusters=20):
     X = np.array(embeddings)
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     labels = kmeans.fit_predict(X)
@@ -98,7 +98,7 @@ def main():
     markdown_files = get_markdown_files()
     embeddings = get_or_calculate_embeddings(markdown_files)
     
-    n_clusters = min(10, len(markdown_files))
+    n_clusters = min(20, len(markdown_files))
     
     groups, labels, cluster_centers = group_files(markdown_files, embeddings, n_clusters)
     
