@@ -13,7 +13,7 @@ def get_embedding(text):
     })
     return response.json()['embedding']
 
-def group_files(files, embeddings, n_clusters=5):
+def group_files(files, embeddings, n_clusters=10):
     # Convert embeddings list to numpy array
     X = np.array(embeddings)
     
@@ -35,7 +35,7 @@ def main():
     embeddings = [get_embedding(file) for file in markdown_files]
     
     # Determine the number of clusters
-    n_clusters = min(5, len(markdown_files))  # Use 5 clusters or the number of files, whichever is smaller
+    n_clusters = min(10, len(markdown_files))  # Use 10 clusters or the number of files, whichever is smaller
     
     groups = group_files(markdown_files, embeddings, n_clusters)
     
