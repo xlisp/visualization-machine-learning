@@ -25,6 +25,7 @@ fastapi-socketio = "^0.0.10"
 fastapi-cors = "^0.0.6"
 pgmpy = "^0.1.26"
 bottleneck = "^1.4.0"
+faiss-cpu = "^1.9.0"
 
 [build-system]
 requires = ["poetry-core"]
