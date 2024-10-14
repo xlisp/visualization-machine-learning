@@ -40,12 +40,21 @@ def load_embeddings_from_faiss(db_path='todo_embeddings.index'):
 
 def get_or_calculate_embeddings(todo_items):
     db_path = 'todo_embeddings.index'
-    embeddings_dict = {}
 
     if os.path.exists(db_path):
         print("Loading embeddings from FAISS index...")
         index = load_embeddings_from_faiss(db_path)
-        return index
+
+        # Extract embeddings from FAISS index one by one
+        num_embeddings = index.ntotal  # Number of stored embeddings
+        dim = index.d  # The dimensionality of the embeddings
+
+        embeddings = np.zeros((num_embeddings, dim))  # Placeholder for the embeddings
+
+        for i in range(num_embeddings):
+            embeddings[i] = index.reconstruct(i)  # Reconstruct each embedding one at a time
+
+        return embeddings
     else:
         print("Calculating new embeddings...")
         embeddings = []
@@ -53,12 +62,11 @@ def get_or_calculate_embeddings(todo_items):
             print(f"Calculating embedding for: {todo}")
             embedding = get_embedding(todo)
             embeddings.append(embedding)
-            embeddings_dict[todo] = embedding
 
         save_embeddings_to_faiss(embeddings, db_path)
         return np.array(embeddings)
 
-def group_todos(todo_items, embeddings, n_clusters=200):
+def group_todos(todo_items, embeddings, n_clusters=300):
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     labels = kmeans.fit_predict(embeddings)
     
@@ -118,7 +126,7 @@ def main():
     todo_items = get_todo_items()
     embeddings = get_or_calculate_embeddings(todo_items)
     
-    n_clusters = min(200, len(todo_items))
+    n_clusters = min(300, len(todo_items))
     
     groups, labels, cluster_centers = group_todos(todo_items, embeddings, n_clusters)
     
