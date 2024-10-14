@@ -17,12 +17,12 @@ def get_embedding(text):
                                  "prompt": text
                              })
     if response.status_code == 200:
-        return response.json()['embedding']
+        return np.array(response.json()['embedding'])
     else:
         raise Exception(f"Error getting embedding: {response.text}")
 
 path = sys.argv[1]
-lmdb_path = 'ollama_embeddings.lmdb'
+lmdb_path = 'ollama_embeddings.lmdb'  # Updated LMDB file name
 
 def get_markdown_files():
     md_files = []
@@ -32,6 +32,13 @@ def get_markdown_files():
                 file_path = os.path.join(root, file)
                 md_files.append(file_path)
     return md_files
+
+def normalize_embedding(embedding, target_dim):
+    if len(embedding) > target_dim:
+        return embedding[:target_dim]
+    elif len(embedding) < target_dim:
+        return np.pad(embedding, (0, target_dim - len(embedding)), 'constant')
+    return embedding
 
 def save_embeddings_to_lmdb(files, embeddings):
     env = lmdb.open(lmdb_path, map_size=1099511627776)
@@ -93,13 +100,37 @@ def main():
         for file in markdown_files:
             with open(file, 'r', encoding='utf-8') as f:
                 content = f.read()
-            embeddings.append(get_embedding(content))
-        save_embeddings_to_lmdb(markdown_files, embeddings)
+            embedding = get_embedding(content)
+            embeddings.append(embedding)
+            print(f"Generated embedding for {file}: shape {embedding.shape}")
+        
+        # Determine the maximum dimension
+        max_dim = max(emb.shape[0] for emb in embeddings)
+        print(f"Maximum embedding dimension: {max_dim}")
+        
+        # Normalize all embeddings to the maximum dimension
+        normalized_embeddings = [normalize_embedding(emb, max_dim) for emb in embeddings]
+        
+        save_embeddings_to_lmdb(markdown_files, normalized_embeddings)
+        embeddings = normalized_embeddings
     else:
         print("Loading embeddings from LMDB...")
         markdown_files, embeddings = load_embeddings_from_lmdb()
+        
+        # Ensure all loaded embeddings have the same dimension
+        embedding_shapes = [emb.shape for emb in embeddings]
+        print(f"Loaded embedding shapes: {embedding_shapes}")
+        
+        max_dim = max(emb.shape[0] for emb in embeddings)
+        print(f"Maximum embedding dimension: {max_dim}")
+        
+        embeddings = [normalize_embedding(emb, max_dim) for emb in embeddings]
 
-    labels = cluster_files(markdown_files, embeddings)
+    # Convert to numpy array
+    embeddings_array = np.array(embeddings)
+    print(f"Final embeddings array shape: {embeddings_array.shape}")
+
+    labels = cluster_files(markdown_files, embeddings_array)
 
     groups = {}
     for file, label in zip(markdown_files, labels):
@@ -112,9 +143,8 @@ def main():
         for file in files:
             print(f"  - {file}")
 
-    visualize_clusters_3d(embeddings, labels)
+    visualize_clusters_3d(embeddings_array, labels)
     print("\n3D cluster visualization displayed. Close the plot window to end the program.")
 
 if __name__ == "__main__":
     main()
-
