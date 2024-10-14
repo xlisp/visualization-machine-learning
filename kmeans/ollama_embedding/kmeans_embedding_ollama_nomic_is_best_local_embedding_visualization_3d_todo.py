@@ -1,5 +1,6 @@
 import os
 import re
+import json
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
@@ -7,7 +8,6 @@ import requests
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import lmdb
-import pickle
 
 def get_todo_items(directory='/Users/emacspy/Documents/_我的本地库思考'):
     todo_items = []
@@ -29,18 +29,18 @@ def get_embedding(text):
     return response.json()['embedding']
 
 def save_embeddings_to_lmdb(embeddings_dict, db_path='todo_embeddings.lmdb'):
-    env = lmdb.open(db_path, map_size=1024*1024*1024)  # 1GB size
+    env = lmdb.open(db_path, map_size=10*1024*1024*1024)  # 10GB size
     with env.begin(write=True) as txn:
         for key, value in embeddings_dict.items():
-            txn.put(key.encode(), pickle.dumps(value))
+            txn.put(key.encode(), json.dumps(value).encode())
 
 def load_embeddings_from_lmdb(db_path='todo_embeddings.lmdb'):
-    env = lmdb.open(db_path, readonly=True)
+    env = lmdb.open(db_path, readonly=True, map_size=10*1024*1024*1024)  # 10GB size
     embeddings_dict = {}
     with env.begin() as txn:
         cursor = txn.cursor()
         for key, value in cursor:
-            embeddings_dict[key.decode()] = pickle.loads(value)
+            embeddings_dict[key.decode()] = json.loads(value.decode())
     return embeddings_dict
 
 def get_or_calculate_embeddings(todo_items):
@@ -60,7 +60,7 @@ def get_or_calculate_embeddings(todo_items):
     save_embeddings_to_lmdb(embeddings_dict)
     return [embeddings_dict[todo] for _, todo in todo_items]
 
-def group_todos(todo_items, embeddings, n_clusters=20):
+def group_todos(todo_items, embeddings, n_clusters=10):
     X = np.array(embeddings)
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
     labels = kmeans.fit_predict(X)
@@ -108,7 +108,7 @@ def main():
     todo_items = get_todo_items()
     embeddings = get_or_calculate_embeddings(todo_items)
     
-    n_clusters = min(20, len(todo_items))
+    n_clusters = min(10, len(todo_items))
     
     groups, labels, cluster_centers = group_todos(todo_items, embeddings, n_clusters)
     
