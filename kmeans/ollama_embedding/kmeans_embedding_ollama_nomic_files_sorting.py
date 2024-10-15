@@ -24,7 +24,8 @@ def find_files_with_chinese_names():
             # Check if the file name contains any Chinese characters
             if chinese_pattern.search(file):
                 # Add the full path to the result list
-                chinese_file_paths.append(("", os.path.join(root, file)))
+                #chinese_file_paths.append(("", os.path.join(root, file)))
+                chinese_file_paths.append(("", file))
     
     return chinese_file_paths
 
