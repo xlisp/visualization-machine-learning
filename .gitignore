@@ -20,3 +20,4 @@ ollama_embeddings.lmdb
 ollama_nomic_embeddings.lmdb
 embeddings_ollama2.lmdb
 todo_embeddings.index
+files_sorting_embeddings.index
