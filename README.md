@@ -31,7 +31,9 @@
 ## init env
 
 ```bash
+conda create -n emacspy python=3.11
 conda activate emacspy
+poetry install
 ```
 
 ## least squares method
