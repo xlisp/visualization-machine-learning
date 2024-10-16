@@ -10,7 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import faiss  # Replacing LMDB with FAISS
 from sklearn.decomposition import PCA
 
-directory="/Users/emacspy/DesktopFile/111机器打败机器"
+directory="/Users/clojure/Desktop/new111机器打败机器"
 
 def find_files_with_chinese_names():
     chinese_file_paths = []
