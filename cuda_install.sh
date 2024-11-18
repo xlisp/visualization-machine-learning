@@ -12,3 +12,7 @@ sudo apt-get -y install cuda-toolkit-12-6
 #sudo apt-get install -y nvidia-open
 sudo apt-get install -y cuda-drivers
 
+### ---- 
+export PATH="/usr/local/cuda/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+
