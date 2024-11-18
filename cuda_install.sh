@@ -16,3 +16,14 @@ sudo apt-get install -y cuda-drivers
 export PATH="/usr/local/cuda/bin:$PATH"
 export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
 
+## test 
+## (base) ➜  ~ nvcc -V
+## nvcc: NVIDIA (R) Cuda compiler driver
+## Copyright (c) 2005-2024 NVIDIA Corporation
+## Built on Thu_Sep_12_02:18:05_PDT_2024
+## Cuda compilation tools, release 12.6, V12.6.77
+## Build cuda_12.6.r12.6/compiler.34841621_0
+## (base) ➜  ~ pwd
+## /home/xlisp
+## (base) ➜  ~
+## 
