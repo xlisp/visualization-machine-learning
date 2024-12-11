@@ -571,7 +571,7 @@ plt.show()
 
 ## Reinforcement Learning (DQN)
 
-![](./rl_gym_dqn_lunar.gif)
+![](./rl_games/rl_gym_dqn_lunar.gif)
 
 
 ```python
@@ -692,7 +692,7 @@ env.close()
 
 ## Flappy bird dqn
 
-![](./flappy_bird_torch_dqn_nocnn.gif)
+![](./rl_games/flappy_bird_app/flappy_bird_torch_dqn_nocnn.gif)
 
 ```python
 import gymnasium as gym
@@ -847,7 +847,7 @@ if __name__ == "__main__":
 ```
 
 ## SGD
-![](./sgd_visualization_animation.gif)
+![](./deep_learning_basic_funcs/sgd_visualization_animation.gif)
 
 ```python
 import torch
