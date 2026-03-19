@@ -1,4 +1,4 @@
-# Visualization Python & R Machine Learning, Deep Learning, Reinforcement Learning
+# Visualization Python Machine Learning, Deep Learning, Reinforcement Learning
 
 ## First principle
 
@@ -7,8 +7,7 @@
 * The idea of high-dimensional space: the code is cut into high-dimensional space, and then a very detailed high-dimensional classification is done to separate it. Then the search is also high-dimensional, just like the code, it is entered into the treesitter to do training to obtain logical learning relationships. Most of NLP is a multi-classification problem in high-dimensional space.
 * Collect the input x and output y around you as training data, and mine their mapping relationship f(x) at any time. You can use GPT to generate certain data for your model training needs or write crawler to get you need data.
 
-- [Python & R Machine Learning](#python--r-machine-learning)
-  - [R Machine Learning](https://github.com/chanshunli/jim-emacs-machine-learning/tree/master/R-Lang-machine-learning)
+- [Python Machine Learning](#python-machine-learning)
   - [least squares method](#least-squares-method)
   - [least squares method by neural network](#least-squares-method-by-neural-network)
   - [nonlinear fitting](#nonlinear-fitting)
