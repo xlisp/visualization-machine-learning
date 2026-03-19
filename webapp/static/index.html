@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visualization Machine Learning - 可视化机器学习</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav id="nav">
+  <div class="nav-brand">VML</div>
+  <div class="nav-links">
+    <a href="#hero">首页</a>
+    <a href="#foundations">数学基础</a>
+    <a href="#classical-ml">经典ML</a>
+    <a href="#nn-basics">神经网络</a>
+    <a href="#deep-learning">深度学习</a>
+    <a href="#transformers">Transformer</a>
+    <a href="#rl">强化学习</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="hero" class="hero">
+  <div class="hero-content">
+    <h1>可视化机器学习</h1>
+    <p class="hero-subtitle">Visualization Machine Learning</p>
+    <p class="hero-desc">从数学基础到深度学习，用交互式可视化理解每一个核心概念</p>
+    <div class="learning-path">
+      <div class="path-node active" data-target="foundations">数学基础</div>
+      <div class="path-arrow">→</div>
+      <div class="path-node" data-target="classical-ml">经典ML</div>
+      <div class="path-arrow">→</div>
+      <div class="path-node" data-target="nn-basics">神经网络</div>
+      <div class="path-arrow">→</div>
+      <div class="path-node" data-target="deep-learning">深度学习</div>
+      <div class="path-arrow">→</div>
+      <div class="path-node" data-target="transformers">Transformer</div>
+      <div class="path-arrow">→</div>
+      <div class="path-node" data-target="rl">强化学习</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 1. MATH FOUNDATIONS ==================== -->
+<section id="foundations" class="section">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2>数学基础 <span class="en">Mathematical Foundations</span></h2>
+    <p>一切机器学习的起点：从最小二乘法到凸优化</p>
+  </div>
+
+  <!-- 1.1 Least Squares -->
+  <div class="topic" id="least-squares">
+    <div class="topic-header">
+      <h3>最小二乘法 Least Squares Method</h3>
+      <p>通过最小化误差的平方和来拟合数据——最基础的参数估计方法</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.leastSquares.reset()">重置</button>
+          <span class="demo-hint">点击画布添加数据点</span>
+        </div>
+        <canvas id="canvas-least-squares" width="560" height="380"></canvas>
+        <div class="demo-info" id="ls-info">y = ax + b | 点击添加数据点，观察拟合直线的变化</div>
+      </div>
+      <div class="image-panel">
+        <h4>项目可视化结果</h4>
+        <img src="/images/least_squares_method.png" alt="Least Squares" loading="lazy">
+        <div class="source-link" onclick="showSource('least_squares_method.py')">📄 查看源码 least_squares_method.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.2 Linear Programming -->
+  <div class="topic" id="linear-programming">
+    <div class="topic-header">
+      <h3>线性规划 Linear Programming</h3>
+      <p>在线性约束条件下寻找目标函数的最优解</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <canvas id="canvas-linear-prog" width="560" height="380"></canvas>
+        <div class="demo-info">可行域(蓝色区域)与目标函数等高线，红点为最优解</div>
+      </div>
+      <div class="image-panel">
+        <h4>项目可视化结果</h4>
+        <img src="/images/linear_programming_visualization.png" alt="Linear Programming" loading="lazy">
+        <div class="source-link" onclick="showSource('linear_programming_visualization.py')">📄 查看源码</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.3 Convex Optimization -->
+  <div class="topic" id="convex-opt">
+    <div class="topic-header">
+      <h3>凸优化 Convex Optimization</h3>
+      <p>梯度下降在凸函数上的收敛过程——深度学习优化的理论基石</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.gradientDescent.reset()">重置</button>
+          <label>学习率: <input type="range" id="gd-lr" min="1" max="50" value="10" oninput="demos.gradientDescent.setLR(this.value/1000)"></label>
+          <span id="gd-lr-val">0.010</span>
+        </div>
+        <canvas id="canvas-gradient-descent" width="560" height="380"></canvas>
+        <div class="demo-info" id="gd-info">点击画布选择起始点，观察梯度下降路径</div>
+      </div>
+      <div class="image-panel">
+        <h4>项目可视化结果</h4>
+        <img src="/images/convex_optimization_visualization.png" alt="Convex Optimization" loading="lazy">
+        <div class="source-link" onclick="showSource('convex_optimization_visualization.py')">📄 查看源码</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.4 Derivatives -->
+  <div class="topic" id="derivatives">
+    <div class="topic-header">
+      <h3>符号求导 Symbolic Derivatives (PyTorch Autograd)</h3>
+      <p>自动微分是反向传播的核心——PyTorch的autograd引擎</p>
+    </div>
+    <div class="topic-content single-image">
+      <div class="image-panel wide">
+        <img src="/images/symbol_derivative_pytorch.png" alt="Symbolic Derivative" loading="lazy">
+        <div class="source-link" onclick="showSource('symbol_derivative_pytorch.py')">📄 查看源码</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 2. CLASSICAL ML ==================== -->
+<section id="classical-ml" class="section alt">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <h2>经典机器学习 <span class="en">Classical Machine Learning</span></h2>
+    <p>SVM、决策树、K-Means——理解分类与聚类的核心算法</p>
+  </div>
+
+  <!-- 2.1 SVM -->
+  <div class="topic" id="svm">
+    <div class="topic-header">
+      <h3>支持向量机 SVM</h3>
+      <p>寻找最大间隔超平面，用核技巧处理非线性分类</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.svm.reset()">重置</button>
+          <button onclick="demos.svm.setClass(0)" id="svm-c0" class="active-btn">● 类别A</button>
+          <button onclick="demos.svm.setClass(1)" id="svm-c1">● 类别B</button>
+        </div>
+        <canvas id="canvas-svm" width="560" height="380"></canvas>
+        <div class="demo-info">添加两类数据点，观察SVM决策边界与支持向量</div>
+      </div>
+      <div class="image-panel">
+        <h4>2D & 3D 可视化</h4>
+        <img src="/images/svm_visualization.png" alt="SVM 2D" loading="lazy">
+        <img src="/images/svm_visualization_3d.gif" alt="SVM 3D" loading="lazy" class="mt-1">
+        <div class="source-link" onclick="showSource('svm_visualization.py')">📄 svm_visualization.py</div>
+        <div class="source-link" onclick="showSource('svm_visualization_3d.py')">📄 svm_visualization_3d.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.2 Decision Tree -->
+  <div class="topic" id="decision-tree">
+    <div class="topic-header">
+      <h3>决策树 Decision Tree</h3>
+      <p>通过递归划分特征空间来进行分类——直观可解释的模型</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.decisionTree.reset()">重置</button>
+          <button onclick="demos.decisionTree.setClass(0)" id="dt-c0" class="active-btn">● 类别A</button>
+          <button onclick="demos.decisionTree.setClass(1)" id="dt-c1">● 类别B</button>
+          <button onclick="demos.decisionTree.split()">执行分裂</button>
+        </div>
+        <canvas id="canvas-decision-tree" width="560" height="380"></canvas>
+        <div class="demo-info">添加数据点后点击"执行分裂"，观察决策边界的形成</div>
+      </div>
+      <div class="image-panel">
+        <h4>项目可视化结果</h4>
+        <img src="/images/DecisionTreeClassifier.png" alt="Decision Tree" loading="lazy">
+        <div class="source-link" onclick="showSource('DecisionTreeClassifier.py')">📄 DecisionTreeClassifier.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.3 K-Means -->
+  <div class="topic" id="kmeans">
+    <div class="topic-header">
+      <h3>K-Means 聚类</h3>
+      <p>迭代地将数据点分配到最近的质心——无监督学习的基础</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.kmeans.reset()">重置</button>
+          <button onclick="demos.kmeans.generate()">生成数据</button>
+          <button onclick="demos.kmeans.step()">下一步迭代</button>
+          <button onclick="demos.kmeans.autoRun()">自动运行</button>
+          <label>K= <input type="number" id="kmeans-k" value="3" min="2" max="8" style="width:40px"></label>
+        </div>
+        <canvas id="canvas-kmeans" width="560" height="380"></canvas>
+        <div class="demo-info" id="kmeans-info">点击"生成数据"开始，然后逐步观察聚类过程</div>
+      </div>
+      <div class="image-panel">
+        <h4>项目可视化结果</h4>
+        <img src="/images/kmeans/kmeans_visualization.png" alt="K-Means" loading="lazy">
+        <img src="/images/kmeans/kmeans_embedding_2024_year_and_visualization_3d.gif" alt="K-Means 3D" loading="lazy" class="mt-1">
+        <div class="source-link" onclick="showSource('kmeans/kmeans_visualization.py')">📄 kmeans_visualization.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.4 Polar Coordinate Classification -->
+  <div class="topic" id="polar">
+    <div class="topic-header">
+      <h3>极坐标分类 Polar Coordinate Classification</h3>
+      <p>用神经网络学习非线性决策边界——从线性到非线性的跨越</p>
+    </div>
+    <div class="topic-content single-image">
+      <div class="image-panel wide">
+        <div class="image-row">
+          <img src="/images/polar_coordinate_classification.png" alt="Polar Classification" loading="lazy">
+          <img src="/images/polar_coordinate_classification.gif" alt="Polar Classification Animation" loading="lazy">
+        </div>
+        <div class="source-link" onclick="showSource('polar_coordinate_classification.py')">📄 polar_coordinate_classification.py</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 3. NEURAL NETWORK BASICS ==================== -->
+<section id="nn-basics" class="section">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <h2>神经网络基础 <span class="en">Neural Network Fundamentals</span></h2>
+    <p>MLP、反向传播、激活函数、损失函数、优化器——构建深度学习的基石</p>
+  </div>
+
+  <!-- 3.1 MLP & Backpropagation -->
+  <div class="topic" id="mlp">
+    <div class="topic-header">
+      <h3>多层感知机与反向传播 MLP & Backpropagation</h3>
+      <p>前向传播计算预测值，反向传播计算梯度并更新权重</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.neuralNet.reset()">重置</button>
+          <button onclick="demos.neuralNet.forward()">前向传播</button>
+          <button onclick="demos.neuralNet.backward()">反向传播</button>
+          <button onclick="demos.neuralNet.train()">训练一步</button>
+        </div>
+        <canvas id="canvas-neural-net" width="560" height="380"></canvas>
+        <div class="demo-info" id="nn-info">可视化信号在网络中的前向和反向传播过程</div>
+      </div>
+      <div class="image-panel">
+        <h4>MLP 反向传播可视化</h4>
+        <img src="/images/mlp_bp.png" alt="MLP Backpropagation" loading="lazy">
+        <div class="source-link" onclick="showSource('mlp_bp.py')">📄 mlp_bp.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.2 Activation Functions -->
+  <div class="topic" id="activation">
+    <div class="topic-header">
+      <h3>激活函数 Activation Functions</h3>
+      <p>ReLU、Sigmoid、Softmax——为神经网络引入非线性</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.activation.show('relu')" class="active-btn" id="act-relu">ReLU</button>
+          <button onclick="demos.activation.show('sigmoid')" id="act-sigmoid">Sigmoid</button>
+          <button onclick="demos.activation.show('tanh')" id="act-tanh">Tanh</button>
+          <button onclick="demos.activation.show('softmax')" id="act-softmax">Softmax</button>
+        </div>
+        <canvas id="canvas-activation" width="560" height="380"></canvas>
+        <div class="demo-info">函数曲线(蓝)与导数(橙)，拖动竖线观察具体值</div>
+      </div>
+      <div class="image-panel">
+        <h4>Softmax & ReLU</h4>
+        <img src="/images/deep_learning_basic_funcs/softmax_3dgraph.png" alt="Softmax 3D" loading="lazy">
+        <img src="/images/relu_graph.png" alt="ReLU" loading="lazy" class="mt-1">
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.3 Loss & SGD -->
+  <div class="topic" id="sgd">
+    <div class="topic-header">
+      <h3>损失函数与SGD优化 Loss Functions & SGD</h3>
+      <p>通过随机梯度下降最小化损失函数——神经网络学习的驱动力</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.sgd.reset()">重置</button>
+          <button onclick="demos.sgd.step()">SGD步进</button>
+          <button onclick="demos.sgd.autoRun()">自动训练</button>
+          <label>批大小: <select id="sgd-batch" onchange="demos.sgd.setBatch(this.value)">
+            <option value="1">1 (纯SGD)</option>
+            <option value="4">4</option>
+            <option value="16" selected>16</option>
+            <option value="all">全量</option>
+          </select></label>
+        </div>
+        <canvas id="canvas-sgd" width="560" height="380"></canvas>
+        <div class="demo-info" id="sgd-info">观察不同批大小下SGD的收敛行为</div>
+      </div>
+      <div class="image-panel">
+        <h4>SGD 可视化 & Loss曲线</h4>
+        <img src="/images/deep_learning_basic_funcs/sgd_visualization.png" alt="SGD" loading="lazy">
+        <img src="/images/deep_learning_basic_funcs/sgd_visualization_animation.gif" alt="SGD Animation" loading="lazy" class="mt-1">
+        <img src="/images/deep_learning_basic_funcs/loss_bp.png" alt="Loss BP" loading="lazy" class="mt-1">
+        <div class="source-link" onclick="showSource('deep_learning_basic_funcs/sgd_visualization.py')">📄 sgd_visualization.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.4 Optimizers -->
+  <div class="topic" id="optimizers">
+    <div class="topic-header">
+      <h3>优化器对比 Optimizers Comparison</h3>
+      <p>SGD vs Momentum vs Adam——不同优化策略的收敛路径</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.optimizers.reset()">重置</button>
+          <button onclick="demos.optimizers.start()">开始对比</button>
+        </div>
+        <canvas id="canvas-optimizers" width="560" height="380"></canvas>
+        <div class="demo-info">SGD(红), Momentum(蓝), Adam(绿) 在同一损失面上的优化路径</div>
+      </div>
+      <div class="image-panel">
+        <h4>优化器可视化</h4>
+        <img src="/images/deep_learning_basic_funcs/optimizer/optimizer.png" alt="Optimizers" loading="lazy">
+        <img src="/images/deep_learning_basic_funcs/optimizer/optimizer_fun.png" alt="Optimizer Function" loading="lazy" class="mt-1">
+        <div class="source-link" onclick="showSource('deep_learning_basic_funcs/optimizer/optimizer.py')">📄 optimizer.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3.5 Function Approximation -->
+  <div class="topic" id="func-approx">
+    <div class="topic-header">
+      <h3>函数逼近 Neural Network Function Approximation</h3>
+      <p>神经网络作为万能函数逼近器——学习sin(x)、傅里叶信号、非线性曲面</p>
+    </div>
+    <div class="topic-content single-image">
+      <div class="image-panel wide">
+        <div class="image-row">
+          <div>
+            <img src="/images/sin_fun_nn.png" alt="Sin Function NN" loading="lazy">
+            <div class="source-link" onclick="showSource('sin_fun_nn.py')">📄 sin_fun_nn.py</div>
+          </div>
+          <div>
+            <img src="/images/fourier_signal_nn.png" alt="Fourier Signal NN" loading="lazy">
+            <div class="source-link" onclick="showSource('fourier_signal_nn.py')">📄 fourier_signal_nn.py</div>
+          </div>
+        </div>
+        <div class="image-row mt-1">
+          <div>
+            <img src="/images/heuristic_thinking/2013_nonlinear_fitting/2013_nonlinear_fitting.png" alt="Nonlinear Fitting" loading="lazy">
+          </div>
+          <div>
+            <img src="/images/heuristic_thinking/2013_nonlinear_fitting/2013_nonlinear_fitting_3d.png" alt="Nonlinear Fitting 3D" loading="lazy">
+          </div>
+        </div>
+        <div class="source-link" onclick="showSource('heuristic_thinking/2013_nonlinear_fitting/2013_nonlinear_fitting.py')">📄 2013_nonlinear_fitting.py</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 4. DEEP LEARNING ==================== -->
+<section id="deep-learning" class="section alt">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <h2>深度学习 <span class="en">Deep Learning</span></h2>
+    <p>CNN图像识别、RNN序列建模、Seq2Seq翻译、注意力机制</p>
+  </div>
+
+  <!-- 4.1 CNN -->
+  <div class="topic" id="cnn">
+    <div class="topic-header">
+      <h3>卷积神经网络 CNN</h3>
+      <p>卷积核滑过图像提取特征——从MNIST手写数字识别开始</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <span class="demo-hint">在左侧画布上绘制数字</span>
+          <button onclick="demos.cnn.clear()">清除</button>
+          <button onclick="demos.cnn.recognize()">识别</button>
+        </div>
+        <div class="cnn-demo-area">
+          <canvas id="canvas-draw" width="200" height="200"></canvas>
+          <canvas id="canvas-cnn" width="340" height="340"></canvas>
+        </div>
+        <div class="demo-info" id="cnn-info">绘制数字后点击"识别"，观察卷积特征提取过程</div>
+      </div>
+      <div class="image-panel">
+        <h4>CNN Attention可视化 & MNIST</h4>
+        <img src="/images/attention_visualization.png" alt="CNN Attention" loading="lazy">
+        <img src="/images/training_animation.gif" alt="Training Animation" loading="lazy" class="mt-1">
+        <div class="source-link" onclick="showSource('cnn_attention_visualization.py')">📄 cnn_attention_visualization.py</div>
+        <div class="source-link" onclick="showSource('mnist_recognize_torch.py')">📄 mnist_recognize_torch.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.2 RNN/LSTM -->
+  <div class="topic" id="rnn">
+    <div class="topic-header">
+      <h3>循环神经网络 RNN / LSTM</h3>
+      <p>处理序列数据的利器——记忆门控机制让网络学会"记住"和"遗忘"</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.rnn.reset()">重置</button>
+          <button onclick="demos.rnn.step()">下一时间步</button>
+          <button onclick="demos.rnn.autoRun()">自动运行</button>
+        </div>
+        <canvas id="canvas-rnn" width="560" height="380"></canvas>
+        <div class="demo-info">LSTM单元内部：遗忘门(f)、输入门(i)、输出门(o)的工作过程</div>
+      </div>
+      <div class="image-panel">
+        <h4>RNN文本生成</h4>
+        <img src="/images/training_process.gif" alt="RNN Training" loading="lazy">
+        <div class="source-link" onclick="showSource('rnn_news_generator.py')">📄 rnn_news_generator.py</div>
+        <div class="source-link" onclick="showSource('rnn_news_generator_ai.py')">📄 rnn_news_generator_ai.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.3 Seq2Seq -->
+  <div class="topic" id="seq2seq">
+    <div class="topic-header">
+      <h3>序列到序列 Seq2Seq</h3>
+      <p>编码器-解码器架构——从数字翻译到机器翻译的基础</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <input type="text" id="seq2seq-input" placeholder="输入数字如: 123" maxlength="10">
+          <button onclick="demos.seq2seq.translate()">翻译</button>
+        </div>
+        <canvas id="canvas-seq2seq" width="560" height="380"></canvas>
+        <div class="demo-info">Encoder将输入编码为上下文向量，Decoder逐步生成输出</div>
+      </div>
+      <div class="image-panel">
+        <h4>Seq2Seq数字翻译器</h4>
+        <p class="desc-text">将数字序列"123"翻译为英文"one hundred twenty three"。展示了编码器-解码器的核心思想。</p>
+        <div class="source-link" onclick="showSource('seq2seq_number_translator.py')">📄 seq2seq_number_translator.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4.4 Attention -->
+  <div class="topic" id="attention">
+    <div class="topic-header">
+      <h3>注意力机制 Attention Mechanism</h3>
+      <p>"Attention is All You Need"——让模型学会关注输入中最重要的部分</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.attention.randomize()">随机生成</button>
+        </div>
+        <canvas id="canvas-attention" width="560" height="380"></canvas>
+        <div class="demo-info">注意力权重热力图：颜色越深表示关注度越高</div>
+      </div>
+      <div class="image-panel">
+        <h4>Attention Is All You Need</h4>
+        <img src="/images/AttentionIsAllYouNeed.png" alt="Attention Architecture" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 5. TRANSFORMERS ==================== -->
+<section id="transformers" class="section">
+  <div class="section-header">
+    <span class="section-number">05</span>
+    <h2>Transformer <span class="en">Transformer Architecture</span></h2>
+    <p>自注意力机制驱动的革命性架构——GPT、BERT的基础</p>
+  </div>
+
+  <!-- 5.1 Self-Attention -->
+  <div class="topic" id="self-attention">
+    <div class="topic-header">
+      <h3>自注意力 Self-Attention (Q·K·V)</h3>
+      <p>Query、Key、Value——Transformer的核心计算单元</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <input type="text" id="sa-input" placeholder="输入句子如: I love machine learning" value="The cat sat on the mat">
+          <button onclick="demos.selfAttention.compute()">计算注意力</button>
+        </div>
+        <canvas id="canvas-self-attention" width="560" height="380"></canvas>
+        <div class="demo-info">Self-Attention: 每个词对其他所有词的注意力权重</div>
+      </div>
+      <div class="image-panel">
+        <h4>Transformer文本生成</h4>
+        <p class="desc-text">项目包含多个Transformer实现：新闻生成(中英文)、机器翻译、音频处理</p>
+        <div class="source-link" onclick="showSource('transformer/transformer_news_generator_ai.py')">📄 transformer_news_generator_ai.py</div>
+        <div class="source-link" onclick="showSource('transformer/transformer_translate.py')">📄 transformer_translate.py</div>
+        <div class="source-link" onclick="showSource('transformer/transformer_news_generator_ai_zh.py')">📄 transformer_news_generator_ai_zh.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.2 Transformer Architecture -->
+  <div class="topic" id="transformer-arch">
+    <div class="topic-header">
+      <h3>Transformer 完整架构</h3>
+      <p>多头注意力 + 前馈网络 + 残差连接 + 层归一化</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel wide-demo">
+        <canvas id="canvas-transformer" width="560" height="500"></canvas>
+        <div class="demo-info">Transformer架构图：从输入嵌入到输出概率的完整流程</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 6. REINFORCEMENT LEARNING ==================== -->
+<section id="rl" class="section alt">
+  <div class="section-header">
+    <span class="section-number">06</span>
+    <h2>强化学习 <span class="en">Reinforcement Learning</span></h2>
+    <p>智能体通过与环境交互学习最优策略——DQN、策略梯度、游戏AI</p>
+  </div>
+
+  <!-- 6.1 Grid World -->
+  <div class="topic" id="gridworld">
+    <div class="topic-header">
+      <h3>Q-Learning 网格世界</h3>
+      <p>强化学习的"Hello World"——在网格中学习最优路径</p>
+    </div>
+    <div class="topic-content">
+      <div class="demo-panel">
+        <div class="demo-controls">
+          <button onclick="demos.gridWorld.reset()">重置</button>
+          <button onclick="demos.gridWorld.step()">探索一步</button>
+          <button onclick="demos.gridWorld.train()">训练100步</button>
+          <button onclick="demos.gridWorld.showPolicy()">显示策略</button>
+          <label>ε: <input type="range" id="gw-epsilon" min="0" max="100" value="30" style="width:80px" oninput="demos.gridWorld.setEpsilon(this.value/100)"></label>
+        </div>
+        <canvas id="canvas-gridworld" width="560" height="380"></canvas>
+        <div class="demo-info" id="gw-info">绿色=目标 红色=障碍 蓝色=智能体 | ε-greedy探索策略</div>
+      </div>
+      <div class="image-panel">
+        <h4>DQN 驾驶游戏</h4>
+        <img src="/images/drive_torch_dqn_nocnn.gif" alt="DQN Driving" loading="lazy">
+        <div class="source-link" onclick="showSource('drive_torch_dqn_nocnn.py')">📄 drive_torch_dqn_nocnn.py</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6.2 RL Games Gallery -->
+  <div class="topic" id="rl-games">
+    <div class="topic-header">
+      <h3>强化学习游戏 RL Games Gallery</h3>
+      <p>DQN学习玩Flappy Bird、Lunar Lander、围棋——从简单到复杂的RL应用</p>
+    </div>
+    <div class="topic-content single-image">
+      <div class="image-panel wide">
+        <div class="image-row triple">
+          <div>
+            <h4>Gym RL</h4>
+            <img src="/images/rl_games/rl_gym.gif" alt="RL Gym" loading="lazy">
+            <div class="source-link" onclick="showSource('rl_games/rl_gym.py')">📄 rl_gym.py</div>
+          </div>
+          <div>
+            <h4>DQN Lunar Lander</h4>
+            <img src="/images/rl_games/rl_gym_dqn_lunar.gif" alt="Lunar Lander" loading="lazy">
+            <div class="source-link" onclick="showSource('rl_games/rl_gym_dqn_lunar.py')">📄 rl_gym_dqn_lunar.py</div>
+          </div>
+          <div>
+            <h4>Lunar EP480</h4>
+            <img src="/images/rl_games/rl_gym_dqn_lunar_Episode480.gif" alt="Lunar EP480" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Source Code Modal -->
+<div id="source-modal" class="modal" onclick="if(event.target===this)closeSource()">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span id="modal-title">Source Code</span>
+      <button onclick="closeSource()" class="modal-close">&times;</button>
+    </div>
+    <pre><code id="modal-code"></code></pre>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <p><strong>Visualization Machine Learning</strong> — 从零到深度的可视化机器学习之旅</p>
+    <p class="footer-tech">Built with FastAPI + Vanilla JS Canvas | PyTorch + Scikit-learn + Matplotlib</p>
+  </div>
+</footer>
+
+<script src="/static/demos.js"></script>
+</body>
+</html>
