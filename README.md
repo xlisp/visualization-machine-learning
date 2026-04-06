@@ -21,6 +21,8 @@
   - [Decision Tree Classifier](#decision-tree-classifier)
   - [Reinforcement Learning (DQN)](#reinforcement-learning-dqn)
   - [Flappy bird dqn](#flappy-bird-dqn)
+  - [GRPO (minimal example)](#grpo-minimal-example)
+  - [DQN vs GRPO — same RL core, different assumptions](#dqn-vs-grpo--same-rl-core-different-assumptions)
   - [SGD](#sgd)
   - [CNN with Attention](#CNN-with-Attention)
   - [LSTM generator](#LSTM-generator)
@@ -844,6 +846,105 @@ if __name__ == "__main__":
     print(f"Final Score: {score}")
     env.close()
 ```
+
+## GRPO (minimal example)
+
+`grpo_minimal.py` is the tiniest possible GRPO (Group Relative Policy Optimization) training loop, written to mirror the pattern used by the companion project `MathGPT/scripts/train_rl.py`, which runs GRPO on GSM8K math problems with an LLM.
+
+Instead of an LLM, the toy runs a contextual bandit: 4 "prompts", vocabulary of 8 tokens, and a reward of `1` when the sampled token matches that prompt's secret target. The policy is just a `[num_prompts, vocab]` logit table — the smallest thing that still has a policy gradient.
+
+The recipe, straight from MathGPT's `train_rl.py`:
+
+1. For each prompt, sample **G rollouts** from `π(a|prompt)` — the "group".
+2. Score each rollout with a reward function (1.0 / 0.0).
+3. **Advantage = reward − group mean** (`advantages = rewards - rewards.mean()` in `train_rl.py:158`).
+4. Policy-gradient loss: `−E[ log π(a|s) · A ]` (`train_rl.py:254-258`).
+5. Gradient step; repeat.
+
+```python
+def grpo_step():
+    prompts = torch.arange(NUM_PROMPTS).repeat_interleave(NUM_SAMPLES)
+    logits  = policy(prompts)
+    dist    = torch.distributions.Categorical(logits=logits)
+    actions = dist.sample()
+    logp    = dist.log_prob(actions)
+
+    rewards = reward_fn(prompts, actions)
+
+    # group-relative advantage: per-prompt baseline
+    rewards_by_group = rewards.view(NUM_PROMPTS, NUM_SAMPLES)
+    baseline         = rewards_by_group.mean(dim=1, keepdim=True)
+    advantages       = (rewards_by_group - baseline).view(-1)
+
+    loss = -(logp * advantages.detach()).mean()
+    optimizer.zero_grad(); loss.backward(); optimizer.step()
+```
+
+The script saves a step-by-step decomposition of the pipeline:
+
+| file | what it shows |
+|---|---|
+| `grpo_01_task.png` | prompt → correct-token mapping (the reward landscape) |
+| `grpo_02_policy_init.png` | `π(a\|prompt)` before training — uniform |
+| `grpo_03_rollouts.png` | one batch of group rollouts, colored by reward |
+| `grpo_04_advantages.png` | reward vs. `reward − group mean` (the variance-reducing baseline) |
+| `grpo_05_training_curves.png` | mean reward, pg loss, policy entropy over steps |
+| `grpo_06_policy_final.png` | learned `π(a\|prompt)` — mass on the stars |
+| `grpo_06b_policy_evolution.png` | snapshots of π migrating toward the correct token |
+| `grpo_overview.png` | all of the above on one figure |
+
+Run it:
+
+```bash
+python grpo_minimal.py
+```
+
+## DQN vs GRPO — same RL core, different assumptions
+
+The DQN examples above (`rl_games/rl_gym_dqn_lunar.py`, `rl_games/flappy_bird_app/...`) and the GRPO example (`grpo_minimal.py`, mirroring `MathGPT/scripts/train_rl.py`) are both reinforcement learning. They look very different because the environments they target are very different (Atari/Gym games vs. an LLM answering math), but the underlying loop is the same.
+
+### The same part (the RL essence)
+
+Both methods do exactly this:
+
+1. **Interact** with something — a Gym env for DQN, the LLM's own generator for GRPO — to collect `(situation, action, reward)` data.
+2. **Assign credit**: decide, for each action we took, how good it actually was.
+3. **Nudge the neural network** so that actions that turned out well become more likely next time.
+4. **Repeat** until the expected reward stops going up.
+
+Both are solving `max_θ  E_{τ~π_θ} [ R(τ) ]` — the same objective. Both need exploration, both use a neural net as a function approximator, both need some form of variance reduction because the reward signal is noisy, both suffer from sample inefficiency and credit assignment.
+
+### The different part
+
+The interesting question is *where* each algorithm makes different structural choices, and *why* — the environment shapes the algorithm.
+
+| dimension | DQN (game playing, this project's `rl_games/`) | GRPO (reasoning / QA, `grpo_minimal.py` ↔ `MathGPT`) |
+|---|---|---|
+| **Family** | Value-based (Q-learning) | Policy-gradient (REINFORCE with baseline) |
+| **What the NN outputs** | `Q(s, a)` — an action-value estimate | `π(a\|s)` — a probability distribution directly |
+| **How the policy is obtained** | `argmax_a Q(s,a)` + ε-greedy noise | Sample from the softmax — the net *is* the policy |
+| **Update rule** | Bellman/TD: `Q(s,a) ← r + γ max_a' Q(s',a')` | PG: `θ ← θ + η · ∇log π(a\|s) · A` |
+| **Bootstraps from own estimate?** | Yes — TD target uses `Q` itself (unstable, needs a target network) | No — uses Monte-Carlo reward directly |
+| **On- or off-policy** | Off-policy (old transitions in replay buffer are still valid) | On-policy (must resample every update — old rollouts become stale) |
+| **Replay / data reuse** | Experience replay buffer, shuffle-sampled minibatches | Fresh rollouts each step, discarded after one update |
+| **Exploration mechanism** | Externally injected: ε-greedy, noise, decaying schedules | Built-in: stochastic sampling from π, optionally a temperature |
+| **Variance reduction** | Target network, Double-DQN, Huber loss, clipped rewards | **Group-relative baseline**: subtract mean reward of the N rollouts from the same prompt |
+| **Episode shape** | Long sequence of `(s_t, a_t, r_t, s_{t+1})` tuples, many decisions per episode | One prompt → one full generation; the "episode" is a single sequence |
+| **Reward density** | Dense — a reward at (almost) every environment step | Sparse — one scalar for the whole generated answer (correct / wrong) |
+| **Discount γ** | Yes, `γ ∈ [0.9, 0.999]`, crucial for long horizons | Usually `γ = 1` (terminal-only reward, so discounting changes nothing) |
+| **State / context** | Physics vector or pixel frame; Markovian | Token prefix (prompt); state = everything generated so far |
+| **Action space** | Small & discrete — 2 in CartPole, 4 in LunarLander, 2 in Flappy Bird | Huge — one vocabulary-sized categorical per token (tens of thousands) |
+| **"Rollouts per decision"** | 1 transition per env step, batched later from the buffer | **G rollouts per prompt** (the Group in GRPO, `--num-samples=16` in MathGPT) |
+| **Where the baseline comes from** | A slowly-updated target network provides a stable Q-target | The mean reward of the group — no extra network needed |
+| **What breaks it** | Q overestimation, non-stationary targets, replay staleness | Reward collapse (entropy → 0), stale rollouts if you reuse them |
+| **Typical environment** | Gym / ALE / physics simulators | A base/SFT language model generating its own rollouts |
+| **Files in this repo** | `rl_games/rl_gym_dqn_lunar.py`, `rl_games/flappy_bird_app/*`, `drive_torch_dqn_nocnn.py` | `grpo_minimal.py` (and `MathGPT/scripts/train_rl.py`) |
+
+### One-line summary
+
+DQN learns *how good* each action is in a state, then acts greedily — it works because games give dense per-step feedback and you can replay old experience. GRPO skips the value function entirely: it generates a whole answer, looks at its reward, compares it to the reward of its siblings from the same prompt, and pushes the policy toward the better siblings — it works because a language model can cheaply generate a whole group of rollouts for the same prompt, and the group mean is a free, unbiased baseline.
+
+![](./grpo_overview.png)
 
 ## SGD
 ![](./deep_learning_basic_funcs/sgd_visualization_animation.gif)
