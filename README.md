@@ -896,7 +896,7 @@ The script saves a step-by-step decomposition of the pipeline:
 Run it:
 
 ```bash
-python grpo_minimal.py
+python grpo/grpo_minimal.py
 ```
 
 ## DQN vs GRPO — same RL core, different assumptions
