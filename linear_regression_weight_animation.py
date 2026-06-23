@@ -5,8 +5,11 @@
 最简单的神经网络就两个参数：斜率 w 和截距 b（y = w*x + b）。
 训练就是不停地微调这两个数，让直线越来越贴合数据。
 
-这个脚本把训练过程"放慢镜头"，左边看拟合直线怎么一点点转到正确角度，
-右边在 loss 等高线图上看参数点 (w, b) 怎么一步步滚到谷底 ——
+这个脚本把训练过程"放慢镜头"，三个面板同步播放：
+  左   —— 拟合直线怎么一点点转到正确角度；
+  中   —— **权重网格**：把 w、b 以及它们的梯度直接以数字写在格子里，
+          每一帧都看见这几个数在被改写（这就是"权重"最朴素的样子）；
+  右   —— 在 loss 等高线图上看参数点 (w, b) 怎么一步步滚到谷底。
 **这就是 optimizer.step() 每一步在真实地修改权重的样子。**
 
 运行: python linear_regression_weight_animation.py
@@ -39,11 +42,15 @@ lr = 0.03
 traj = []
 
 
+grads = {"w": 0.0, "b": 0.0}             # 记录最近一次的梯度，给"权重网格"展示用
+
+
 def train_step():
     global w, b                          # w/b 在函数里被 -= 修改，必须声明为全局
     pred = x @ w + b
     loss = ((pred - y) ** 2).mean()
     loss.backward()
+    grads["w"], grads["b"] = w.grad.item(), b.grad.item()   # 清零前先存下来
     with torch.no_grad():
         w -= lr * w.grad
         b -= lr * b.grad
@@ -66,10 +73,27 @@ for i in range(WW.shape[0]):
         LOSS[i, j] = np.mean((pred - yn) ** 2)
 
 # ---------------------------------------------------------------
-# 4. 双面板动画
+# 4. 三面板动画
 # ---------------------------------------------------------------
-fig, (axL, axR) = plt.subplots(1, 2, figsize=(12, 5.5))
+fig, (axL, axG, axR) = plt.subplots(1, 3, figsize=(17, 5.5))
 FRAMES = 120
+
+
+def draw_weight_grid(ax, cw, cb, loss, frame):
+    """把权重 w、b 和它们的梯度，以数字直接写进网格里。"""
+    ax.clear()
+    cells = np.array([[cw, cb],                 # 第一行：当前权重值
+                      [grads["w"], grads["b"]]])  # 第二行：本步梯度
+    ax.imshow(cells, cmap="coolwarm", vmin=-3, vmax=3, aspect="auto")
+    for i in range(2):
+        for j in range(2):
+            ax.text(j, i, f"{cells[i, j]:+.3f}", ha="center", va="center",
+                    fontsize=20, fontweight="bold", color="black")
+    ax.set_xticks([0, 1]); ax.set_xticklabels(["w (斜率)", "b (截距)"], fontsize=11)
+    ax.set_yticks([0, 1])
+    ax.set_yticklabels(["权重值", "梯度 ∂loss/∂"], fontsize=11)
+    ax.set_title(f"权重网格（数字在被改写）  step={frame}\n"
+                 f"更新规则: 新权重 = 旧权重 − lr × 梯度", fontsize=11)
 
 
 def update(frame):
@@ -87,6 +111,9 @@ def update(frame):
     axL.set_title(f"拟合直线在转动   loss = {loss:.3f}")
     axL.set_xlim(-3.2, 3.2); axL.set_ylim(-8, 9)
     axL.legend(loc="upper left", fontsize=9)
+
+    # ---- 中：权重网格（数字） ----
+    draw_weight_grid(axG, cw, cb, loss, frame)
 
     # ---- 右：loss 地形图 + 参数点的下山轨迹 ----
     axR.clear()
