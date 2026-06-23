@@ -17,6 +17,8 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
+plt.rcParams['axes.unicode_minus'] = False
 
 torch.manual_seed(0)
 
@@ -38,6 +40,7 @@ traj = []
 
 
 def train_step():
+    global w, b                          # w/b 在函数里被 -= 修改，必须声明为全局
     pred = x @ w + b
     loss = ((pred - y) ** 2).mean()
     loss.backward()
